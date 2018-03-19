@@ -35,4 +35,14 @@ export const play = () => {
     [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1],
     true
   );
+
+  parts.addRepeatingSoloPart(
+    "0:0:0",
+    scales.bassLineForChordProgression(chordProgression, songKey),
+    new instruments.bass.FastAttackSquare(),
+    "4n",
+    [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+    4,
+    true
+  );
 };

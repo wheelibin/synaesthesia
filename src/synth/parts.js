@@ -40,6 +40,66 @@ export const addDrums = (startTime, note, instrument, pattern, shouldLoop) => {
   sequencer.start(startTime);
 };
 
+export const addSoloPart = (
+  startTime,
+  notes,
+  instrument,
+  noteLength,
+  pattern,
+  shouldLoop
+) => {
+  const sequencer = new Tone.Sequence(
+    function(time, hit) {
+      if (hit === 1) {
+        const note = notes.shift();
+        notes.push(note);
+        instrument.triggerAttackRelease(note, noteLength, time);
+      }
+    },
+    pattern,
+    "16n"
+  );
+
+  sequencer.loop = shouldLoop;
+  sequencer.start(startTime);
+};
+
+export const addRepeatingSoloPart = (
+  startTime,
+  notes,
+  instrument,
+  noteLength,
+  pattern,
+  repeatTimes,
+  shouldLoop
+) => {
+  const newSequence = [];
+
+  for (const section of notes) {
+    for (let i = 0; i < repeatTimes; i++) {
+      for (let i = 0; i < section.length; i++) {
+        const note = section[i];
+        newSequence.push(note);
+      }
+    }
+  }
+
+  const sequencer = new Tone.Sequence(
+    function(time, hit) {
+      if (hit === 1) {
+        const note = newSequence.shift();
+        newSequence.push(note);
+        instrument.triggerAttackRelease(note, noteLength, time);
+      }
+    },
+    pattern,
+    "16n"
+  );
+
+  sequencer.loop = shouldLoop;
+  sequencer.start(startTime);
+};
+
 // export const addDrums = (startTime, note, instrument, interval, shouldLoop) => {
 //   const loop = new Tone.Loop(function(time) {
 //     instrument.triggerAttackRelease(note, "16n", time);

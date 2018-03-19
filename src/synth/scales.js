@@ -85,3 +85,29 @@ export const scaleFromTonic = (tonic, intervals) => {
 
   return scale;
 };
+
+export const bassLineForChordProgression = (chordProgression, key) => {
+  const notesPerChord = 4;
+  const notes = [];
+
+  for (const chord of chordProgression) {
+    const chordRoot = Tone.Frequency(chord[0]).transpose(-12);
+    const possibleNotesForCurrentChord = actualNotesFromScale(
+      key.root,
+      key.type,
+      1,
+      1
+    );
+    const notesForChord = [chordRoot];
+    for (let i = 0; i < notesPerChord - 1; i++) {
+      const rnd = utils.randomIntBetween(
+        0,
+        possibleNotesForCurrentChord.length - 1
+      );
+      notesForChord.push(possibleNotesForCurrentChord[rnd]);
+    }
+    notes.push(notesForChord);
+  }
+
+  return notes;
+};
