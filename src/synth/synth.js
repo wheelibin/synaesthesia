@@ -1,12 +1,11 @@
 import Tone from "tone";
-import * as parts from "./parts";
+import * as song from "./song";
 
 export const play = () => {
-  //parts.addBass();
-  parts.addChords();
-  //parts.addMelody(reverb);
+  song.play();
 
   Tone.Master.volume.value = -32;
+  Tone.Transport.bpm.value = 80;
   Tone.Transport.start();
-  Tone.Transport.stop(30);
+  //Tone.Transport.stop(60);
 };

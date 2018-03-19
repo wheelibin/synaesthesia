@@ -2,87 +2,80 @@ import Tone from "tone";
 import * as keys from "./keys";
 import * as scales from "./scales";
 import * as utils from "../utils";
-import * as instruments from "./instruments";
+import instruments from "./instruments";
 
-export const addChords = () => {
-  const chordKey = keys.keyFromTonicAndScale("D", scales.scales.dorian, 3, 3);
+export const addChords = chordProgression => {
+  const chordSynth = new instruments.Pad();
 
-  const chordProgression = [
-    scales.chordFromScale(
-      chordKey[utils.randomIntBetween(0, chordKey.length - 1)],
-      scales.scales.major,
-      [1, 4, 7]
-    ),
-    scales.chordFromScale(
-      chordKey[utils.randomIntBetween(0, chordKey.length - 1)],
-      scales.scales.major,
-      [1, 3, 5]
-    ),
-    scales.chordFromScale(
-      chordKey[utils.randomIntBetween(0, chordKey.length - 1)],
-      scales.scales.major,
-      [1, 3, 5]
-    ),
-    scales.chordFromScale(
-      chordKey[utils.randomIntBetween(0, chordKey.length - 1)],
-      scales.scales.major,
-      [1, 4, 6]
-    )
-  ];
-
-  // const chordProgression = [
-  //   Tone.Frequency(
-  //     chordKey[utils.randomIntBetween(0, chordKey.length - 1)]
-  //   ).harmonize([0, 3, 6]),
-  //   Tone.Frequency(
-  //     chordKey[utils.randomIntBetween(0, chordKey.length - 1)]
-  //   ).harmonize([0, 2, 4]),
-  //   Tone.Frequency(
-  //     chordKey[utils.randomIntBetween(0, chordKey.length - 1)]
-  //   ).harmonize([0, 2, 4]),
-  //   Tone.Frequency(
-  //     chordKey[utils.randomIntBetween(0, chordKey.length - 1)]
-  //   ).harmonize([0, 3, 5])
-  // ];
-
-  const chordSynth = instruments.pad();
-  const bassSynth = instruments.softSquareBass();
-  bassSynth.volume.value = bassSynth.volume.value - 8;
-
-  var loop = new Tone.Loop(function(time) {
+  var chordLoop = new Tone.Loop(function(time) {
     //Take first chord
     var currentChord = chordProgression.shift();
     //add chord to back of queue
     chordProgression.push(currentChord);
     //play it
-    chordSynth.triggerAttackRelease(currentChord, "4m");
-    //Add bass for the root note
-    const lowRootNote = Tone.Frequency(currentChord[0]).transpose(-24);
-    bassSynth.triggerAttackRelease(lowRootNote, "3:3:2");
-  }, "4m");
-  loop.start();
+    chordSynth.triggerAttackRelease(currentChord, "8m", time);
+  }, "8m");
+  chordLoop.start();
 };
 
-export const addBass = () => {
-  const bassKey = keys.keyFromTonicAndScale("D", scales.scales.dorian, 1, 1);
+export const addDrums = key => {
+  const synth = new Tone.MembraneSynth().toMaster();
+  synth.volume.value = 24;
+  const loop = new Tone.Loop(function(time) {
+    synth.triggerAttackRelease(key.root + "0", "16n", time);
+  }, "4n");
+  loop.start();
 
-  const bassSynth = instruments.softSquareBass();
+  const noiseSynth = new Tone.NoiseSynth().toMaster();
+  noiseSynth.volume.value = 16;
+  const snareLoop = new Tone.Loop(function(time) {
+    noiseSynth.triggerAttackRelease("16n", time);
+  }, "0:2:0");
+  snareLoop.start("0:1:0");
+};
 
-  const numberOfSteps = 8;
+export const addBass = (key, chordProgression) => {
   const sequence = [];
-  for (let i = 0; i < numberOfSteps - sequence.length; i++) {
-    const notesInStep = utils.randomIntBetween(1, 2);
-    const step = [];
-    for (let i = 0; i < notesInStep; i++) {
-      step.push(bassKey[utils.randomIntBetween(0, bassKey.length - 1)]);
+  const numberOfSteps = 4;
+
+  for (const chord of chordProgression) {
+    const chordRoot = Tone.Frequency(chord[0]).transpose(-12);
+    const possibleNotesForCurrentChord = scales.actualNotesFromScale(
+      key.root,
+      key.type,
+      1,
+      1
+    );
+
+    for (let i = 0; i < numberOfSteps; i++) {
+      const notesInStep = utils.randomIntBetween(1, 4);
+      //Start on chord root
+      const step = [chordRoot];
+      //Random sequence for the rest of the notes
+      for (let i = 1; i < notesInStep; i++) {
+        const stepNote =
+          possibleNotesForCurrentChord[
+            utils.randomIntBetween(0, possibleNotesForCurrentChord.length - 1)
+          ];
+        step.push(stepNote);
+      }
+
+      sequence.push(step);
     }
-    sequence.push(step);
   }
 
-  const sequencer = new Tone.Sequence(function(time, note) {
-    bassSynth.triggerAttackRelease(note, "4n");
-  }, sequence);
-  sequencer.probability = 0.4;
+  const bassSynth = instruments.bass.fastAttackBass();
+  bassSynth.volume.value = bassSynth.volume.value - 10;
+  const sequencer = new Tone.Sequence(
+    function(time, note) {
+      bassSynth.triggerAttackRelease(note, "8n", time);
+    },
+    sequence,
+    "1m"
+  );
+
+  //sequencer.probability = 0.8;
+  //sequencer.playbackRate = 0.25;
   sequencer.start();
 };
 
