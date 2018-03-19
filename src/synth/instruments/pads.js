@@ -1,7 +1,7 @@
 import Tone from "tone";
 import * as bass from "./bass";
 
-export const Pad = function() {
+export const SwirlyChorusWithSubBass = function() {
   const chordSynth = new Tone.PolySynth(6, Tone.Synth);
   chordSynth.set({
     oscillator: {

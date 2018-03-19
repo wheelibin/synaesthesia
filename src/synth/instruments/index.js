@@ -1,4 +1,5 @@
 import * as bass from "./bass";
-import { Pad } from "./Pad";
+import * as pads from "./pads";
+import * as drums from "./drums";
 
-export default { bass, Pad };
+export default { bass, pads, drums };

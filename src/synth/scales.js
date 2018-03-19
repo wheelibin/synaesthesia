@@ -40,7 +40,7 @@ export const actualNotesFromScale = (tonic, scale, lowOctave, highOctave) => {
 
 export const getRandomChordProgressionForKey = (key, mainOctave) => {
   const progressionRootNotes = chordFromScale(
-    [1, 4, 7, 3, 6, 2, 5],
+    [1, 3, 4, 6],
     key.root,
     key.type,
     mainOctave
@@ -50,7 +50,7 @@ export const getRandomChordProgressionForKey = (key, mainOctave) => {
 
   for (const progressionRootNote of progressionRootNotes) {
     progression.push(
-      chordFromScale([1, 3, 5], progressionRootNote, key.type, mainOctave)
+      chordFromScale([1, 3, 5, 7], progressionRootNote, key.type, mainOctave)
     );
   }
 
