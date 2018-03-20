@@ -1,25 +1,68 @@
 import React, { Component } from "react";
-import "./App.css";
 import * as synth from "./synth/synth";
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = { seed: new Date().getTime() };
+    this.handleSeedChange = this.handleSeedChange.bind(this);
+    this.handleNewSeed = this.handleNewSeed.bind(this);
+  }
+  handleSeedChange(event) {
+    this.setState({ seed: event.target.value });
+  }
+  handleNewSeed() {
+    this.setState({ seed: new Date().getTime() });
+  }
+
   render() {
-    //Math.seedrandom("Music is the food of the soul!");
-    //Math.seedrandom("Without music, life would be a mistake");
-    // Math.seedrandom(
-    //   "Music expresses that which cannot be put into words and that which cannot remain silent"
-    // );
-    // Math.seedrandom(
-    //   "And those who were seen dancing were thought to be insane by those who could not hear the music"
-    // );
-    //Math.seedrandom("None but ourselves can free our minds");
-    //Math.seedrandom("!");
+    Math.seedrandom(this.state.seed);
+    const generatedSettings = synth.play();
 
-    const randomSeed = Math.seedrandom(new Date().getTime());
+    const settingsRows = [
+      <tr key={"seed"}>
+        <th>Seed</th>
+        <td>{this.state.seed}</td>
+      </tr>
+    ];
+    Object.keys(generatedSettings).forEach(function(key) {
+      const row = (
+        <tr key={key}>
+          <th>{key}</th>
+          <td>{JSON.stringify(generatedSettings[key])}</td>
+        </tr>
+      );
 
-    synth.play();
+      settingsRows.push(row);
+    });
 
-    return <div className="App">Seeded with: {randomSeed}</div>;
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            <p>Generated settings:</p>
+            <table className="table">
+              <tbody>{settingsRows}</tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-md-12">
+            <div className="form-group">
+              <label htmlFor="seed">Seed</label>
+              <input type="text" className="form-control" id="seed" aria-describedby="emailHelp" placeholder="" onBlur={this.handleSeedChange} />
+            </div>
+
+            <div>
+              <button type="button" onClick={this.handleNewSeed}>
+                Randomize!
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 }
 

@@ -1,7 +1,7 @@
 import Tone from "tone";
 import * as utils from "../utils";
 
-const roots = ["A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab"];
+const roots = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
 export const scales = {
   major: [2, 2, 1, 2, 2, 2],
   naturalMinor: [2, 1, 2, 2, 1, 2],
@@ -17,6 +17,7 @@ export const scales = {
 
 export const chordProgressions = [
   [1, 5, 4, 4, 1, 5, 1, 5],
+  [1, 1, 1, 1, 4, 4, 1, 1, 5, 5, 1, 1],
   [1, 6, 4, 5],
   [1, 4, 7, 4],
   [2, 5, 1],
@@ -52,22 +53,26 @@ export const actualNotesFromScale = (tonic, scale, lowOctave, highOctave) => {
   return notes;
 };
 
-export const getRandomChordProgressionForKey = key => {
-  const progressionRootNotes = chordFromScale(
-    chordProgressions[utils.randomIntBetween(0, chordProgressions.length - 1)],
-    key.root,
-    key.type,
-    key.chordOctave
-  );
+export const getRandomScaleType = () => {
+  var keys = Object.keys(scales);
+  return scales[keys[(keys.length * Math.random()) << 0]];
+};
 
-  const progression = [];
+export const getRandomChordProgressionForKey = key => {
+  return getChordProgressionForKey(key, utils.randomFromArray(chordProgressions));
+};
+
+export const getChordProgressionForKey = (key, progression) => {
+  const progressionRootNotes = chordFromScale(progression, key.root, key.type, key.chordOctave);
+
+  const progressionNotes = [];
 
   for (const progressionRootNote of progressionRootNotes) {
     const chord = utils.randomFromArray(chords);
-    progression.push(chordFromScale(chord, progressionRootNote, key.type, key.chordOctave));
+    progressionNotes.push(chordFromScale(chord, progressionRootNote, key.type, key.chordOctave));
   }
 
-  return progression;
+  return progressionNotes;
 };
 
 export const chordFromScale = (chordToneIndexes, tonic, scale, mainOctave) => {
