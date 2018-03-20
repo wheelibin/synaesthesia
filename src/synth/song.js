@@ -13,8 +13,9 @@ export const play = () => {
     chordOctave: utils.randomIntBetween(2, 4)
   };
 
-  const progression = utils.randomFromArray(scales.chordProgressions);
-  const chordProgression = scales.getChordProgressionForKey(songKey, progression);
+  const progressionIntervals = utils.randomFromArray(scales.chordProgressions);
+  const chordTypesToUseInProgression = scales.getRandomChordTypesForProgression(progressionIntervals);
+  const chordProgression = scales.getChordProgressionForKey(songKey, progressionIntervals, chordTypesToUseInProgression);
   const possibleChordSectionLengths = [1, 2, 4, 8];
   const chordProgressionBars = utils.randomFromArray(possibleChordSectionLengths);
   const possibleChordPads = [
@@ -30,8 +31,9 @@ export const play = () => {
   const generatedSettings = {
     key: `${songKey.root} (${songKey.typeName})`,
     chordOctave: songKey.chordOctave,
-    chordProgression: progression,
+    chordProgression: progressionIntervals,
     chordProgressionBars: chordProgressionBars,
+    chordTypesToUseInProgression: chordTypesToUseInProgression,
     kickRythym: kickRythym,
     hihatRythym: hihatRythym,
     bassLinePattern: bassLinePattern,
@@ -39,9 +41,7 @@ export const play = () => {
   };
 
   parts.addChordProgression("0:0:0", chordProgression, chordInstrument, `${chordProgressionBars}m`, `${chordProgressionBars}m`, true);
-
   parts.addDrums("0:0:0", songKey.root + "0", new instruments.drums.KickDrum(), kickRythym, true);
-
   parts.addDrums("0:0:0", undefined, new instruments.drums.HiHat(), hihatRythym, true);
 
   const repeatEachSectionTimes = chordProgressionBars / (bassLinePattern.length / 16);

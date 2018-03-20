@@ -23,7 +23,7 @@ export class FastAttackSquare extends Instrument {
           release: 1
         }
       }),
-      16
+      18
     );
   }
 }

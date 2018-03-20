@@ -59,21 +59,25 @@ export const getRandomScaleType = () => {
   return { type: randomType, intervals: scales[randomType] };
 };
 
-export const getRandomChordProgressionForKey = key => {
-  return getChordProgressionForKey(key, utils.randomFromArray(chordProgressions));
-};
-
-export const getChordProgressionForKey = (key, progression) => {
+export const getChordProgressionForKey = (key, progression, chordTypesToUse) => {
   const progressionRootNotes = chordFromScale(progression, key.root, key.type, key.chordOctave);
 
   const progressionNotes = [];
 
-  for (const progressionRootNote of progressionRootNotes) {
-    const chord = utils.randomFromArray(chords);
+  for (let index = 0; index < progressionRootNotes.length; index++) {
+    const progressionRootNote = progressionRootNotes[index];
+    const chord = chordTypesToUse[index];
     progressionNotes.push(chordFromScale(chord, progressionRootNote, key.type, key.chordOctave));
   }
-
   return progressionNotes;
+};
+
+export const getRandomChordTypesForProgression = progressionRootNotes => {
+  const chordTypes = [];
+  for (let index = 0; index < progressionRootNotes.length; index++) {
+    chordTypes.push(utils.randomFromArray(chords));
+  }
+  return chordTypes;
 };
 
 export const chordFromScale = (chordToneIndexes, tonic, scale, mainOctave) => {
@@ -110,8 +114,7 @@ export const bassLineForChordProgression = (chordProgression, key) => {
     const possibleNotesForCurrentChord = actualNotesFromScale(key.root, key.type, 1, 1);
     const notesForChord = [chordRoot];
     for (let i = 0; i < notesPerChord - 1; i++) {
-      const rnd = utils.randomIntBetween(0, possibleNotesForCurrentChord.length - 1);
-      notesForChord.push(possibleNotesForCurrentChord[rnd]);
+      notesForChord.push(utils.randomFromArray(possibleNotesForCurrentChord));
     }
     notes.push(notesForChord);
   }
