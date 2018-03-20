@@ -15,7 +15,8 @@ class App extends Component {
     this.setState({ seed: this.getCurrentTimeSeed() });
   }
   getCurrentTimeSeed() {
-    return new Date().getTime().toString();
+    return "1521578619406";
+    //return new Date().getTime().toString();
   }
   render() {
     Math.seedrandom(this.state.seed);

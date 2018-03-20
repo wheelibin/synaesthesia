@@ -4,11 +4,11 @@ export class Instrument {
     this.synth.toMaster();
     this.synth.volume.value = volume;
   }
-  triggerAttackRelease = (note, duration, time) => {
+  triggerAttackRelease(note, duration, time) {
     if (note) {
       this.synth.triggerAttackRelease(note, duration, time);
     } else {
       this.synth.triggerAttackRelease(duration, time);
     }
-  };
+  }
 }

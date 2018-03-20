@@ -9,7 +9,7 @@ export const play = () => {
 
   const generatedSettings = song.play();
 
-  const bpm = utils.randomIntBetween(70, 130);
+  const bpm = utils.randomIntBetween(70, 110);
   generatedSettings.bpm = bpm;
 
   Tone.Master.volume.value = -32;

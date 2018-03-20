@@ -28,7 +28,7 @@ export const chordProgressions = [
   [1, 5, 6, 3, 4, 1, 4, 5]
 ];
 
-const chords = [[1, 3, 5, 7], [1, 3, 5, 9], [1, 3, 5, 7, 9], [1, 3, 4, 7]];
+const chords = [[1, 3, 5], [1, 3, 5, 7], [1, 3, 5, 9], [1, 3, 5, 7, 9], [1, 3, 5, 7, 9, 11]];
 
 export const getRandomRootNote = () => {
   return roots[utils.randomIntBetween(0, roots.length - 1)];
@@ -106,16 +106,45 @@ export const scaleFromTonic = (tonic, intervals) => {
 
 export const bassLineForChordProgression = (chordProgression, key) => {
   const notesPerChord = 4;
+  const bassOctave = key.chordOctave - 1;
+  const transposeSemiTones = -1 * bassOctave * 12;
   const notes = [];
 
   for (const chord of chordProgression) {
-    const transposeSemiTones = -1 * (key.chordOctave - 1) * 12;
     const chordRoot = Tone.Frequency(chord[0]).transpose(transposeSemiTones);
-    const possibleNotesForCurrentChord = actualNotesFromScale(key.root, key.type, 1, 1);
+    const chordRootToNote = Tone.Frequency(chordRoot).toNote();
+    const scaleForCurrentChord = actualNotesFromScale(chordRootToNote, key.type, bassOctave, bassOctave);
     const notesForChord = [chordRoot];
     for (let i = 0; i < notesPerChord - 1; i++) {
-      notesForChord.push(utils.randomFromArray(possibleNotesForCurrentChord));
+      notesForChord.push(utils.randomFromArray(scaleForCurrentChord));
     }
+    notes.push(notesForChord);
+  }
+
+  return notes;
+};
+
+export const melodyForChordProgression = (chordProgression, key) => {
+  //const notesPerChord = 8;
+  const melodyOctave = key.chordOctave + 1;
+  const transposeSemiTones = melodyOctave - key.chordOctave * 12;
+  const notes = [];
+
+  for (const chord of chordProgression) {
+    const chordRoot = Tone.Frequency(chord[0]).transpose(transposeSemiTones);
+    const chordRootToNote = Tone.Frequency(chordRoot).toNote();
+
+    const scaleForCurrentChord = actualNotesFromScale(chordRootToNote, key.type, melodyOctave, melodyOctave);
+    const notesForChord = [chordRootToNote];
+
+    notesForChord.push(scaleForCurrentChord[1]);
+    notesForChord.push(scaleForCurrentChord[2]);
+    notesForChord.push(scaleForCurrentChord[1]);
+    notesForChord.push(scaleForCurrentChord[4]);
+    notesForChord.push(scaleForCurrentChord[4]);
+    notesForChord.push(scaleForCurrentChord[2]);
+    notesForChord.push(scaleForCurrentChord[0]);
+
     notes.push(notesForChord);
   }
 
