@@ -45,11 +45,18 @@ class App extends Component {
           <div className="col-md-12">
             <div className="form-group">
               <label htmlFor="seed">Seed</label>
-              <input type="text" className="form-control" id="seed" aria-describedby="emailHelp" placeholder="" onBlur={this.handleSeedChange} />
+              <input
+                type="text"
+                className="form-control"
+                id="seed"
+                aria-describedby="emailHelp"
+                placeholder="Feel the music"
+                onBlur={this.handleSeedChange}
+              />
             </div>
 
             <div>
-              <button type="button" onClick={this.handleNewSeed}>
+              <button className="btn btn-dark" type="button" onClick={this.handleNewSeed}>
                 Randomize!
               </button>
             </div>
