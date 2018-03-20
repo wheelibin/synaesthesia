@@ -29,6 +29,7 @@ export const play = () => {
 
   const generatedSettings = {
     key: `${songKey.root} (${songKey.typeName})`,
+    chordOctave: songKey.chordOctave,
     chordProgression: progression,
     chordProgressionBars: chordProgressionBars,
     kickRythym: kickRythym,
