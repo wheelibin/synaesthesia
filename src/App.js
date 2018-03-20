@@ -15,8 +15,8 @@ class App extends Component {
     this.setState({ seed: this.getCurrentTimeSeed() });
   }
   getCurrentTimeSeed() {
-    return "1521578619406";
-    //return new Date().getTime().toString();
+    //return "1521578619406";
+    return new Date().getTime().toString();
   }
   render() {
     Math.seedrandom(this.state.seed);
@@ -43,15 +43,6 @@ class App extends Component {
       <div className="container">
         <div className="row">
           <div className="col-md-12">
-            <p>Generated settings:</p>
-            <table className="table">
-              <tbody>{settingsRows}</tbody>
-            </table>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-md-12">
             <div className="form-group">
               <label htmlFor="seed">Seed</label>
               <input type="text" className="form-control" id="seed" aria-describedby="emailHelp" placeholder="" onBlur={this.handleSeedChange} />
@@ -62,6 +53,15 @@ class App extends Component {
                 Randomize!
               </button>
             </div>
+          </div>
+        </div>
+        <hr />
+        <div className="row">
+          <div className="col-md-12">
+            <p>Generated settings:</p>
+            <table className="table">
+              <tbody>{settingsRows}</tbody>
+            </table>
           </div>
         </div>
       </div>
