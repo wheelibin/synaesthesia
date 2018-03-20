@@ -2,5 +2,13 @@
   "extends": ["plugin:prettier/recommended", 
           "eslint:recommended",
     "plugin:react/recommended"],
-    "parser": "babel-eslint"
+    "parser": "babel-eslint",
+    "rules": {
+        "prettier/prettier": [
+            "error",
+            {
+                "printWidth": 150
+            }
+        ]
+    }
 }

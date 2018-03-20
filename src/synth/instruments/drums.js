@@ -7,7 +7,11 @@ export class KickDrum extends Instrument {
   }
 }
 export class HiHat extends Instrument {
-  constructor() {
+  constructor(addReverb) {
     super(new Tone.NoiseSynth(), 16);
+    if (addReverb) {
+      const reverb = new Tone.Freeverb().toMaster();
+      this.synth.connect(reverb);
+    }
   }
 }

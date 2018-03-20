@@ -4,14 +4,7 @@ import Tone from "tone";
 // import * as utils from "../utils";
 // import instruments from "./instruments";
 
-export const addChordProgression = (
-  startTime,
-  chordProgression,
-  instrument,
-  noteLength,
-  interval,
-  shouldLoop
-) => {
+export const addChordProgression = (startTime, chordProgression, instrument, noteLength, interval, shouldLoop) => {
   const loop = new Tone.Loop(function(time) {
     //Take first chord
     const currentChord = chordProgression.shift();
@@ -40,14 +33,7 @@ export const addDrums = (startTime, note, instrument, pattern, shouldLoop) => {
   sequencer.start(startTime);
 };
 
-export const addSoloPart = (
-  startTime,
-  notes,
-  instrument,
-  noteLength,
-  pattern,
-  shouldLoop
-) => {
+export const addSoloPart = (startTime, notes, instrument, noteLength, pattern, shouldLoop) => {
   const sequencer = new Tone.Sequence(
     function(time, hit) {
       if (hit === 1) {
@@ -64,21 +50,13 @@ export const addSoloPart = (
   sequencer.start(startTime);
 };
 
-export const addRepeatingSoloPart = (
-  startTime,
-  notes,
-  instrument,
-  noteLength,
-  pattern,
-  repeatTimes,
-  shouldLoop
-) => {
+export const addRepeatingSoloPart = (startTime, notes, instrument, noteLength, pattern, repeatTimes, shouldLoop) => {
   const newSequence = [];
 
   for (const section of notes) {
-    for (let i = 0; i < repeatTimes; i++) {
-      for (let i = 0; i < section.length; i++) {
-        const note = section[i];
+    for (let ri = 0; ri < repeatTimes; ri++) {
+      for (let ni = 0; ni < section.length; ni++) {
+        const note = section[ni];
         newSequence.push(note);
       }
     }

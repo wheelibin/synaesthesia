@@ -1,7 +1,29 @@
 import Tone from "tone";
 import * as bass from "./bass";
+import { Instrument } from "./instrument";
 
-export const SwirlyChorusWithSubBass = function() {
+export class SimpleSine extends Instrument {
+  constructor() {
+    super(new Tone.PolySynth(6, Tone.Synth), 24);
+    this.synth.set({
+      oscillator: {
+        type: "fatsine"
+      },
+      envelope: {
+        attack: 0.2,
+        decay: 0.1,
+        sustain: 1,
+        release: 1
+      },
+      portamento: 0.2
+    });
+    this.synth.volume.value = 10;
+    const reverb = new Tone.Freeverb().toMaster();
+    this.synth.connect(reverb);
+  }
+}
+
+export const SwirlySawtoothChorusWithSubBass = function() {
   const chordSynth = new Tone.PolySynth(6, Tone.Synth);
   chordSynth.set({
     oscillator: {

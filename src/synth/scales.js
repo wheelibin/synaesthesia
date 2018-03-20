@@ -15,6 +15,18 @@ export const scales = {
   majorPentatonic: [2, 2, 3, 2]
 };
 
+export const chordProgressions = [
+  [1, 5, 4, 4, 1, 5, 1, 5],
+  [1, 6, 4, 5],
+  [1, 4, 7, 4],
+  [2, 5, 1],
+  [1, 5, 7, 4],
+  [6, 2, 5, 1],
+  [1, 5, 6, 3],
+  [1, 4, 2, 5],
+  [1, 5, 6, 3, 4, 1, 4, 5]
+];
+
 export const getRandomRootNote = () => {
   return roots[utils.randomIntBetween(0, roots.length - 1)];
 };
@@ -38,32 +50,26 @@ export const actualNotesFromScale = (tonic, scale, lowOctave, highOctave) => {
   return notes;
 };
 
-export const getRandomChordProgressionForKey = (key, mainOctave) => {
+export const getRandomChordProgressionForKey = key => {
   const progressionRootNotes = chordFromScale(
-    [1, 3, 4, 6],
+    chordProgressions[utils.randomIntBetween(0, chordProgressions.length - 1)],
     key.root,
     key.type,
-    mainOctave
+    key.chordOctave
   );
 
   const progression = [];
 
   for (const progressionRootNote of progressionRootNotes) {
-    progression.push(
-      chordFromScale([1, 3, 5, 7], progressionRootNote, key.type, mainOctave)
-    );
+    const chord = [1, 3, 5, 7];
+    progression.push(chordFromScale(chord, progressionRootNote, key.type, key.chordOctave));
   }
 
   return progression;
 };
 
 export const chordFromScale = (chordToneIndexes, tonic, scale, mainOctave) => {
-  const fullScale = actualNotesFromScale(
-    tonic,
-    scale,
-    mainOctave,
-    mainOctave + 1
-  );
+  const fullScale = actualNotesFromScale(tonic, scale, mainOctave, mainOctave + 1);
 
   const filteredScale = [];
   for (const index of chordToneIndexes) {
@@ -91,19 +97,12 @@ export const bassLineForChordProgression = (chordProgression, key) => {
   const notes = [];
 
   for (const chord of chordProgression) {
-    const chordRoot = Tone.Frequency(chord[0]).transpose(-12);
-    const possibleNotesForCurrentChord = actualNotesFromScale(
-      key.root,
-      key.type,
-      1,
-      1
-    );
+    const transposeSemiTones = -1 * (key.chordOctave - 1) * 12;
+    const chordRoot = Tone.Frequency(chord[0]).transpose(transposeSemiTones);
+    const possibleNotesForCurrentChord = actualNotesFromScale(key.root, key.type, 1, 1);
     const notesForChord = [chordRoot];
     for (let i = 0; i < notesPerChord - 1; i++) {
-      const rnd = utils.randomIntBetween(
-        0,
-        possibleNotesForCurrentChord.length - 1
-      );
+      const rnd = utils.randomIntBetween(0, possibleNotesForCurrentChord.length - 1);
       notesForChord.push(possibleNotesForCurrentChord[rnd]);
     }
     notes.push(notesForChord);
