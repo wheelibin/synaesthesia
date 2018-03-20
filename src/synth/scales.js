@@ -27,6 +27,8 @@ export const chordProgressions = [
   [1, 5, 6, 3, 4, 1, 4, 5]
 ];
 
+const chords = [[1, 3, 5, 7], [1, 3, 5, 9], [1, 3, 5, 7, 9], [1, 3, 4, 7]];
+
 export const getRandomRootNote = () => {
   return roots[utils.randomIntBetween(0, roots.length - 1)];
 };
@@ -61,7 +63,7 @@ export const getRandomChordProgressionForKey = key => {
   const progression = [];
 
   for (const progressionRootNote of progressionRootNotes) {
-    const chord = [1, 3, 5, 7];
+    const chord = utils.randomFromArray(chords);
     progression.push(chordFromScale(chord, progressionRootNote, key.type, key.chordOctave));
   }
 
