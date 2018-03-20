@@ -4,7 +4,7 @@ import * as synth from "./synth/synth";
 class App extends Component {
   constructor() {
     super();
-    this.state = { seed: new Date().getTime() };
+    this.state = { seed: this.getCurrentTimeSeed() };
     this.handleSeedChange = this.handleSeedChange.bind(this);
     this.handleNewSeed = this.handleNewSeed.bind(this);
   }
@@ -12,9 +12,11 @@ class App extends Component {
     this.setState({ seed: event.target.value });
   }
   handleNewSeed() {
-    this.setState({ seed: new Date().getTime() });
+    this.setState({ seed: this.getCurrentTimeSeed() });
   }
-
+  getCurrentTimeSeed() {
+    return new Date().getTime().toString();
+  }
   render() {
     Math.seedrandom(this.state.seed);
     const generatedSettings = synth.play();

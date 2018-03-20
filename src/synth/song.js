@@ -5,9 +5,11 @@ import * as rythyms from "./rythyms";
 import * as utils from "../utils";
 
 export const play = () => {
+  const keyType = scales.getRandomScaleType();
   const songKey = {
     root: scales.getRandomRootNote(),
-    type: scales.getRandomScaleType(),
+    type: keyType.intervals,
+    typeName: keyType.type,
     chordOctave: utils.randomIntBetween(2, 4)
   };
 
@@ -15,14 +17,18 @@ export const play = () => {
   const chordProgression = scales.getChordProgressionForKey(songKey, progression);
   const possibleChordSectionLengths = [1, 2, 4, 8];
   const chordProgressionBars = utils.randomFromArray(possibleChordSectionLengths);
-  const possibleChordPads = [new instruments.pads.SimpleSine(), new instruments.pads.SwirlySawtoothChorusWithSubBass()];
+  const possibleChordPads = [
+    new instruments.pads.SimpleSine(),
+    new instruments.pads.SwirlySawtoothChorusWithSubBass(),
+    new instruments.pads.SoftSquareFm()
+  ];
   const kickRythym = rythyms.randomKickRythym();
   const hihatRythym = rythyms.randomHiHatRythym();
   const bassLinePattern = rythyms.randomBassRythym();
   const chordInstrument = utils.randomFromArray(possibleChordPads);
 
   const generatedSettings = {
-    songKey: songKey,
+    key: `${songKey.root} (${songKey.typeName})`,
     chordProgression: progression,
     chordProgressionBars: chordProgressionBars,
     kickRythym: kickRythym,

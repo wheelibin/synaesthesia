@@ -55,7 +55,8 @@ export const actualNotesFromScale = (tonic, scale, lowOctave, highOctave) => {
 
 export const getRandomScaleType = () => {
   var keys = Object.keys(scales);
-  return scales[keys[(keys.length * Math.random()) << 0]];
+  var randomType = keys[(keys.length * Math.random()) << 0];
+  return { type: randomType, intervals: scales[randomType] };
 };
 
 export const getRandomChordProgressionForKey = key => {
