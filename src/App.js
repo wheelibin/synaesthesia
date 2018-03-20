@@ -14,9 +14,12 @@ class App extends Component {
     // );
     //Math.seedrandom("None but ourselves can free our minds");
     //Math.seedrandom("!");
+
+    const randomSeed = Math.seedrandom(new Date().getTime());
+
     synth.play();
 
-    return <div className="App" />;
+    return <div className="App">Seeded with: {randomSeed}</div>;
   }
 }
 
