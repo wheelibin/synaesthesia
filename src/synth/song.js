@@ -53,9 +53,10 @@ export const play = () => {
   parts.addDrums("0:0:0", undefined, new instruments.drums.OpenHat(openHatFrequency), openHatRythym, 0.8, true);
 
   const repeatEachSectionTimes = chordProgressionBars / (bassLinePattern.length / 16);
+  const notesInPattern = bassLinePattern.filter(hit => hit === 1).length;
   parts.addRepeatingSoloPart(
     "0:0:0",
-    scales.bassLineForChordProgression(chordProgression, songKey, stayInKey),
+    scales.bassLineForChordProgression(notesInPattern, chordProgression, songKey, stayInKey),
     bassInstrument,
     "4n",
     bassLinePattern,

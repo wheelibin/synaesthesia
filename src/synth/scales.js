@@ -148,8 +148,7 @@ export const scaleFromTonic = (tonic, intervals) => {
   return scale;
 };
 
-export const bassLineForChordProgression = (chordProgression, key, stayInKey) => {
-  const notesPerChord = 4;
+export const bassLineForChordProgression = (notesPerChord, chordProgression, key, stayInKey) => {
   const bassOctave = key.chordOctave - 1;
 
   const transposeSemiTones = -1 * bassOctave * 12;
