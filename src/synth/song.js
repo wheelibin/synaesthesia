@@ -47,10 +47,10 @@ export const play = () => {
 
   parts.addChordProgression("0:0:0", chordProgression, chordInstrument, `${chordProgressionBars}m`, `${chordProgressionBars}m`, true);
 
-  parts.addDrums("0:0:0", songKey.root + "0", new instruments.drums.KickDrum(), kickRythym, true);
-  parts.addDrums("0:0:0", undefined, new instruments.drums.HiHat(), hihatRythym, true);
-  parts.addDrums("0:0:0", undefined, new instruments.drums.Shaker(), shakerRythym, true);
-  parts.addDrums("0:0:0", undefined, new instruments.drums.OpenHat(openHatFrequency), openHatRythym, true);
+  parts.addDrums("2:0:0", songKey.root + "0", new instruments.drums.KickDrum(), kickRythym, true);
+  parts.addDrums("4:0:0", undefined, new instruments.drums.HiHat(), hihatRythym, true);
+  parts.addDrums("5:0:0", undefined, new instruments.drums.Shaker(), shakerRythym, true);
+  parts.addDrums("6:0:0", undefined, new instruments.drums.OpenHat(openHatFrequency), openHatRythym, true);
 
   const repeatEachSectionTimes = chordProgressionBars / (bassLinePattern.length / 16);
   parts.addRepeatingSoloPart(
