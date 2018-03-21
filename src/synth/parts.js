@@ -18,7 +18,7 @@ export const addChordProgression = (startTime, chordProgression, instrument, not
   loop.start(startTime);
 };
 
-export const addDrums = (startTime, note, instrument, pattern, shouldLoop) => {
+export const addDrums = (startTime, note, instrument, pattern, probability, shouldLoop) => {
   const sequencer = new Tone.Sequence(
     function(time, hit) {
       if (hit === 1) {
@@ -28,7 +28,7 @@ export const addDrums = (startTime, note, instrument, pattern, shouldLoop) => {
     pattern,
     "16n"
   );
-
+  sequencer.probability = probability;
   sequencer.loop = shouldLoop;
   sequencer.start(startTime);
 };

@@ -1,11 +1,11 @@
 import Tone from "tone";
 import * as song from "./song";
-import * as constants from "./constants";
 import * as utils from "../utils";
 
 export const play = () => {
   Tone.context.close();
   Tone.context = new AudioContext();
+  Tone.context.latencyHint = "playback";
 
   const generatedSettings = song.play();
 
@@ -14,7 +14,7 @@ export const play = () => {
 
   Tone.Master.volume.value = -32;
   Tone.Transport.bpm.value = bpm;
-  Tone.Transport.start(constants.almostImmediately);
+  Tone.Transport.start(1);
   //Tone.Transport.stop(60);
 
   return generatedSettings;
