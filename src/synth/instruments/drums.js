@@ -10,8 +10,7 @@ export class HiHat extends Instrument {
   constructor(addReverb) {
     super(new Tone.NoiseSynth(), 16);
     if (addReverb) {
-      const reverb = new Tone.Freeverb().toMaster();
-      this.synth.connect(reverb);
+      this.synth.send("reverb", -12);
     }
   }
 }
@@ -39,8 +38,7 @@ export class Shaker extends Instrument {
       }),
       16
     );
-    const reverb = new Tone.Freeverb().toMaster();
-    this.synth.connect(reverb);
+    this.synth.send("reverb", -12);
   }
 }
 

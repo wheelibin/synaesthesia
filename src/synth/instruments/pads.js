@@ -18,8 +18,8 @@ export class SimpleSine extends Instrument {
       portamento: 0.2
     });
     this.synth.volume.value = 10;
-    const reverb = new Tone.Freeverb().toMaster();
-    this.synth.connect(reverb);
+
+    this.synth.send("reverb", -12);
   }
 }
 
@@ -41,9 +41,8 @@ export class SoftSquareFm extends Instrument {
     this.synth.volume.value = 10;
 
     const filter = new Tone.Filter(400, "lowpass").toMaster();
-    const reverb = new Tone.Freeverb().toMaster();
-
-    this.synth.chain(filter, reverb);
+    this.synth.send("reverb", -12);
+    this.synth.connect(filter);
   }
 }
 
