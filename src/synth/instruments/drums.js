@@ -22,7 +22,7 @@ export class OpenHat extends Instrument {
       new Tone.MetalSynth({
         frequency: frequency
       }),
-      16
+      10
     );
   }
 }

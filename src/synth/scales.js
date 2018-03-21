@@ -3,16 +3,54 @@ import * as utils from "../utils";
 
 const roots = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
 export const scales = {
-  major: [2, 2, 1, 2, 2, 2],
-  naturalMinor: [2, 1, 2, 2, 1, 2],
-  harmonicMinor: [2, 1, 2, 2, 1, 3],
-  melodicMinor: [2, 1, 2, 2, 2, 2],
-  dorian: [2, 1, 2, 2, 2, 1],
-  mixolydian: [2, 2, 1, 2, 2, 1],
-  ahavaRaba: [1, 3, 1, 2, 1, 2],
-  phrygian: [1, 2, 2, 2, 1, 2],
-  minorPentatonic: [3, 2, 2, 3],
-  majorPentatonic: [2, 2, 3, 2]
+  Major: [2, 2, 1, 2, 2, 2],
+  Minor: [2, 1, 2, 2, 1, 2],
+  HarmonicMinor: [2, 1, 2, 2, 1, 3],
+  MelodicMinor: [2, 1, 2, 2, 2, 2],
+  PentatonicMajor: [2, 2, 3, 2],
+  PentatonicMinor: [3, 2, 2, 3],
+  PentatonicBlues: [3, 2, 1, 1],
+  PentatonicNeutral: [2, 3, 2],
+  Ionian: [2, 2, 1, 2, 2, 2],
+  Aeolian: [2, 1, 2, 2, 1, 2],
+  Dorian: [2, 1, 2, 2, 2, 1],
+  Mixolydian: [2, 2, 1, 2, 2, 1],
+  Phrygian: [1, 2, 2, 2, 1, 2],
+  Lydian: [2, 2, 2, 1, 2, 2],
+  Locrian: [1, 2, 2, 1, 2, 2],
+  Dominant7th: [2, 2, 1, 2, 2, 1],
+  Blues: [3, 2, 1, 1, 3]
+  //   Dimhalf: [1, 2, 1, 2, 1, 2],
+  //   Dimwhole: [2, 1, 2, 1, 2, 1],
+  //   Whole: [2, 2, 2, 2],
+  //   Augmented: [3, 1, 3, 1],
+  //   Chromatic: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  //   RoumanianMinor: [2, 1, 3, 1, 2, 1],
+  //   SpanishGypsy: [1, 3, 1, 2, 1, 2],
+
+  //   Diatonic: [2, 2, 3, 2],
+  //   DoubleHarmonic: [1, 3, 1, 2, 1, 3],
+  //   EightToneSpanish: [1, 2, 1, 1, 1, 2, 2],
+  //   Enigmatic: [1, 3, 2, 2, 2, 1],
+  //   LeadingWholeTone: [2, 2, 2, 2, 1],
+  //   LydianAugmented: [2, 2, 2, 2, 1, 2],
+  //   NeopolitanMajor: [1, 2, 2, 2, 2, 2],
+  //   NeopolitanMinor: [1, 2, 2, 2, 1, 2],
+  //   Pelog: [1, 2, 3, 4],
+  //   Prometheus: [2, 2, 2, 3, 1],
+  //   PrometheusNeopolitan: [1, 3, 2, 3, 1],
+  //   SixToneSymmetrical: [1, 3, 1, 3, 1],
+  //   SuperLocrian: [1, 2, 1, 2, 2, 2],
+  //   LydianMinor: [2, 2, 2, 1, 1, 2],
+  //   LydianDiminished: [2, 1, 3, 1, 1, 2],
+  //   NineToneScale: [2, 1, 1, 2, 1, 1, 1, 2],
+  //   AuxiliaryDiminished: [2, 1, 2, 1, 2, 1, 2],
+  //   AuxiliaryAugmented: [2, 2, 2, 2, 2],
+  //   AuxiliaryDimBlues: [1, 2, 1, 2, 1, 2, 1],
+  //   MajorLocrian: [2, 2, 1, 1, 2, 2],
+  //   Overtone: [2, 2, 2, 1, 2, 1],
+  //   DiminishedWholeTone: [1, 2, 1, 2, 2, 2],
+  //   PureMinor: [2, 1, 2, 2, 1, 2]
 };
 
 export const chordProgressions = [
@@ -59,15 +97,21 @@ export const getRandomScaleType = () => {
   return { type: randomType, intervals: scales[randomType] };
 };
 
-export const getChordProgressionForKey = (key, progression, chordTypesToUse) => {
+export const getChordProgressionForKey = (key, progression, chordTypesToUse, stayInKey) => {
   const progressionRootNotes = chordFromScale(progression, key.root, key.type, key.chordOctave);
 
   const progressionNotes = [];
 
   for (let index = 0; index < progressionRootNotes.length; index++) {
     const progressionRootNote = progressionRootNotes[index];
+    const progressionIndex = progression[index];
     const chord = chordTypesToUse[index];
-    progressionNotes.push(chordFromScale(chord, progressionRootNote, key.type, key.chordOctave));
+
+    if (stayInKey) {
+      progressionNotes.push(chordFromScale(chord, key.root, key.type, key.chordOctave, progressionIndex));
+    } else {
+      progressionNotes.push(chordFromScale(chord, progressionRootNote, key.type, key.chordOctave));
+    }
   }
   return progressionNotes;
 };
@@ -80,12 +124,12 @@ export const getRandomChordTypesForProgression = progressionRootNotes => {
   return chordTypes;
 };
 
-export const chordFromScale = (chordToneIndexes, tonic, scale, mainOctave) => {
+export const chordFromScale = (chordToneIndexes, tonic, scale, mainOctave, indexOffset = 0) => {
   const fullScale = actualNotesFromScale(tonic, scale, mainOctave, mainOctave + 1);
 
   const filteredScale = [];
   for (const index of chordToneIndexes) {
-    filteredScale.push(fullScale[index - 1]);
+    filteredScale.push(fullScale[index + indexOffset - 1]);
   }
 
   return filteredScale;
@@ -104,16 +148,19 @@ export const scaleFromTonic = (tonic, intervals) => {
   return scale;
 };
 
-export const bassLineForChordProgression = (chordProgression, key) => {
+export const bassLineForChordProgression = (chordProgression, key, stayInKey) => {
   const notesPerChord = 4;
   const bassOctave = key.chordOctave - 1;
+
   const transposeSemiTones = -1 * bassOctave * 12;
   const notes = [];
 
   for (const chord of chordProgression) {
     const chordRoot = Tone.Frequency(chord[0]).transpose(transposeSemiTones);
-    const chordRootToNote = Tone.Frequency(chordRoot).toNote();
-    const scaleForCurrentChord = actualNotesFromScale(chordRootToNote, key.type, bassOctave, bassOctave);
+    const scaleTonicForChord = stayInKey ? key.root : Tone.Frequency(chordRoot).toNote();
+
+    const scaleForCurrentChord = actualNotesFromScale(scaleTonicForChord, key.type, bassOctave, bassOctave);
+
     const notesForChord = [chordRoot];
     for (let i = 0; i < notesPerChord - 1; i++) {
       notesForChord.push(utils.randomFromArray(scaleForCurrentChord));
