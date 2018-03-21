@@ -24,18 +24,8 @@ export const play = () => {
   const possibleBassInstruments = [instruments.bass.FastAttackSquare];
   const kickRythym = rythyms.randomKickRythym();
   const hihatRythym = rythyms.randomHiHatRythym();
-  const shakerhihatRythym = utils.randomFromArray([
-    [0, 0, 0, 0, 1, 0, 0, 0],
-    [0, 0, 0, 0, 0, 1, 0, 0],
-    [0, 0, 0, 1, 0, 0, 0, 1],
-    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0]
-  ]);
-  const openHatRythym = utils.randomFromArray([
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
-  ]);
-
+  const shakerRythym = rythyms.randomShakerRythym();
+  const openHatRythym = rythyms.randomOpenHatRythym();
   const bassLinePattern = rythyms.randomBassRythym();
   //const melodyPattern = [1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0];
   const chordInstrument = new (utils.randomFromArray(possibleChordPads))();
@@ -59,7 +49,7 @@ export const play = () => {
 
   parts.addDrums("0:0:0", songKey.root + "0", new instruments.drums.KickDrum(), kickRythym, true);
   parts.addDrums("0:0:0", undefined, new instruments.drums.HiHat(), hihatRythym, true);
-  parts.addDrums("0:0:0", undefined, new instruments.drums.Shaker(), shakerhihatRythym, true);
+  parts.addDrums("0:0:0", undefined, new instruments.drums.Shaker(), shakerRythym, true);
   parts.addDrums("0:0:0", undefined, new instruments.drums.OpenHat(openHatFrequency), openHatRythym, true);
 
   const repeatEachSectionTimes = chordProgressionBars / (bassLinePattern.length / 16);
