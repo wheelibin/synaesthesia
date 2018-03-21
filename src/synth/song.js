@@ -14,9 +14,10 @@ export const play = () => {
     chordOctave: utils.randomIntBetween(2, 4)
   };
 
+  const stayInKey = true;
   const progressionIntervals = utils.randomFromArray(scales.chordProgressions);
   const chordTypesToUseInProgression = scales.getRandomChordTypesForProgression(progressionIntervals);
-  const chordProgression = scales.getChordProgressionForKey(songKey, progressionIntervals, chordTypesToUseInProgression, true);
+  const chordProgression = scales.getChordProgressionForKey(songKey, progressionIntervals, chordTypesToUseInProgression, stayInKey);
   const possibleChordSectionLengths = [1, 2, 4, 8];
   const chordProgressionBars = utils.randomFromArray(possibleChordSectionLengths);
   const possibleChordPads = [instruments.pads.SimpleSine, instruments.pads.SwirlySawtoothChorusWithSubBass, instruments.pads.SoftSquareFm];
@@ -64,7 +65,7 @@ export const play = () => {
   const repeatEachSectionTimes = chordProgressionBars / (bassLinePattern.length / 16);
   parts.addRepeatingSoloPart(
     "0:0:0",
-    scales.bassLineForChordProgression(chordProgression, songKey, true),
+    scales.bassLineForChordProgression(chordProgression, songKey, stayInKey),
     bassInstrument,
     "4n",
     bassLinePattern,
