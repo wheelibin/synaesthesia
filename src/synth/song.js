@@ -11,7 +11,7 @@ export const play = () => {
     root: scales.getRandomRootNote(),
     type: keyType.intervals,
     typeName: keyType.type,
-    chordOctave: utils.randomIntBetween(2, 4)
+    chordOctave: utils.randomIntBetween(2, 3)
   };
 
   const stayInKey = true;

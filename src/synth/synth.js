@@ -12,7 +12,7 @@ export const play = () => {
 
   const generatedSettings = song.play();
 
-  const bpm = utils.randomIntBetween(70, 110);
+  const bpm = utils.randomIntBetween(70, 90);
   generatedSettings.bpm = bpm;
 
   Tone.Master.volume.value = -32;
@@ -21,4 +21,8 @@ export const play = () => {
   //Tone.Transport.stop(60);
 
   return generatedSettings;
+};
+
+export const stop = () => {
+  Tone.context.close();
 };
