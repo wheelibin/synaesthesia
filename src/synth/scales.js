@@ -154,14 +154,17 @@ export const bassLineForChordProgression = (notesPerChord, chordProgression, key
   const transposeSemiTones = -1 * bassOctave * 12;
   const notes = [];
 
-  for (const chord of chordProgression) {
+  for (let i = 0; i < chordProgression.length; i++) {
+    const chord = chordProgression[i];
+    const noteCountForChord = notesPerChord[i];
+
     const chordRoot = Tone.Frequency(chord[0]).transpose(transposeSemiTones);
     const scaleTonicForChord = stayInKey ? key.root : Tone.Frequency(chordRoot).toNote();
 
     const scaleForCurrentChord = actualNotesFromScale(scaleTonicForChord, key.type, bassOctave, bassOctave);
 
     const notesForChord = [chordRoot];
-    for (let i = 0; i < notesPerChord - 1; i++) {
+    for (let i = 0; i < noteCountForChord - 1; i++) {
       notesForChord.push(utils.randomFromArray(scaleForCurrentChord));
     }
     notes.push(notesForChord);

@@ -50,14 +50,23 @@ export const addSoloPart = (startTime, notes, instrument, noteLength, pattern, s
   sequencer.start(startTime);
 };
 
-export const addRepeatingSoloPart = (startTime, notes, instrument, noteLength, pattern, repeatTimes, shouldLoop) => {
-  const newSequence = [];
-
+export const addRepeatingSoloPart = (startTime, notes, instrument, noteLength, patterns, repeatTimes, shouldLoop) => {
+  const expandedSequence = [];
   for (const section of notes) {
     for (let ri = 0; ri < repeatTimes; ri++) {
       for (let ni = 0; ni < section.length; ni++) {
         const note = section[ni];
-        newSequence.push(note);
+        expandedSequence.push(note);
+      }
+    }
+  }
+
+  const expandedPattern = [];
+  for (const section of patterns) {
+    for (let ri = 0; ri < repeatTimes; ri++) {
+      for (let ni = 0; ni < section.length; ni++) {
+        const rythym = section[ni];
+        expandedPattern.push(rythym);
       }
     }
   }
@@ -65,12 +74,12 @@ export const addRepeatingSoloPart = (startTime, notes, instrument, noteLength, p
   const sequencer = new Tone.Sequence(
     function(time, hit) {
       if (hit === 1) {
-        const note = newSequence.shift();
-        newSequence.push(note);
+        const note = expandedSequence.shift();
+        expandedSequence.push(note);
         instrument.triggerAttackRelease(note, noteLength, time);
       }
     },
-    pattern,
+    expandedPattern,
     "16n"
   );
 

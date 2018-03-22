@@ -26,7 +26,11 @@ export const play = () => {
   const hihatRythym = rythyms.randomHiHatRythym();
   const shakerRythym = rythyms.randomShakerRythym();
   const openHatRythym = rythyms.randomOpenHatRythym();
-  const bassLinePattern = rythyms.randomBassRythym();
+
+  const bassLinePatterns = [];
+  for (let i = 0; i < chordProgression.length; i++) {
+    bassLinePatterns.push(rythyms.randomBassRythym());
+  }
   //const melodyPattern = [1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0];
   const chordInstrument = new (utils.randomFromArray(possibleChordPads))();
   const bassInstrument = new (utils.randomFromArray(possibleBassInstruments))();
@@ -40,7 +44,7 @@ export const play = () => {
     chordTypesToUseInProgression: chordTypesToUseInProgression,
     kickRythym: kickRythym,
     hihatRythym: hihatRythym,
-    bassLinePattern: bassLinePattern,
+    bassLinePatterns: bassLinePatterns,
     chordInstrument: chordInstrument.constructor.name,
     bassInstrument: bassInstrument.constructor.name
   };
@@ -52,15 +56,18 @@ export const play = () => {
   parts.addDrums("0:0:0", undefined, new instruments.drums.Shaker(), shakerRythym, 0.8, true);
   parts.addDrums("0:0:0", undefined, new instruments.drums.OpenHat(openHatFrequency), openHatRythym, 0.8, true);
 
-  const repeatEachSectionTimes = chordProgressionBars / (bassLinePattern.length / 16);
-  const notesInPattern = bassLinePattern.filter(hit => hit === 1).length;
+  const notesPerChord = [];
+  for (const bassLinePattern of bassLinePatterns) {
+    notesPerChord.push(bassLinePattern.filter(hit => hit === 1).length);
+  }
+
   parts.addRepeatingSoloPart(
     "0:0:0",
-    scales.bassLineForChordProgression(notesInPattern, chordProgression, songKey, stayInKey),
+    scales.bassLineForChordProgression(notesPerChord, chordProgression, songKey, stayInKey),
     bassInstrument,
     "4n",
-    bassLinePattern,
-    repeatEachSectionTimes,
+    bassLinePatterns,
+    chordProgressionBars,
     true
   );
 
