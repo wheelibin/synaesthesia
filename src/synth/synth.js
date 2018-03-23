@@ -16,9 +16,12 @@ export const play = seed => {
   const bpm = utils.randomIntBetween(70, 90);
   generatedSettings.bpm = bpm;
 
+  const swing = Math.random();
+  generatedSettings.swing = swing;
+
   Tone.Master.volume.value = -32;
   Tone.Transport.bpm.value = bpm;
-  Tone.Transport.swing = 1;
+  Tone.Transport.swing = swing;
   Tone.Transport.start(1);
 
   return generatedSettings;
