@@ -39,7 +39,6 @@ class App extends Component {
     } else {
       this.play();
     }
-
     this.setState({ isPlaying: !this.state.isPlaying });
   }
 
@@ -109,7 +108,7 @@ class App extends Component {
 
     return (
       <div className="container text-center">
-        <h1 className="display-1">Synesthesia</h1>
+        <h1 className="display-1">Synaesthesia</h1>
         <p className="lead">A Web Audio experiment</p>
 
         <div className="main-panel col-sm-6 offset-3">
