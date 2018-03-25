@@ -42,6 +42,7 @@ export const play = () => {
     chordProgression: progressionIntervals,
     chordProgressionBars: chordProgressionBars,
     chordTypesToUseInProgression: chordTypesToUseInProgression,
+    chordProgressionNotes: scales.rootNotesFromChordProgression(chordProgression),
     kickRythym: kickRythym,
     hihatRythym: hihatRythym,
     bassLinePatterns: bassLinePatterns,

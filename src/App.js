@@ -44,10 +44,22 @@ class App extends Component {
 
   render() {
     const settingsRows = [];
-    let nowPlaying;
+
+    let nowPlayingSection;
     if (this.state.generatedSettings) {
       if (this.state.isPlaying) {
-        nowPlaying = `Currently playing a little ditty in the key of ${this.state.generatedSettings.key}`;
+        nowPlayingSection = (
+          <div className="now-playing-section row">
+            <div className="col-sm-12">
+              <h5>Key</h5>
+              <p className="now-playing">{this.state.generatedSettings.key}</p>
+            </div>
+            <div className="col-sm-12">
+              <h5>Chord Progression</h5>
+              <p className="now-playing-chords">{this.state.generatedSettings.chordProgressionNotes}</p>
+            </div>
+          </div>
+        );
       }
 
       settingsRows.push(
@@ -72,12 +84,6 @@ class App extends Component {
       <div className="generation-options">
         <div className="row">
           <div className="col-sm-12 text-center">
-            {/* <p className="text-justify">
-              The music is randomly generated within certain musical constraints, the seed for the currently playing song is shown below.
-            </p>
-            <p className="text-justify">
-              Try experimenting by entering your own seed, it can be any text string - why not see what your name sounds like? :-)
-            </p> */}
             <p className="text-justify">
               The music is randomly generated within certain musical constraints, the seed for the currently playing song is shown below. This can be
               shared and entered again to recreate the exact combination of random parameters used to generate this song. Try experimenting by
@@ -88,7 +94,7 @@ class App extends Component {
               <div className="form-group">
                 <input
                   type="text"
-                  className="form-control form-control-lg text-center"
+                  className="form-control form-control-lg text-center seed-input"
                   id="seed"
                   onChange={this.handleSeedChange}
                   placeholder="A word or phrase to generate music from"
@@ -117,7 +123,7 @@ class App extends Component {
               <button onClick={this.playButtonClick} className="main-panel__play-button btn btn-block btn-outline-light btn-lg">
                 {this.state.playButtonText}
               </button>
-              <span className="now-playing">{nowPlaying}</span>
+              {nowPlayingSection}
             </div>
           </div>
 

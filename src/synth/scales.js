@@ -97,21 +97,14 @@ export const getRandomScaleType = () => {
   return { type: randomType, intervals: scales[randomType] };
 };
 
-export const getChordProgressionForKey = (key, progression, chordTypesToUse, stayInKey) => {
+export const getChordProgressionForKey = (key, progression, chordTypesToUse) => {
   const progressionRootNotes = chordFromScale(progression, key.root, key.type, key.chordOctave);
 
   const progressionNotes = [];
-
   for (let index = 0; index < progressionRootNotes.length; index++) {
-    const progressionRootNote = progressionRootNotes[index];
     const progressionIndex = progression[index];
     const chord = chordTypesToUse[index];
-
-    if (stayInKey) {
-      progressionNotes.push(chordFromScale(chord, key.root, key.type, key.chordOctave, progressionIndex));
-    } else {
-      progressionNotes.push(chordFromScale(chord, progressionRootNote, key.type, key.chordOctave));
-    }
+    progressionNotes.push(chordFromScale(chord, key.root, key.type, key.chordOctave, progressionIndex));
   }
   return progressionNotes;
 };
@@ -148,7 +141,17 @@ export const scaleFromTonic = (tonic, intervals) => {
   return scale;
 };
 
-export const bassLineForChordProgression = (notesPerChord, chordProgression, key, stayInKey) => {
+export const rootNotesFromChordProgression = chordProgression => {
+  return chordProgression
+    .map(chord =>
+      Tone.Frequency(chord[0])
+        .toNote()
+        .replace(/[0-9]/g, "")
+    )
+    .join(", ");
+};
+
+export const bassLineForChordProgression = (notesPerChord, chordProgression, key) => {
   const bassOctave = key.chordOctave - 1;
 
   const transposeSemiTones = -1 * bassOctave * 12;
@@ -157,11 +160,8 @@ export const bassLineForChordProgression = (notesPerChord, chordProgression, key
   for (let i = 0; i < chordProgression.length; i++) {
     const chord = chordProgression[i];
     const noteCountForChord = notesPerChord[i];
-
     const chordRoot = Tone.Frequency(chord[0]).transpose(transposeSemiTones);
-    const scaleTonicForChord = stayInKey ? key.root : Tone.Frequency(chordRoot).toNote();
-
-    const scaleForCurrentChord = actualNotesFromScale(scaleTonicForChord, key.type, bassOctave, bassOctave);
+    const scaleForCurrentChord = actualNotesFromScale(key.root, key.type, bassOctave, bassOctave);
 
     const notesForChord = [chordRoot];
     for (let i = 0; i < noteCountForChord - 1; i++) {
