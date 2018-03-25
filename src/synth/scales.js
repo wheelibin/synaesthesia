@@ -151,17 +151,15 @@ export const rootNotesFromChordProgression = chordProgression => {
     .join(", ");
 };
 
-export const bassLineForChordProgression = (notesPerChord, chordProgression, key) => {
-  const bassOctave = key.chordOctave - 1;
-
-  const transposeSemiTones = -1 * bassOctave * 12;
+export const bassLineForChordProgression = (notesPerChord, chordProgression, key, octave) => {
+  const transposeSemiTones = -1 * octave * 12;
   const notes = [];
 
   for (let i = 0; i < chordProgression.length; i++) {
     const chord = chordProgression[i];
     const noteCountForChord = notesPerChord[i];
     const chordRoot = Tone.Frequency(chord[0]).transpose(transposeSemiTones);
-    const scaleForCurrentChord = actualNotesFromScale(key.root, key.type, bassOctave, bassOctave);
+    const scaleForCurrentChord = actualNotesFromScale(key.root, key.type, octave, octave);
 
     const notesForChord = [chordRoot];
     for (let i = 0; i < noteCountForChord - 1; i++) {

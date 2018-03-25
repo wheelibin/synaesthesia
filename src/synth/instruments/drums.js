@@ -52,7 +52,7 @@ export class DampenedOpenHat extends Instrument {
         resonance: 1000,
         octaves: 1.5
       }),
-      16
+      8
     );
   }
 }

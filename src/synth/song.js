@@ -14,10 +14,9 @@ export const play = () => {
     chordOctave: utils.randomIntBetween(2, 3)
   };
 
-  const stayInKey = true;
   const progressionIntervals = utils.randomFromArray(scales.chordProgressions);
   const chordTypesToUseInProgression = scales.getRandomChordTypesForProgression(progressionIntervals);
-  const chordProgression = scales.getChordProgressionForKey(songKey, progressionIntervals, chordTypesToUseInProgression, stayInKey);
+  const chordProgression = scales.getChordProgressionForKey(songKey, progressionIntervals, chordTypesToUseInProgression);
   const possibleChordSectionLengths = [1, 2, 4, 8];
   const chordProgressionBars = utils.randomFromArray(possibleChordSectionLengths);
   const possibleChordPads = [instruments.pads.SimpleSine, instruments.pads.SwirlySawtoothChorusWithSubBass, instruments.pads.SoftSquareFm];
@@ -50,21 +49,22 @@ export const play = () => {
     bassInstrument: bassInstrument.constructor.name
   };
 
-  parts.addChordProgression("0:0:0", chordProgression, chordInstrument, `${chordProgressionBars}m`, `${chordProgressionBars}m`, true);
-
   parts.addDrums("0:0:0", songKey.root + "0", new instruments.drums.KickDrum(), kickRythym, 1, true);
   parts.addDrums("0:0:0", undefined, new instruments.drums.HiHat(), hihatRythym, 0.9, true);
   parts.addDrums("0:0:0", undefined, new instruments.drums.Shaker(), shakerRythym, 0.8, true);
   parts.addDrums("0:0:0", undefined, new instruments.drums.OpenHat(openHatFrequency), openHatRythym, 0.8, true);
 
+  parts.addChordProgression("0:0:0", chordProgression, chordInstrument, `${chordProgressionBars}m`, `${chordProgressionBars}m`, true);
+
   const notesPerChord = [];
   for (const bassLinePattern of bassLinePatterns) {
     notesPerChord.push(bassLinePattern.filter(hit => hit === 1).length);
   }
+  const bassOctave = songKey.chordOctave - 1;
 
   parts.addRepeatingSoloPart(
     "0:0:0",
-    scales.bassLineForChordProgression(notesPerChord, chordProgression, songKey, stayInKey),
+    scales.bassLineForChordProgression(notesPerChord, chordProgression, songKey, bassOctave),
     bassInstrument,
     "4n",
     bassLinePatterns,
@@ -72,14 +72,5 @@ export const play = () => {
     true
   );
 
-  // parts.addRepeatingSoloPart(
-  //   "0:0:0",
-  //   scales.melodyForChordProgression(chordProgression, songKey),
-  //   new instruments.lead.SimpleSine(),
-  //   "4n",
-  //   melodyPattern,
-  //   repeatEachSectionTimes,
-  //   true
-  // );
   return generatedSettings;
 };
