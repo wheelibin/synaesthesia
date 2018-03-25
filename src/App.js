@@ -6,7 +6,7 @@ import "./App.css";
 class App extends Component {
   constructor() {
     super();
-    this.state = { seed: this.getCurrentTimeSeed(), playButtonText: "Play", generatedSettings: null, isPlaying: false };
+    this.state = { seed: "Jon Wheeler", playButtonText: "Play", generatedSettings: null, isPlaying: false };
     this.handleSeedChange = this.handleSeedChange.bind(this);
     this.handleNewSeed = this.handleNewSeed.bind(this);
     this.playButtonClick = this.playButtonClick.bind(this);
@@ -49,16 +49,20 @@ class App extends Component {
     if (this.state.generatedSettings) {
       if (this.state.isPlaying) {
         nowPlayingSection = (
-          <div className="now-playing-section row">
-            <div className="col-sm-12">
-              <h5>Key</h5>
-              <p className="now-playing">{this.state.generatedSettings.key}</p>
+          <section className="now-playing-section">
+            <div className="row">
+              <div className="col-sm-12">
+                <h5>Key</h5>
+                <p className="now-playing">{this.state.generatedSettings.key}</p>
+              </div>
             </div>
-            <div className="col-sm-12">
-              <h5>Chord Progression</h5>
-              <p className="now-playing-chords">{this.state.generatedSettings.chordProgressionNotes}</p>
+            <div className="row">
+              <div className="col-sm-12">
+                <h5>Chord Progression</h5>
+                <p className="now-playing-chords">{this.state.generatedSettings.chordProgressionNotes}</p>
+              </div>
             </div>
-          </div>
+          </section>
         );
       }
 
