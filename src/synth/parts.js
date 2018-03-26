@@ -14,7 +14,7 @@ export const addChordProgression = (startTime, chordProgression, instrument, not
   loop.start(startTime);
 };
 
-export const addDrums = (startTime, note, instrument, pattern, probability, shouldLoop) => {
+export const addDrums = (startTime, note, instrument, pattern, probability, shouldLoop, mutationFunction) => {
   const sequencer = new Tone.Sequence(
     function(time, hit) {
       if (hit === 1) {
@@ -27,6 +27,8 @@ export const addDrums = (startTime, note, instrument, pattern, probability, shou
   sequencer.probability = probability;
   sequencer.loop = shouldLoop;
   sequencer.start(startTime);
+
+  return new Part(sequencer, mutationFunction);
 };
 
 export const addSoloPart = (startTime, notes, instrument, noteLength, pattern, shouldLoop) => {
@@ -82,3 +84,10 @@ export const addRepeatingSoloPart = (startTime, notes, instrument, noteLength, p
   sequencer.loop = shouldLoop;
   sequencer.start(startTime);
 };
+
+export function Part(mutationPayload, mutationFunction) {
+  this.mutationFunction = mutationFunction;
+  this.mutate = function() {
+    this.mutationFunction(mutationPayload);
+  };
+}

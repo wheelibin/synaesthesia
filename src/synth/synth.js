@@ -13,7 +13,7 @@ export const play = seed => {
 
   const generatedSettings = song.play();
 
-  const bpm = utils.randomIntBetween(70, 90);
+  const bpm = utils.randomIntBetween(70, 110);
   generatedSettings.bpm = bpm;
 
   const swing = Math.random();

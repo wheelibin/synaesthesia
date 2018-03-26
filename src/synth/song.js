@@ -49,10 +49,34 @@ export const play = () => {
     bassInstrument: bassInstrument.constructor.name
   };
 
-  parts.addDrums("0:0:0", songKey.root + "0", new instruments.drums.KickDrum(), kickRythym, 1, true);
-  parts.addDrums("0:0:0", undefined, new instruments.drums.HiHat(), hihatRythym, 0.9, true);
-  parts.addDrums("0:0:0", undefined, new instruments.drums.Shaker(), shakerRythym, 0.8, true);
-  parts.addDrums("0:0:0", undefined, new instruments.drums.OpenHat(openHatFrequency), openHatRythym, 0.8, true);
+  const changeRythym = (sequencer, newRythym) => {
+    const originalLength = sequencer.length;
+    newRythym.forEach((item, index) => {
+      sequencer.at(index, item);
+    });
+    const numberToRemove = originalLength - newRythym.length;
+    for (let i = numberToRemove; i > 0; i--) {
+      sequencer.remove(newRythym.length + i - 1);
+    }
+  };
+
+  const kickPart = parts.addDrums("0:0:0", songKey.root + "0", new instruments.drums.KickDrum(), kickRythym, 1, true, function(sequencer) {
+    changeRythym(sequencer, rythyms.randomKickRythym());
+  });
+
+  const hihatPart = parts.addDrums("0:0:0", undefined, new instruments.drums.HiHat(), hihatRythym, 0.9, true, function(sequencer) {
+    changeRythym(sequencer, rythyms.randomHiHatRythym());
+  });
+
+  const shakerPart = parts.addDrums("0:0:0", undefined, new instruments.drums.Shaker(), shakerRythym, 0.8, true, function(sequencer) {
+    changeRythym(sequencer, rythyms.randomShakerRythym());
+  });
+
+  const openHatPart = parts.addDrums("0:0:0", undefined, new instruments.drums.OpenHat(openHatFrequency), openHatRythym, 0.8, true, function(
+    sequencer
+  ) {
+    changeRythym(sequencer, rythyms.randomOpenHatRythym());
+  });
 
   parts.addChordProgression("0:0:0", chordProgression, chordInstrument, `${chordProgressionBars}m`, `${chordProgressionBars}m`, true);
 
@@ -71,6 +95,13 @@ export const play = () => {
     chordProgressionBars,
     true
   );
+
+  const evolutionLoop = new Tone.Loop(function() {
+    const parts = [kickPart, hihatPart, shakerPart, openHatPart];
+    const part = utils.randomFromArray(parts);
+    part.mutate();
+  }, "4m");
+  evolutionLoop.start(0);
 
   return generatedSettings;
 };
