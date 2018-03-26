@@ -118,10 +118,14 @@ class App extends Component {
 
     return (
       <div className="container text-center">
-        <h1 className="display-1">Synaesthesia</h1>
-        <p className="lead">A Web Audio experiment</p>
-
-        <div className="main-panel col-sm-6 offset-3">
+        <div className="main-panel col-md-6 offset-md-3">
+          <div className="row">
+            <div className="col-sm-12">
+              <h1 className="main-title">Synaesthesia</h1>
+              {/* <h1 className="main-title--mobile">Synaesthesia</h1> */}
+              <p className="lead">A Web Audio experiment</p>
+            </div>
+          </div>
           <div className="row">
             <div className="col-sm-12">
               <button onClick={this.playButtonClick} className="main-panel__play-button btn btn-block btn-outline-light btn-lg">

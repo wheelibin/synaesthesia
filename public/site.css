@@ -7,6 +7,7 @@ html, body, #root {
     background: #43cea2;  
     background: -webkit-linear-gradient(to top, #185a9d, #43cea2);
     background: linear-gradient(to top, #185a9d, #43cea2); 
+
     /* background: #fceabb;  
 background: -webkit-linear-gradient(to top,#fceabb ,#f8b500 ); 
 background: linear-gradient(to top, #fceabb ,#f8b500);  */
