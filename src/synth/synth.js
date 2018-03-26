@@ -1,5 +1,5 @@
 import Tone from "tone";
-import * as song from "./song";
+import * as song from "./song/experiment1";
 import * as utils from "../utils";
 
 export const play = seed => {
@@ -13,7 +13,7 @@ export const play = seed => {
 
   const generatedSettings = song.play();
 
-  const bpm = utils.randomIntBetween(70, 110);
+  const bpm = utils.randomIntBetween(70, 90);
   generatedSettings.bpm = bpm;
 
   const swing = Math.random();
@@ -22,6 +22,7 @@ export const play = seed => {
   Tone.Master.volume.value = -32;
   Tone.Transport.bpm.value = bpm;
   Tone.Transport.swing = swing;
+
   Tone.Transport.start(1);
 
   return generatedSettings;

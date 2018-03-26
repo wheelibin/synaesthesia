@@ -171,6 +171,31 @@ export const bassLineForChordProgression = (notesPerChord, chordProgression, key
   return notes;
 };
 
+export const smoothBassLineForChordProgression = (notesPerChord, chordProgression, key, octave) => {
+  const transposeSemiTones = -1 * octave * 12;
+  const notes = [];
+
+  for (let i = 0; i < chordProgression.length; i++) {
+    const chord = chordProgression[i];
+    const noteCountForChord = notesPerChord[i];
+    const chordRoot = Tone.Frequency(chord[0]).transpose(transposeSemiTones);
+    const scaleForCurrentChord = actualNotesFromScale(key.root, key.type, octave, octave);
+
+    const notesForChord = [chordRoot];
+    let previousNoteIndex = 0;
+    for (let i = 0; i < noteCountForChord - 1; i++) {
+      //get a note not too far away from the last
+      const newNote = utils.randomIntBetween(Math.max(previousNoteIndex - 2, 0), Math.min(previousNoteIndex + 2, scaleForCurrentChord.length));
+      notesForChord.push(scaleForCurrentChord[newNote]);
+
+      previousNoteIndex = newNote;
+    }
+    notes.push(notesForChord);
+  }
+
+  return notes;
+};
+
 export const melodyForChordProgression = (chordProgression, key) => {
   //const notesPerChord = 8;
   const melodyOctave = key.chordOctave + 1;

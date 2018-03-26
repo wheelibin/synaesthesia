@@ -18,7 +18,6 @@ export class SimpleSine extends Instrument {
       portamento: 0.2
     });
     this.synth.volume.value = 10;
-
     this.synth.send("reverb", -12);
   }
 }

@@ -1,9 +1,9 @@
 import Tone from "tone";
-import * as scales from "./scales";
-import * as parts from "./parts";
-import instruments from "./instruments";
-import * as rythyms from "./rythyms";
-import * as utils from "../utils";
+import * as scales from "../scales";
+import * as parts from "../parts";
+import instruments from "../instruments";
+import * as rythyms from "../rythyms";
+import * as utils from "../../utils";
 
 export const play = () => {
   const keyType = scales.getRandomScaleType();
@@ -25,12 +25,13 @@ export const play = () => {
   const hihatRythym = rythyms.randomHiHatRythym();
   const shakerRythym = rythyms.randomShakerRythym();
   const openHatRythym = rythyms.randomOpenHatRythym();
+  const snareRythym = rythyms.randomSnareRythym();
 
   const bassLinePatterns = [];
   for (let i = 0; i < chordProgression.length; i++) {
     bassLinePatterns.push(rythyms.randomBassRythym());
   }
-  //const melodyPattern = [1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0];
+
   const chordInstrument = new (utils.randomFromArray(possibleChordPads))();
   const bassInstrument = new (utils.randomFromArray(possibleBassInstruments))();
   const openHatFrequency = Tone.Frequency(songKey.root + "3").toFrequency();
@@ -64,6 +65,10 @@ export const play = () => {
     changeRythym(sequencer, rythyms.randomKickRythym());
   });
 
+  const snarePart = parts.addDrums("0:0:0", undefined, new instruments.drums.Slap(), snareRythym, 0.9, true, function(sequencer) {
+    changeRythym(sequencer, rythyms.randomSnareRythym());
+  });
+
   const hihatPart = parts.addDrums("0:0:0", undefined, new instruments.drums.HiHat(), hihatRythym, 0.9, true, function(sequencer) {
     changeRythym(sequencer, rythyms.randomHiHatRythym());
   });
@@ -88,7 +93,7 @@ export const play = () => {
 
   parts.addRepeatingSoloPart(
     "0:0:0",
-    scales.bassLineForChordProgression(notesPerChord, chordProgression, songKey, bassOctave),
+    scales.smoothBassLineForChordProgression(notesPerChord, chordProgression, songKey, bassOctave),
     bassInstrument,
     "4n",
     bassLinePatterns,
@@ -97,7 +102,7 @@ export const play = () => {
   );
 
   const evolutionLoop = new Tone.Loop(function() {
-    const parts = [kickPart, hihatPart, shakerPart, openHatPart];
+    const parts = [kickPart, snarePart, hihatPart, shakerPart, openHatPart];
     const part = utils.randomFromArray(parts);
     part.mutate();
   }, "4m");
