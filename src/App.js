@@ -6,7 +6,7 @@ import "./App.css";
 class App extends Component {
   constructor() {
     super();
-    this.state = { seed: "Jon Wheeler", playButtonText: "Play", generatedSettings: null, isPlaying: false };
+    this.state = { seed: "1522133287280", playButtonText: "Play", generatedSettings: null, isPlaying: false };
     this.handleSeedChange = this.handleSeedChange.bind(this);
     this.handleNewSeed = this.handleNewSeed.bind(this);
     this.playButtonClick = this.playButtonClick.bind(this);
