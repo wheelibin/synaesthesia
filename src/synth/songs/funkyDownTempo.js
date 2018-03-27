@@ -20,7 +20,7 @@ export const play = () => {
   const possibleChordSectionLengths = [1, 2, 4, 8];
   const chordProgressionBars = utils.randomFromArray(possibleChordSectionLengths);
   const possibleChordPads = [instruments.pads.SimpleSine, instruments.pads.SwirlySawtoothChorusWithSubBass, instruments.pads.SoftSquareFm];
-  const possibleBassInstruments = [instruments.bass.FastAttackSquare];
+  const possibleBassInstruments = [instruments.bass.FastAttackSquare, instruments.presets.Bassy];
   const kickRythym = rythyms.randomKickRythym();
   const hihatRythym = rythyms.randomHiHatRythym();
   const shakerRythym = rythyms.randomShakerRythym();

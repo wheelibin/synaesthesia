@@ -38,6 +38,38 @@ export class Tiny extends Instrument {
   }
 }
 
+export class Harmonics extends Instrument {
+  constructor() {
+    super(new Tone.PolySynth(6, Tone.AMSynth), 24);
+    this.synth.set({
+      volume: 16,
+      harmonicity: 3.999,
+      oscillator: {
+        type: "square"
+      },
+      envelope: {
+        attack: 0.03,
+        decay: 0.3,
+        sustain: 0.7,
+        release: 0.8
+      },
+      modulation: {
+        volume: 12,
+        type: "square6"
+      },
+      modulationEnvelope: {
+        attack: 2,
+        decay: 3,
+        sustain: 0.8,
+        release: 0.1
+      }
+    });
+    this.synth.volume.value = 10;
+
+    this.synth.send("reverb", -12);
+  }
+}
+
 export class AM_Tiny extends Instrument {
   constructor() {
     super(new Tone.PolySynth(6, Tone.Synth), 24);
@@ -75,8 +107,9 @@ export class AM_Tiny extends Instrument {
 
 export class FM_ElectricCello extends Instrument {
   constructor() {
-    super(new Tone.PolySynth(6, Tone.Synth), 24);
+    super(new Tone.PolySynth(6, Tone.FMSynth), 24);
     this.synth.set({
+      volume: 20,
       harmonicity: 3.01,
       modulationIndex: 14,
       oscillator: {
@@ -85,7 +118,7 @@ export class FM_ElectricCello extends Instrument {
       envelope: {
         attack: 0.2,
         decay: 0.3,
-        sustain: 0.1,
+        sustain: 0.9,
         release: 1.2
       },
       modulation: {
@@ -137,7 +170,7 @@ export class Kalimba extends Instrument {
 export class BassGuitar extends Instrument {
   constructor() {
     super(
-      new Tone.Synth({
+      new Tone.MonoSynth({
         oscillator: {
           type: "fmsquare5",
           modulationType: "triangle",
@@ -172,7 +205,7 @@ export class BassGuitar extends Instrument {
 export class Bassy extends Instrument {
   constructor() {
     super(
-      new Tone.Synth({
+      new Tone.MonoSynth({
         portamento: 0.08,
         oscillator: {
           partials: [2, 1, 3, 2, 0.4]
@@ -203,7 +236,7 @@ export class Bassy extends Instrument {
 }
 export class Coolguy extends Instrument {
   constructor() {
-    super(new Tone.PolySynth(6, Tone.Synth), 24);
+    super(new Tone.PolySynth(6, Tone.MonoSynth), 24);
     this.synth.set({
       oscillator: {
         type: "pwm",
@@ -232,6 +265,38 @@ export class Coolguy extends Instrument {
     this.synth.volume.value = 10;
 
     this.synth.send("reverb", -12);
+  }
+}
+
+export class Bah extends Instrument {
+  constructor() {
+    super(new Tone.PolySynth(6, Tone.MonoSynth), 24);
+    this.synth.set({
+      volume: 24,
+      oscillator: {
+        type: "sawtooth"
+      },
+      filter: {
+        Q: 2,
+        type: "bandpass",
+        rolloff: -24
+      },
+      envelope: {
+        attack: 0.01,
+        decay: 0.1,
+        sustain: 0.2,
+        release: 0.6
+      },
+      filterEnvelope: {
+        attack: 0.02,
+        decay: 0.4,
+        sustain: 1,
+        release: 0.7,
+        releaseCurve: "linear",
+        baseFrequency: 20,
+        octaves: 5
+      }
+    });
   }
 }
 
