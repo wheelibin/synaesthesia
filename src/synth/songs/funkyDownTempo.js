@@ -101,6 +101,21 @@ export const play = () => {
     true
   );
 
+  const motifPatterns = [];
+  for (let i = 0; i < chordProgression.length; i++) {
+    motifPatterns.push(rythyms.randomMotifRythym());
+  }
+  const motifOctave = songKey.chordOctave + 1;
+  parts.addRepeatingSoloPart(
+    "0:0:0",
+    scales.motifForChordProgression(notesPerChord, chordProgression, songKey, motifOctave),
+    new (utils.randomFromArray([instruments.presets.AM_Tiny, instruments.presets.FM_ElectricCello, instruments.presets.Kalimba]))(),
+    1.3,
+    motifPatterns,
+    chordProgressionBars,
+    true
+  );
+
   const evolutionLoop = new Tone.Loop(function() {
     const parts = [kickPart, snarePart, hihatPart, shakerPart, openHatPart];
     const part = utils.randomFromArray(parts);

@@ -67,7 +67,7 @@ export class AM_Tiny extends Instrument {
         release: 0.4
       }
     });
-    this.synth.volume.value = 10;
+    this.synth.volume.value = 14;
 
     this.synth.send("reverb", -12);
   }

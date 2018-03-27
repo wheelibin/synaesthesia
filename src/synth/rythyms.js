@@ -42,6 +42,12 @@ const openHats = [
   [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
 ];
 
+const motifs = [[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0]];
+
+export const randomMotifRythym = () => {
+  return utils.randomFromArray(motifs);
+};
+
 export const randomHiHatRythym = () => {
   return utils.randomFromArray(hiHats);
 };

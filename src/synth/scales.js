@@ -196,6 +196,27 @@ export const smoothBassLineForChordProgression = (notesPerChord, chordProgressio
   return notes;
 };
 
+export const motifForChordProgression = (notesPerChord, chordProgression, key, octave) => {
+  const notes = [];
+
+  for (let i = 0; i < chordProgression.length; i++) {
+    const noteCountForChord = notesPerChord[i];
+    const scaleForCurrentChord = actualNotesFromScale(key.root, key.type, octave, octave);
+    const notesForChord = [];
+    let previousNoteIndex = 0;
+    for (let i = 0; i < noteCountForChord; i++) {
+      //get a note not too far away from the last
+      const newNote = utils.randomIntBetween(Math.max(previousNoteIndex - 2, 0), Math.min(previousNoteIndex + 2, scaleForCurrentChord.length));
+      notesForChord.push(scaleForCurrentChord[newNote]);
+
+      previousNoteIndex = newNote;
+    }
+    notes.push(notesForChord);
+  }
+
+  return notes;
+};
+
 export const melodyForChordProgression = (chordProgression, key) => {
   //const notesPerChord = 8;
   const melodyOctave = key.chordOctave + 1;

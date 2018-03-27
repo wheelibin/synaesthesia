@@ -61,17 +61,17 @@ export class Shaker extends Instrument {
     super(
       new Tone.MetalSynth({
         envelope: {
-          attack: 0.5,
-          decay: 1.4,
+          attack: 0.1,
+          decay: 0.4,
           release: 0.3
         },
         frequency: frequency,
         //harmonicity: 5.1,
         modulationIndex: 64,
-        resonance: 6000,
+        resonance: 3000,
         octaves: 1.5
       }),
-      10
+      5
     );
   }
 }

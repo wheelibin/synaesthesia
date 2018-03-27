@@ -23,7 +23,7 @@ export class FastAttackSquare extends Instrument {
           release: 1
         }
       }),
-      20
+      22
     );
     var comp = new Tone.Compressor(-30, 12).toMaster();
     this.synth.connect(comp);

@@ -1,5 +1,5 @@
 import Tone from "tone";
-import * as song from "./song/experiment1";
+import songs from "./songs";
 import * as utils from "../utils";
 
 export const play = seed => {
@@ -11,7 +11,7 @@ export const play = seed => {
   const reverb = new Tone.Freeverb().toMaster();
   reverb.receive("reverb");
 
-  const generatedSettings = song.play();
+  const generatedSettings = songs.funkyDownTempo.play();
 
   const bpm = utils.randomIntBetween(70, 90);
   generatedSettings.bpm = bpm;

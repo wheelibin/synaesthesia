@@ -31,7 +31,7 @@ export const addDrums = (startTime, note, instrument, pattern, probability, shou
   return new Part(sequencer, mutationFunction);
 };
 
-export const addSoloPart = (startTime, notes, instrument, noteLength, pattern, shouldLoop) => {
+export const addSoloPart = (startTime, notes, instrument, noteLength, pattern, probability, shouldLoop) => {
   const sequencer = new Tone.Sequence(
     function(time, hit) {
       if (hit === 1) {
@@ -44,6 +44,7 @@ export const addSoloPart = (startTime, notes, instrument, noteLength, pattern, s
     "16n"
   );
 
+  sequencer.probability = probability;
   sequencer.loop = shouldLoop;
   sequencer.start(startTime);
 };
