@@ -24,7 +24,7 @@ export const play = seed => {
   Tone.Transport.swing = swing;
 
   Tone.Transport.start(1);
-
+  console.log(generatedSettings);
   return generatedSettings;
 };
 

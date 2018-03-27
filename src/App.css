@@ -13,6 +13,7 @@
 }
 .now-playing-section h5 {
   font-size: 1rem;
+  margin-bottom: 0px;
 }
 .seed-input {
   color: white;
@@ -21,6 +22,9 @@
 
 .main-title {
     font-weight: 100;
+}
+.generation-options {
+  padding: 2em;
 }
 
 .version {

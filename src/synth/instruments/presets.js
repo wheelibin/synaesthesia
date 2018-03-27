@@ -72,8 +72,9 @@ export class Harmonics extends Instrument {
 
 export class AM_Tiny extends Instrument {
   constructor() {
-    super(new Tone.PolySynth(6, Tone.Synth), 24);
+    super(new Tone.PolySynth(6, Tone.AMSynth), 24);
     this.synth.set({
+      volume: 14,
       harmonicity: 2,
       oscillator: {
         type: "amsine2",
@@ -140,7 +141,7 @@ export class FM_ElectricCello extends Instrument {
 export class Kalimba extends Instrument {
   constructor() {
     super(
-      new Tone.Synth({
+      new Tone.FMSynth({
         harmonicity: 8,
         modulationIndex: 2,
         oscillator: {
@@ -316,6 +317,27 @@ export class AlienChorus extends Instrument {
         attackCurve: "sine",
         releaseCurve: "sine",
         release: 0.4
+      }
+    });
+    this.synth.volume.value = 10;
+
+    this.synth.send("reverb", -12);
+  }
+}
+
+export class Gravel extends Instrument {
+  constructor() {
+    super(new Tone.PolySynth(6, Tone.NoiseSynth), 24);
+    this.synth.set({
+      noise: {
+        type: "pink",
+        playbackRate: 0.1
+      },
+      envelope: {
+        attack: 0.5,
+        decay: 2,
+        sustain: 0.5,
+        release: 3
       }
     });
     this.synth.volume.value = 10;

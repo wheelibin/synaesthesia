@@ -109,19 +109,19 @@ export const play = () => {
   parts.addRepeatingSoloPart(
     "0:0:0",
     scales.motifForChordProgression(notesPerChord, chordProgression, songKey, motifOctave),
-    new (utils.randomFromArray([instruments.presets.AM_Tiny, instruments.presets.FM_ElectricCello, instruments.presets.Kalimba]))(),
+    new (utils.randomFromArray([instruments.presets.AM_Tiny, instruments.presets.Kalimba]))(),
     1.3,
     motifPatterns,
     chordProgressionBars,
     true
   );
 
-  const evolutionLoop = new Tone.Loop(function() {
-    const parts = [kickPart, snarePart, hihatPart, shakerPart, openHatPart];
-    const part = utils.randomFromArray(parts);
-    part.mutate();
-  }, "4m");
-  evolutionLoop.start(0);
+  // const evolutionLoop = new Tone.Loop(function() {
+  //   const parts = [kickPart, snarePart, hihatPart, shakerPart, openHatPart];
+  //   const part = utils.randomFromArray(parts);
+  //   part.mutate();
+  // }, "4m");
+  // evolutionLoop.start(0);
 
   return generatedSettings;
 };

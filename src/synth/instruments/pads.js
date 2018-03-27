@@ -37,7 +37,7 @@ export class SoftSquareFm extends Instrument {
       },
       portamento: 0
     });
-    this.synth.volume.value = 10;
+    this.synth.volume.value = 8;
 
     const filter = new Tone.Filter(400, "lowpass").toMaster();
     this.synth.send("reverb", -12);
