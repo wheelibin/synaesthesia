@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import debounce from "lodash/debounce";
 import * as synth from "./synth/synth";
 import "./App.css";
+import { version } from "../package.json";
 
 class App extends Component {
   constructor() {
@@ -146,6 +147,7 @@ class App extends Component {
             </div>
           </div> */}
         </div>
+        <small className="version">v{version}</small>
       </div>
     );
   }

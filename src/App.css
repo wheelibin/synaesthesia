@@ -1,10 +1,6 @@
 .main-panel {
-/* background-color: rgb(255,255,255,0.6); */
     padding-bottom: 8px;
     font-weight: lighter;
-    /* -webkit-box-shadow: 0px 0px 26px -5px rgba(0,0,0,0.66);
-    -moz-box-shadow: 0px 0px 26px -5px rgba(0,0,0,0.66);
-    box-shadow: 0px 0px 26px -5px rgba(0,0,0,0.66); */
 }
 
 .main-panel__play-button {
@@ -25,6 +21,10 @@
 
 .main-title {
     font-weight: 100;
+}
+
+.version {
+    font-size: 0.6rem;
 }
 
 @media (min-width: 576px) { 
