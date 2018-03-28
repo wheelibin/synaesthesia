@@ -65,25 +65,23 @@ export const play = () => {
     }
   };
 
-  const kickPart = parts.addDrums("0:0:0", songKey.root + "0", new instruments.drums.KickDrum(), kickRythym, 1, true, function(sequencer) {
+  parts.addDrums("0:0:0", songKey.root + "0", new instruments.drums.KickDrum(), kickRythym, 1, true, function(sequencer) {
     changeRythym(sequencer, rythyms.randomKickRythym());
   });
 
-  const snarePart = parts.addDrums("0:0:0", undefined, new instruments.drums.Slap(), snareRythym, 0.9, true, function(sequencer) {
+  parts.addDrums("0:0:0", undefined, new instruments.drums.Slap(), snareRythym, 0.9, true, function(sequencer) {
     changeRythym(sequencer, rythyms.randomSnareRythym());
   });
 
-  const hihatPart = parts.addDrums("0:0:0", undefined, new instruments.drums.HiHat(), hihatRythym, 0.9, true, function(sequencer) {
+  parts.addDrums("0:0:0", undefined, new instruments.drums.HiHat(), hihatRythym, 0.9, true, function(sequencer) {
     changeRythym(sequencer, rythyms.randomHiHatRythym());
   });
 
-  const shakerPart = parts.addDrums("0:0:0", undefined, new instruments.drums.Shaker(), shakerRythym, 0.8, true, function(sequencer) {
+  parts.addDrums("0:0:0", undefined, new instruments.drums.Shaker(), shakerRythym, 0.8, true, function(sequencer) {
     changeRythym(sequencer, rythyms.randomShakerRythym());
   });
 
-  const openHatPart = parts.addDrums("0:0:0", undefined, new instruments.drums.OpenHat(openHatFrequency), openHatRythym, 0.8, true, function(
-    sequencer
-  ) {
+  parts.addDrums("0:0:0", undefined, new instruments.drums.OpenHat(openHatFrequency), openHatRythym, 0.8, true, function(sequencer) {
     changeRythym(sequencer, rythyms.randomOpenHatRythym());
   });
 
