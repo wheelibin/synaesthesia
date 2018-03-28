@@ -21,6 +21,7 @@ export const play = () => {
   const chordProgressionBars = utils.randomFromArray(possibleChordSectionLengths);
   const possibleChordPads = [instruments.pads.SimpleSine, instruments.pads.SwirlySawtoothChorusWithSubBass, instruments.pads.SoftSquareFm];
   const possibleBassInstruments = [instruments.bass.FastAttackSquare, instruments.presets.Bassy];
+  const possibleMotifInstruments = [instruments.presets.AM_Tiny, instruments.presets.Kalimba];
   const kickRythym = rythyms.randomKickRythym();
   const hihatRythym = rythyms.randomHiHatRythym();
   const shakerRythym = rythyms.randomShakerRythym();
@@ -31,9 +32,14 @@ export const play = () => {
   for (let i = 0; i < chordProgression.length; i++) {
     bassLinePatterns.push(rythyms.randomBassRythym());
   }
+  const motifPatterns = [];
+  for (let i = 0; i < chordProgression.length; i++) {
+    motifPatterns.push(rythyms.randomMotifRythym());
+  }
 
   const chordInstrument = new (utils.randomFromArray(possibleChordPads))();
   const bassInstrument = new (utils.randomFromArray(possibleBassInstruments))();
+  const motifInstrument = new (utils.randomFromArray(possibleMotifInstruments))();
   const openHatFrequency = Tone.Frequency(songKey.root + "3").toFrequency();
 
   const generatedSettings = {
@@ -43,11 +49,9 @@ export const play = () => {
     chordProgressionBars: chordProgressionBars,
     chordTypesToUseInProgression: chordTypesToUseInProgression,
     chordProgressionNotes: scales.rootNotesFromChordProgression(chordProgression),
-    kickRythym: kickRythym,
-    hihatRythym: hihatRythym,
-    bassLinePatterns: bassLinePatterns,
     chordInstrument: chordInstrument.constructor.name,
-    bassInstrument: bassInstrument.constructor.name
+    bassInstrument: bassInstrument.constructor.name,
+    motifInstrument: motifInstrument.constructor.name
   };
 
   const changeRythym = (sequencer, newRythym) => {
@@ -101,15 +105,11 @@ export const play = () => {
     true
   );
 
-  const motifPatterns = [];
-  for (let i = 0; i < chordProgression.length; i++) {
-    motifPatterns.push(rythyms.randomMotifRythym());
-  }
   const motifOctave = songKey.chordOctave + 1;
   parts.addRepeatingSoloPart(
     "0:0:0",
     scales.motifForChordProgression(notesPerChord, chordProgression, songKey, motifOctave),
-    new (utils.randomFromArray([instruments.presets.AM_Tiny, instruments.presets.Kalimba]))(),
+    motifInstrument,
     1.3,
     motifPatterns,
     chordProgressionBars,
