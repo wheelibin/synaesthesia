@@ -111,7 +111,9 @@ class App extends Component {
           <div className="row">
             <div className="col-sm-12">
               <h1 className="main-title">Synaesthesia</h1>
-              <p className="lead">A Web Audio experiment</p>
+              <p className="lead">
+                A Web Audio experiment by <a href="https://soundcloud.com/wheelibin">wheelibin</a>
+              </p>
             </div>
           </div>
           <div className="row">
