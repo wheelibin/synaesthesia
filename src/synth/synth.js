@@ -1,3 +1,4 @@
+import debounce from "lodash/debounce";
 import Tone from "tone";
 import songs from "./songs";
 import * as utils from "../utils";
@@ -31,3 +32,5 @@ export const play = seed => {
 export const stop = () => {
   Tone.context.close();
 };
+
+export const playDebounced = debounce(play, 500);
