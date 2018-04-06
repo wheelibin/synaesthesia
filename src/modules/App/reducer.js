@@ -1,7 +1,7 @@
 import * as actions from "./actionTypes";
 import * as synth from "../../synth/synth";
 
-const initialState = { seed: "1522133287280", playButtonText: "Play", generatedSettings: null, isPlaying: false };
+const initialState = { seed: "yeah", playButtonText: "Play", generatedSettings: null, isPlaying: false };
 
 export default (state = initialState, action) => {
   switch (action.type) {
