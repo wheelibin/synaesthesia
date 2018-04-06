@@ -1,4 +1,5 @@
 import * as actions from "./actionTypes";
+import * as synth from "../../synth/synth";
 
 export const Play = () => {
   return dispatch => {
@@ -24,13 +25,14 @@ export const PlayButtonClick = () => {
 
 export const SetSeed = newSeed => {
   return dispatch => {
-    dispatch({ type: actions.SET_SEED, payload: newSeed });
+    dispatch({ type: actions.UPDATE_SEED, payload: newSeed });
+    synth.playDebounced(newSeed, generatedSettings => {
+      dispatch({ type: actions.UPDATE_GENERATED_SETTINGS, payload: generatedSettings });
+    });
   };
 };
 
 export const RandomiseSeed = () => {
   const randomSeed = new Date().getTime().toString();
-  return dispatch => {
-    dispatch({ type: actions.SET_SEED, payload: randomSeed });
-  };
+  return SetSeed(randomSeed);
 };

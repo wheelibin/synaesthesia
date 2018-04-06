@@ -3,7 +3,7 @@ import Tone from "tone";
 import songs from "./songs";
 import * as utils from "../utils";
 
-export const play = seed => {
+export const play = (seed, callback = null) => {
   Tone.context.close();
   Tone.context = new AudioContext();
 
@@ -27,6 +27,11 @@ export const play = seed => {
 
   Tone.Transport.start(1);
   console.log(generatedSettings);
+
+  if (callback) {
+    callback(generatedSettings);
+  }
+
   return generatedSettings;
 };
 

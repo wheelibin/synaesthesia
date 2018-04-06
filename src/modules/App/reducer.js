@@ -17,9 +17,15 @@ export default (state = initialState, action) => {
       break;
     }
 
-    case actions.SET_SEED: {
-      state = { ...state, seed: action.payload };
-      synth.playDebounced(state.seed);
+    case actions.UPDATE_SEED: {
+      const newSeed = action.payload;
+      state = { ...state, seed: newSeed };
+      break;
+    }
+
+    case actions.UPDATE_GENERATED_SETTINGS: {
+      const generatedSettings = action.payload;
+      state = { ...state, generatedSettings: generatedSettings };
       break;
     }
 
