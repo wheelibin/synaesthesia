@@ -13,6 +13,7 @@ export const play = seed => {
   reverb.receive("reverb");
 
   const generatedSettings = songs.funkyDownTempo.play();
+  //const generatedSettings = songs.drone.play();
 
   const bpm = utils.randomIntBetween(70, 90);
   generatedSettings.bpm = bpm;

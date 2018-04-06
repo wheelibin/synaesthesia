@@ -13,6 +13,9 @@ class App extends Component {
   handleSeedChange(event) {
     this.props.actions.SetSeed(event.target.value.toString());
   }
+  // componentDidMount() {
+  //   this.props.actions.PlayButtonClick();
+  // }
   render() {
     return (
       <div className="container text-center">
