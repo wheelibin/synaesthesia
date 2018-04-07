@@ -12,8 +12,8 @@ ReactDOM.render(
   <Provider store={store}>
     <Router>
       <Switch>
-        <Route path="/:seed" component={containers.AppContainer} />
-        <Route path="/" component={containers.AppContainer} />
+        <Route path={`${process.env.PUBLIC_URL}/:seed`} component={containers.AppContainer} />
+        <Route path={`${process.env.PUBLIC_URL}/`} component={containers.AppContainer} />
       </Switch>
     </Router>
   </Provider>,
