@@ -23,6 +23,13 @@ export const PlayButtonClick = () => {
   };
 };
 
+export const SetInitialSeed = newSeed => {
+  return dispatch => {
+    dispatch({ type: actions.UPDATE_SEED, payload: newSeed });
+    dispatch({ type: actions.SYNTH_PLAY });
+  };
+};
+
 export const SetSeed = newSeed => {
   return dispatch => {
     dispatch({ type: actions.UPDATE_SEED, payload: newSeed });

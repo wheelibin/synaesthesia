@@ -10,12 +10,24 @@ class App extends Component {
     super();
     this.handleSeedChange = this.handleSeedChange.bind(this);
   }
-  handleSeedChange(event) {
-    this.props.actions.SetSeed(event.target.value.toString());
+  componentWillMount() {
+    if (this.props.match.params.seed) {
+      this.props.actions.SetInitialSeed(this.props.match.params.seed);
+    }
   }
-  // componentDidMount() {
-  //   this.props.actions.PlayButtonClick();
-  // }
+  componentDidUpdate(prevProps) {
+    if (this.props.location !== prevProps.location) {
+      this.props.actions.SetSeed(this.props.match.params.seed);
+    }
+  }
+  handleSeedChange(event) {
+    const newSeed = event.target.value.toString();
+    this.props.history.push("/" + newSeed);
+  }
+  randomiseSeed = () => {
+    const randomSeed = new Date().getTime().toString();
+    this.props.history.push("/" + randomSeed);
+  };
   render() {
     return (
       <div className="container text-center">
@@ -39,7 +51,7 @@ class App extends Component {
           <GenerationOptions
             isPlaying={this.props.isPlaying}
             seed={this.props.seed}
-            onRandomise={this.props.actions.RandomiseSeed}
+            onRandomise={this.randomiseSeed}
             onSeedChange={this.handleSeedChange}
           />
         </div>
@@ -54,6 +66,9 @@ App.propTypes = {
   isPlaying: PropTypes.bool.isRequired,
   generatedSettings: PropTypes.object,
   seed: PropTypes.string.isRequired,
-  playButtonText: PropTypes.string.isRequired
+  playButtonText: PropTypes.string.isRequired,
+  match: PropTypes.object,
+  location: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 export default App;

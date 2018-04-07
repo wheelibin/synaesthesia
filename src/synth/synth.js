@@ -39,4 +39,4 @@ export const stop = () => {
   Tone.context.close();
 };
 
-export const playDebounced = debounce(play, 500);
+export const playDebounced = debounce(play, 400);
