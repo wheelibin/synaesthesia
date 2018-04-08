@@ -22,11 +22,11 @@ class App extends Component {
   }
   handleSeedChange(event) {
     const newSeed = event.target.value.toString();
-    this.props.history.push(`${process.env.PUBLIC_URL}/` + newSeed);
+    this.props.history.push("/" + newSeed);
   }
   randomiseSeed = () => {
     const randomSeed = new Date().getTime().toString();
-    this.props.history.push(`${process.env.PUBLIC_URL}/` + randomSeed);
+    this.props.history.push("/" + randomSeed);
   };
   render() {
     return (
