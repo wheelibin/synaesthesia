@@ -24,10 +24,11 @@
     font-weight: 100;
 }
 
-.lead a {
+a, a:visited {
     color: white;
     text-decoration: underline;
 }
+
 .generation-options {
   padding: 2em;
 }
