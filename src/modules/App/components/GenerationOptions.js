@@ -28,11 +28,6 @@ const GenerationOptions = ({ isPlaying, seed, onRandomise, onSeedChange }) => {
                 </button>
               </div>
             </form>
-            <p className="text-justify">
-              The music is randomly generated within certain musical constraints, the seed for the currently playing song is shown above. This can be
-              shared and entered again to recreate the exact combination of random parameters used to generate this song. Try experimenting by
-              entering your own seed, it can be any text string - why not see what your name sounds like? :-)
-            </p>
           </div>
         </div>
       </div>
