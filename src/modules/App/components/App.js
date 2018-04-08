@@ -7,10 +7,6 @@ import GenerationOptions from "./GenerationOptions";
 import Info from "./Info";
 
 class App extends Component {
-  constructor() {
-    super();
-    this.handleSeedChange = this.handleSeedChange.bind(this);
-  }
   componentWillMount() {
     if (this.props.match.params.seed) {
       this.props.actions.SetInitialSeed(this.props.match.params.seed);
@@ -21,10 +17,10 @@ class App extends Component {
       this.props.actions.SetSeed(this.props.match.params.seed);
     }
   }
-  handleSeedChange(event) {
+  handleSeedChange = event => {
     const newSeed = event.target.value.toString();
     this.props.history.push("/" + newSeed);
-  }
+  };
   randomiseSeed = () => {
     const randomSeed = new Date().getTime().toString();
     this.props.history.push("/" + randomSeed);
