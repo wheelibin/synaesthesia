@@ -10,7 +10,7 @@ import store from "./store";
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router basename={process.env.PUBLIC_URL}>
+    <Router basename={"/" + process.env.PUBLIC_URL}>
       <Switch>
         <Route path="/:seed" component={containers.AppContainer} />
         <Route path="/" component={containers.AppContainer} />

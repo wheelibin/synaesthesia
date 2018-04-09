@@ -17,25 +17,15 @@ export const play = () => {
   // oscillators.push(fmOscillator(Tone.Frequency(harmonisedFreqs[0]).transpose(12)));
   // oscillators.push(fmOscillator(Tone.Frequency(harmonisedFreqs[1]).transpose(12)));
 
+  const oscTypes = ["sine", "triangle", "square", "sawtooth", "pwm", "pulse"];
+
   const oscillators = [
-    // new Tone.FMOscillator("D1", "sine", "square").toMaster().start(),
-    // new Tone.FMOscillator("D2", "sine", "square").toMaster().start(),
-    // new Tone.FMOscillator("D3", "sine", "square").toMaster().start(),
-    // new Tone.FMOscillator("D4", "sine", "square").toMaster().start(),
-    // new Tone.FMOscillator("F2", "sine", "square").toMaster().start(),
-    // new Tone.FMOscillator("F3", "sine", "square").toMaster().start(),
-    // new Tone.FMOscillator("A2", "sine", "square").toMaster().start(),
-    // new Tone.FMOscillator("A3", "sine", "square").toMaster().start(),
-    // new Tone.FMOscillator("C3", "sine", "square").toMaster().start(),
-    // new Tone.FMOscillator("C4", "sine", "square").toMaster().start(),
-    // new Tone.FMOscillator("E3", "sine", "square").toMaster().start(),
-    // new Tone.FMOscillator("E4", "sine", "square").toMaster().start()
-    new Tone.FMOscillator("D1", "sine", "square").toMaster().start(),
-    new Tone.FMOscillator("D2", "sine", "square").toMaster().start(),
-    new Tone.FMOscillator("F2", "sine", "square").toMaster().start(),
-    new Tone.FMOscillator("A2", "sine", "square").toMaster().start(),
-    new Tone.FMOscillator("C3", "sine", "square").toMaster().start(),
-    new Tone.FMOscillator("E3", "sine", "square").toMaster().start()
+    new Tone.OmniOscillator("D1", utils.randomFromArray(oscTypes)).toMaster().start(),
+    new Tone.OmniOscillator("D2", utils.randomFromArray(oscTypes)).toMaster().start(),
+    new Tone.OmniOscillator("F2", utils.randomFromArray(oscTypes)).toMaster().start(),
+    new Tone.OmniOscillator("A2", utils.randomFromArray(oscTypes)).toMaster().start(),
+    new Tone.OmniOscillator("C3", utils.randomFromArray(oscTypes)).toMaster().start(),
+    new Tone.OmniOscillator("E3", utils.randomFromArray(oscTypes)).toMaster().start()
   ];
 
   const chorus = new Tone.Chorus(2, 2.5, 0.5).toMaster();
@@ -52,25 +42,49 @@ export const play = () => {
     osc.connect(autoWah);
     osc.connect(reverb);
     //osc.connect(autoFilter);
-    osc.on = true;
+    osc.frequencyChangeActive = true;
+    osc.volumeChangeActive = true;
   });
 
   const loop = new Tone.Loop(() => {
-    const randomOsc = utils.randomFromArray(oscillators);
+    const frequencyChangeOscillator = utils.randomFromArray(oscillators);
+    const volumeChangeOscillator = utils.randomFromArray(oscillators);
 
-    let newFreq;
-    if (randomOsc.on) {
-      const transposeAmount = utils.randomFromArray([5, 7]);
-      newFreq = Tone.Frequency(randomOsc.frequency.value).transpose(transposeAmount);
-      randomOsc.frequency.exponentialRampToValueAtTime(newFreq, "+0:2:0");
-      randomOsc.transposeAmount = transposeAmount;
+    //frequency change
+    if (frequencyChangeOscillator.frequencyChangeActive) {
+      const transposeAmount = 1; // utils.randomFromArray([5, 7]);
+      frequencyChangeOscillator.frequency.exponentialRampToValueAtTime(
+        Tone.Frequency(frequencyChangeOscillator.frequency.value).transpose(transposeAmount),
+        "+0:2:0"
+      );
+      frequencyChangeOscillator.transposeAmount = transposeAmount;
     } else {
-      newFreq = Tone.Frequency(randomOsc.frequency.value).transpose(randomOsc.transposeAmount * -1);
-      randomOsc.frequency.exponentialRampToValueAtTime(newFreq, "+0:2:0");
+      frequencyChangeOscillator.frequency.exponentialRampToValueAtTime(
+        Tone.Frequency(frequencyChangeOscillator.frequency.value).transpose(frequencyChangeOscillator.transposeAmount * -1),
+        "+0:2:0"
+      );
     }
-    randomOsc.on = !randomOsc.on;
-  }, "8m");
-  loop.start("8m");
+    frequencyChangeOscillator.frequencyChangeActive = !frequencyChangeOscillator.frequencyChangeActive;
+
+    //volume change
+    //on each loop lower the volume of one of the oscillators
+
+    //reset all back to original volume
+    oscillators.forEach(osc => {
+      osc.volume.exponentialRampToValueAtTime(0, "+0:2:0");
+    });
+
+    //change the randomly selected one only
+    volumeChangeOscillator.volume.exponentialRampToValueAtTime(-6, "+0:2:0");
+
+    // if (volumeChangeOscillator.volumeChangeActive) {
+    //   volumeChangeOscillator.volume.exponentialRampToValueAtTime(-6, "+0:2:0");
+    // } else {
+    //   volumeChangeOscillator.volume.exponentialRampToValueAtTime(0, "+0:2:0");
+    // }
+    // volumeChangeOscillator.volumeChangeActive = !volumeChangeOscillator.volumeChangeActive;
+  }, "1m");
+  loop.start("1m");
 
   return {};
 };
