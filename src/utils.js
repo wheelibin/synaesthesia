@@ -9,3 +9,7 @@ export const isNumeric = value => {
 export const randomFromArray = array => {
   return array[randomIntBetween(0, array.length - 1)];
 };
+
+export const coinToss = () => {
+  return Math.floor(Math.random() * 2);
+};
