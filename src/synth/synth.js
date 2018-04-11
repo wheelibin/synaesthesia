@@ -12,8 +12,8 @@ export const play = (seed, callback = null) => {
   const reverb = new Tone.Freeverb().toMaster();
   reverb.receive("reverb");
 
-  const generatedSettings = songs.funkyDownTempo.play();
-  //const generatedSettings = songs.drone.play();
+  //const generatedSettings = songs.funkyDownTempo.play();
+  const generatedSettings = songs.drone.play();
 
   const bpm = utils.randomIntBetween(70, 90);
   generatedSettings.bpm = bpm;

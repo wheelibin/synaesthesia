@@ -17,7 +17,11 @@ export const play = () => {
     changeFrequencyInterval: "4m",
     changeVolumeInterval: "3m",
     bassInterval: "4m",
-    harmonyInterval: "6m",
+    harmonyInterval: "5m",
+    harmonyFadeOutTime: "+2:0:0",
+    harmonyOscVolume: -6,
+    extraOscillatorInterval: "4m",
+    extraOscillatorFadeOutTime: "+1:2:0",
     changeRootInterval: "64m"
   };
   const masterScale = scales.getRandomScaleType();
@@ -29,10 +33,13 @@ export const play = () => {
 
   const oscScale = scales.actualNotesFromScale(rootFreq.toNote(), masterScale.intervals, 2, 3);
 
+  const harmonyNotes = utils.shuffleArray(scales.actualNotesFromScale(rootFreq.toNote(), masterScale.intervals, 3, 3));
+  const harmonyOscillator = fmOscillator(rootFreq, config.lowestOscVolume);
+
   let oscillatorsWithEffects = [];
   let oscillatorsWithFrequencyChange = [];
   let oscillatorsWithVolumeChange = [];
-  let oscillatorsOccassional = [];
+  let extraOscillators = [];
 
   let changeRootAndTransposeAllToMatch = null;
   const changeRootRampTime = "+4:0:0";
@@ -56,10 +63,10 @@ export const play = () => {
     const osc7 = fmOscillator(oscScale[6], config.lowestOscVolume);
     const osc9 = fmOscillator(oscScale[8], config.lowestOscVolume);
     const osc11 = fmOscillator(oscScale[10], config.lowestOscVolume);
-    oscillatorsWithEffects = [oscRoot, oscRootO2, oscRootO3, osc3, osc5, osc7, osc9, osc11];
+    oscillatorsWithEffects = [harmonyOscillator, oscRoot, oscRootO2, oscRootO3, osc3, osc5, osc7, osc9, osc11];
     oscillatorsWithFrequencyChange = oscillatorsWithEffects;
     oscillatorsWithVolumeChange = [oscRoot, oscRootO2, oscRootO3, osc3];
-    oscillatorsOccassional = [osc5, osc7, osc9, osc11];
+    extraOscillators = [osc5, osc7, osc9, osc11];
     changeRootAndTransposeAllToMatch = newRoot => {
       newRoot = Tone.Frequency(newRoot);
       const newScale = scales.actualNotesFromScale(newRoot.toNote(), masterScale.intervals, 2, 3);
@@ -78,10 +85,10 @@ export const play = () => {
     const oscSeventh = fmOscillator(transpose(rootFreq, 34), config.lowestOscVolume);
     const oscNinth = fmOscillator(transpose(rootFreq, 36), config.lowestOscVolume);
     const oscEleventh = fmOscillator(transpose(rootFreq, 38), config.lowestOscVolume);
-    oscillatorsWithEffects = [oscRoot, oscRootO2, oscRootO3, oscFifth, oscSeventh, oscNinth, oscEleventh];
+    oscillatorsWithEffects = [harmonyOscillator, oscRoot, oscRootO2, oscRootO3, oscFifth, oscSeventh, oscNinth, oscEleventh];
     oscillatorsWithFrequencyChange = oscillatorsWithEffects;
     oscillatorsWithVolumeChange = [oscRoot, oscRootO2, oscRootO3, oscFifth];
-    oscillatorsOccassional = [oscSeventh, oscNinth, oscEleventh];
+    extraOscillators = [oscSeventh, oscNinth, oscEleventh];
     changeRootAndTransposeAllToMatch = newRoot => {
       newRoot = Tone.Frequency(newRoot);
       oscRoot.frequency.linearRampToValueAtTime(newRoot, changeRootRampTime);
@@ -158,20 +165,33 @@ export const play = () => {
   lfo.connect(reverb.roomSize);
 
   //Fade in and out one other random oscillator
-  const harmonyLoop = new Tone.Loop(() => {
-    const oscs = [...oscillatorsOccassional];
-    const harmonyOscillator = utils.randomFromArray(oscs);
-    oscillatorsOccassional.forEach(osc => {
-      if (osc !== harmonyOscillator) {
+  const extraOscillatorLoop = new Tone.Loop(() => {
+    const oscs = [...extraOscillators];
+    const extraOscillator = utils.randomFromArray(oscs);
+    extraOscillators.forEach(osc => {
+      if (osc !== extraOscillator) {
         osc.volume.exponentialRampToValueAtTime(config.lowestOscVolume, "+1:0:0");
       }
     });
-    if (harmonyOscillator) {
-      harmonyOscillator.volume.exponentialRampToValueAtTime(0, "+2:0:0");
-    }
+    Tone.Transport.scheduleOnce(function(time) {
+      extraOscillator.volume.rampTo(0, "1m", time);
+    }, config.extraOscillatorFadeOutTime);
+  }, config.extraOscillatorInterval);
+  extraOscillatorLoop.probability = 0.7;
+  extraOscillatorLoop.start(config.extraOscillatorInterval);
+
+  const harmonyOscillatorLoop = new Tone.Loop(time => {
+    const note = harmonyNotes.shift();
+    harmonyOscillator.frequency.value = note;
+    harmonyOscillator.volume.rampTo(config.harmonyOscVolume, "1m", time);
+
+    Tone.Transport.scheduleOnce(function(time) {
+      harmonyOscillator.volume.rampTo(config.lowestOscVolume, "1m", time);
+    }, config.harmonyFadeOutTime);
+    harmonyNotes.push(note);
   }, config.harmonyInterval);
-  harmonyLoop.probability = 0.7;
-  harmonyLoop.start(config.harmonyInterval);
+  harmonyOscillatorLoop.probability = 0.8;
+  harmonyOscillatorLoop.start(config.harmonyInterval);
 
   //Transpose th whole lot by changing the root
   const changeRootPattern = new Tone.Pattern(
