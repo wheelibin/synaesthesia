@@ -18,7 +18,7 @@ export const play = () => {
     changeVolumeInterval: "3m",
     bassInterval: "4m",
     harmonyInterval: "6m",
-    changeRootInterval: "32m"
+    changeRootInterval: "64m"
   };
   const masterScale = scales.getRandomScaleType();
   const rootFreq = Tone.Frequency(scales.getRandomRootNote() + "0");
@@ -35,7 +35,7 @@ export const play = () => {
   let oscillatorsOccassional = [];
 
   let changeRootAndTransposeAllToMatch = null;
-  const changeRootRampTime = "+1:0:0";
+  const changeRootRampTime = "+4:0:0";
 
   //Create the bass pattern
   const bassInstrument = new instruments.bass.FastAttackSquare();
@@ -64,13 +64,13 @@ export const play = () => {
       newRoot = Tone.Frequency(newRoot);
       const newScale = scales.actualNotesFromScale(newRoot.toNote(), masterScale.intervals, 2, 3);
       //Change the oscillators to the new notes
-      oscRoot.frequency.exponentialRampToValueAtTime(newRoot, changeRootRampTime);
-      oscRootO2.frequency.exponentialRampToValueAtTime(transpose(newRoot, 24), changeRootRampTime);
-      osc3.frequency.exponentialRampToValueAtTime(newScale[2], changeRootRampTime);
-      osc5.frequency.exponentialRampToValueAtTime(newScale[4], changeRootRampTime);
-      osc7.frequency.exponentialRampToValueAtTime(newScale[6], changeRootRampTime);
-      osc9.frequency.exponentialRampToValueAtTime(newScale[8], changeRootRampTime);
-      osc11.frequency.exponentialRampToValueAtTime(newScale[10], changeRootRampTime);
+      oscRoot.frequency.linearRampToValueAtTime(newRoot, changeRootRampTime);
+      oscRootO2.frequency.linearRampToValueAtTime(transpose(newRoot, 24), changeRootRampTime);
+      osc3.frequency.linearRampToValueAtTime(newScale[2], changeRootRampTime);
+      osc5.frequency.linearRampToValueAtTime(newScale[4], changeRootRampTime);
+      osc7.frequency.linearRampToValueAtTime(newScale[6], changeRootRampTime);
+      osc9.frequency.linearRampToValueAtTime(newScale[8], changeRootRampTime);
+      osc11.frequency.linearRampToValueAtTime(newScale[10], changeRootRampTime);
       bassPattern.values = scales.actualNotesFromScale(newRoot.toNote(), masterScale.intervals, 1, 2);
     };
   } else {
@@ -84,14 +84,14 @@ export const play = () => {
     oscillatorsOccassional = [oscSeventh, oscNinth, oscEleventh];
     changeRootAndTransposeAllToMatch = newRoot => {
       newRoot = Tone.Frequency(newRoot);
-      oscRoot.frequency.exponentialRampToValueAtTime(newRoot, changeRootRampTime);
+      oscRoot.frequency.linearRampToValueAtTime(newRoot, changeRootRampTime);
 
-      oscRootO2.frequency.exponentialRampToValueAtTime(transpose(newRoot, 12), changeRootRampTime);
-      oscRootO3.frequency.exponentialRampToValueAtTime(transpose(newRoot, 24), changeRootRampTime);
-      oscFifth.frequency.exponentialRampToValueAtTime(transpose(newRoot, 27), changeRootRampTime);
-      oscSeventh.frequency.exponentialRampToValueAtTime(transpose(newRoot, 34), changeRootRampTime);
-      oscNinth.frequency.exponentialRampToValueAtTime(transpose(newRoot, 36), changeRootRampTime);
-      oscEleventh.frequency.exponentialRampToValueAtTime(transpose(newRoot, 38), changeRootRampTime);
+      oscRootO2.frequency.linearRampToValueAtTime(transpose(newRoot, 12), changeRootRampTime);
+      oscRootO3.frequency.linearRampToValueAtTime(transpose(newRoot, 24), changeRootRampTime);
+      oscFifth.frequency.linearRampToValueAtTime(transpose(newRoot, 27), changeRootRampTime);
+      oscSeventh.frequency.linearRampToValueAtTime(transpose(newRoot, 34), changeRootRampTime);
+      oscNinth.frequency.linearRampToValueAtTime(transpose(newRoot, 36), changeRootRampTime);
+      oscEleventh.frequency.linearRampToValueAtTime(transpose(newRoot, 38), changeRootRampTime);
       //bassPattern.values = scales.actualNotesFromScale(newRoot.toNote(), masterScale.intervals, 1, 2);
     };
   }
