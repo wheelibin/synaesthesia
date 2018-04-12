@@ -31,9 +31,9 @@ export const SetInitialSeed = newSeed => {
 };
 
 export const SetSeed = newSeed => {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch({ type: actions.UPDATE_SEED, payload: newSeed });
-    synth.playDebounced(newSeed, generatedSettings => {
+    synth.playDebounced(getState().song, newSeed, generatedSettings => {
       dispatch({ type: actions.UPDATE_GENERATED_SETTINGS, payload: generatedSettings });
     });
   };
@@ -42,4 +42,11 @@ export const SetSeed = newSeed => {
 export const RandomiseSeed = () => {
   const randomSeed = new Date().getTime().toString();
   return SetSeed(randomSeed);
+};
+
+export const SetSong = song => {
+  return dispatch => {
+    dispatch({ type: actions.SET_SONG, payload: song });
+    dispatch({ type: actions.SYNTH_PLAY });
+  };
 };

@@ -6,13 +6,12 @@ const NowPlayingSection = ({ isPlaying, generatedSettings }) => {
     return (
       <section className="now-playing-section">
         <div className="row">
-          <div className="col-sm-12">
+          <div className="col-md-12">
             <h5>Key</h5>
             <p className="now-playing">{generatedSettings.key}</p>
           </div>
-        </div>
-        <div className="row">
-          <div className="col-sm-12">
+
+          <div className="col-md-12">
             <h5>Chord Progression</h5>
             <p className="now-playing-chords">{generatedSettings.chordProgressionNotes}</p>
           </div>

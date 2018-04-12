@@ -6,9 +6,10 @@ body {
 }
 html {
   min-height: 100%;
-  background: #43cea2;  
-  background: -webkit-linear-gradient(to top, #185a9d, #43cea2);
-  background: linear-gradient(to top, #185a9d, #43cea2); 
+  background: #283048;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #859398, #283048);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #859398, #283048); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  
 }
 #root {
   padding-top: 40px;

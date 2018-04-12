@@ -5,6 +5,9 @@ import instruments from "../instruments";
 import * as rythyms from "../rythyms";
 import * as utils from "../../utils";
 
+const reverb = new Tone.Freeverb().toMaster();
+reverb.receive("reverb");
+
 export const play = () => {
   const keyType = scales.getRandomScaleType();
   const songKey = {
@@ -43,6 +46,8 @@ export const play = () => {
   const openHatFrequency = Tone.Frequency(songKey.root + "3").toFrequency();
 
   const generatedSettings = {
+    bpm: utils.randomIntBetween(70, 90),
+    swing: Math.random(),
     key: `${songKey.root} (${songKey.typeName})`,
     chordOctave: songKey.chordOctave,
     chordProgression: progressionIntervals,

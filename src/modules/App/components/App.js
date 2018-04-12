@@ -4,6 +4,7 @@ import "./App.css";
 import { version } from "../../../../package.json";
 import NowPlayingSection from "./NowPlayingSection";
 import GenerationOptions from "./GenerationOptions";
+import Songs from "./Songs";
 import Info from "./Info";
 
 class App extends Component {
@@ -14,12 +15,16 @@ class App extends Component {
   }
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
-      this.props.actions.SetSeed(this.props.match.params.seed);
+      this.props.actions.SetSeed(this.props.match.params.seed || "");
     }
   }
   handleSeedChange = event => {
     const newSeed = event.target.value.toString();
     this.props.history.push("/" + newSeed);
+  };
+  handleSongSelection = event => {
+    const song = parseInt(event.target.getAttribute("data-song"), 10);
+    this.props.actions.SetSong(song);
   };
   randomiseSeed = () => {
     const randomSeed = new Date().getTime().toString();
@@ -28,30 +33,42 @@ class App extends Component {
   render() {
     return (
       <div className="container text-center">
-        <div className="main-panel col-md-6 offset-md-3">
-          <div className="row">
-            <div className="col-sm-12">
-              <h1 className="main-title">Synaesthesia</h1>
-              <p className="lead">
-                A Web Audio experiment by <a href="https://soundcloud.com/wheelibin">wheelibin</a>
-              </p>
-            </div>
+        <div className="row">
+          <div className="col-sm-12">
+            <h1 className="main-title">Synaesthesia</h1>
+            <p className="lead">
+              Web Audio experiments by <a href="https://soundcloud.com/wheelibin">wheelibin</a>
+            </p>
           </div>
-          <div className="row">
-            <div className="col-sm-12">
-              <button onClick={this.props.actions.PlayButtonClick} className="main-panel__play-button btn btn-block btn-outline-light btn-lg">
-                {this.props.playButtonText}
-              </button>
-              <NowPlayingSection isPlaying={this.props.isPlaying} generatedSettings={this.props.generatedSettings} />
-            </div>
-          </div>
-          <GenerationOptions
-            isPlaying={this.props.isPlaying}
-            seed={this.props.seed}
-            onRandomise={this.randomiseSeed}
-            onSeedChange={this.handleSeedChange}
-          />
+        </div>
 
+        <div className="row">
+          <div className="col-md-8 offset-md-2">
+            <Songs onSongSelection={this.handleSongSelection} song={this.props.song} />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-md-8 offset-md-2">
+            <NowPlayingSection isPlaying={this.props.isPlaying} generatedSettings={this.props.generatedSettings} />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-md-8 offset-md-2">
+            <GenerationOptions
+              isPlaying={this.props.isPlaying}
+              seed={this.props.seed}
+              onRandomise={this.randomiseSeed}
+              onSeedChange={this.handleSeedChange}
+            />
+            {/* <button onClick={this.props.actions.PlayButtonClick} className="main-panel__play-button btn btn-block btn-outline-light btn-lg">
+              {this.props.playButtonText}
+            </button> */}
+          </div>
+        </div>
+
+        <div className="main-panel col-md-8 offset-md-2">
           <Info isPlaying={this.props.isPlaying} />
         </div>
         <small className="version">v{version}</small>

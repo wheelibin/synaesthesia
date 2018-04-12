@@ -4,7 +4,7 @@ import * as scales from "../scales";
 import instruments from "../instruments";
 
 const fmOscillator = (note, volume = 0) => {
-  const osc = new Tone.FMOscillator(note, "sine", "square").toMaster().start(0.5);
+  const osc = new Tone.FMOscillator(note, "sine", "square").toMaster().start();
   osc.volume.value = volume;
   return osc;
 };
@@ -24,11 +24,15 @@ export const play = () => {
     extraOscillatorFadeOutTime: "+2:2:0",
     changeRootInterval: "64m"
   };
-
   const masterScale = scales.getRandomScaleType();
-  const root = scales.getRandomRootNote();
-  const rootFreq = Tone.Frequency(root + "0");
+  const rootFreq = Tone.Frequency(scales.getRandomRootNote() + "0");
+
+  const oscRoot = fmOscillator(rootFreq);
+  const oscRootO2 = fmOscillator(transpose(rootFreq, 12));
+  const oscRootO3 = fmOscillator(transpose(rootFreq, 24));
+
   const oscScale = scales.actualNotesFromScale(rootFreq.toNote(), masterScale.intervals, 2, 3);
+
   const harmonyNotes = utils.shuffleArray(scales.actualNotesFromScale(rootFreq.toNote(), masterScale.intervals, 3, 3));
   const harmonyOscillator = fmOscillator(rootFreq, config.lowestOscVolume);
 
@@ -52,33 +56,53 @@ export const play = () => {
   bassPattern.interval = config.bassInterval;
   bassPattern.start();
 
-  const oscRoot = fmOscillator(rootFreq);
-  const oscRootO2 = fmOscillator(transpose(rootFreq, 12));
-  const oscRootO3 = fmOscillator(transpose(rootFreq, 24));
-  const osc3 = fmOscillator(oscScale[2], config.lowestOscVolume);
-  const osc5 = fmOscillator(oscScale[4], config.lowestOscVolume);
-  const osc7 = fmOscillator(oscScale[6], config.lowestOscVolume);
-  const osc9 = fmOscillator(oscScale[8], config.lowestOscVolume);
-  const osc11 = fmOscillator(oscScale[10], config.lowestOscVolume);
+  //Toss a coin for which oscillator setup to use
+  // if (utils.coinToss()) {
+  if (0) {
+    const osc3 = fmOscillator(oscScale[2], config.lowestOscVolume);
+    const osc5 = fmOscillator(oscScale[4], config.lowestOscVolume);
+    const osc7 = fmOscillator(oscScale[6], config.lowestOscVolume);
+    const osc9 = fmOscillator(oscScale[8], config.lowestOscVolume);
+    const osc11 = fmOscillator(oscScale[10], config.lowestOscVolume);
+    oscillatorsWithEffects = [harmonyOscillator, oscRoot, oscRootO2, oscRootO3, osc3, osc5, osc7, osc9, osc11];
+    oscillatorsWithFrequencyChange = oscillatorsWithEffects;
+    oscillatorsWithVolumeChange = [oscRoot, oscRootO2, oscRootO3, osc3];
+    extraOscillators = [osc5, osc7, osc9, osc11];
+    changeRootAndTransposeAllToMatch = newRoot => {
+      newRoot = Tone.Frequency(newRoot);
+      const newScale = scales.actualNotesFromScale(newRoot.toNote(), masterScale.intervals, 2, 3);
+      //Change the oscillators to the new notes
+      oscRoot.frequency.linearRampToValueAtTime(newRoot, changeRootRampTime);
+      oscRootO2.frequency.linearRampToValueAtTime(transpose(newRoot, 24), changeRootRampTime);
+      osc3.frequency.linearRampToValueAtTime(newScale[2], changeRootRampTime);
+      osc5.frequency.linearRampToValueAtTime(newScale[4], changeRootRampTime);
+      osc7.frequency.linearRampToValueAtTime(newScale[6], changeRootRampTime);
+      osc9.frequency.linearRampToValueAtTime(newScale[8], changeRootRampTime);
+      osc11.frequency.linearRampToValueAtTime(newScale[10], changeRootRampTime);
+      bassPattern.values = scales.actualNotesFromScale(newRoot.toNote(), masterScale.intervals, 1, 2);
+    };
+  } else {
+    const oscFifth = fmOscillator(transpose(rootFreq, 27));
+    const oscSeventh = fmOscillator(transpose(rootFreq, 34), config.lowestOscVolume);
+    const oscNinth = fmOscillator(transpose(rootFreq, 36), config.lowestOscVolume);
+    const oscEleventh = fmOscillator(transpose(rootFreq, 38), config.lowestOscVolume);
+    oscillatorsWithEffects = [harmonyOscillator, oscRoot, oscRootO2, oscRootO3, oscFifth, oscSeventh, oscNinth, oscEleventh];
+    oscillatorsWithFrequencyChange = oscillatorsWithEffects;
+    oscillatorsWithVolumeChange = [oscRoot, oscRootO2, oscRootO3, oscFifth];
+    extraOscillators = [oscSeventh, oscNinth, oscEleventh];
+    changeRootAndTransposeAllToMatch = newRoot => {
+      newRoot = Tone.Frequency(newRoot);
+      oscRoot.frequency.linearRampToValueAtTime(newRoot, changeRootRampTime);
 
-  oscillatorsWithEffects = [harmonyOscillator, oscRoot, oscRootO2, oscRootO3, osc3, osc5, osc7, osc9, osc11];
-  oscillatorsWithFrequencyChange = oscillatorsWithEffects;
-  oscillatorsWithVolumeChange = [oscRoot, oscRootO2, oscRootO3, osc3];
-  extraOscillators = [osc5, osc7, osc9, osc11];
-
-  changeRootAndTransposeAllToMatch = newRoot => {
-    newRoot = Tone.Frequency(newRoot);
-    const newScale = scales.actualNotesFromScale(newRoot.toNote(), masterScale.intervals, 2, 3);
-    //Change the oscillators to the new notes
-    oscRoot.frequency.linearRampToValueAtTime(newRoot, changeRootRampTime);
-    oscRootO2.frequency.linearRampToValueAtTime(transpose(newRoot, 24), changeRootRampTime);
-    osc3.frequency.linearRampToValueAtTime(newScale[2], changeRootRampTime);
-    osc5.frequency.linearRampToValueAtTime(newScale[4], changeRootRampTime);
-    osc7.frequency.linearRampToValueAtTime(newScale[6], changeRootRampTime);
-    osc9.frequency.linearRampToValueAtTime(newScale[8], changeRootRampTime);
-    osc11.frequency.linearRampToValueAtTime(newScale[10], changeRootRampTime);
-    bassPattern.values = scales.actualNotesFromScale(newRoot.toNote(), masterScale.intervals, 1, 2);
-  };
+      oscRootO2.frequency.linearRampToValueAtTime(transpose(newRoot, 12), changeRootRampTime);
+      oscRootO3.frequency.linearRampToValueAtTime(transpose(newRoot, 24), changeRootRampTime);
+      oscFifth.frequency.linearRampToValueAtTime(transpose(newRoot, 27), changeRootRampTime);
+      oscSeventh.frequency.linearRampToValueAtTime(transpose(newRoot, 34), changeRootRampTime);
+      oscNinth.frequency.linearRampToValueAtTime(transpose(newRoot, 36), changeRootRampTime);
+      oscEleventh.frequency.linearRampToValueAtTime(transpose(newRoot, 38), changeRootRampTime);
+      //bassPattern.values = scales.actualNotesFromScale(newRoot.toNote(), masterScale.intervals, 1, 2);
+    };
+  }
 
   const chorus = new Tone.Chorus(2, 2.5, 0.5).toMaster();
   const reverb = new Tone.Freeverb().toMaster();
@@ -136,20 +160,10 @@ export const play = () => {
   noise.connect(noiseAutoFilter);
   noiseAutoFilter.start();
 
-  //Subtly modulate the noise volume
-  const noiseVolumeLfo = new Tone.LFO("9m", 8, 10);
-  noiseVolumeLfo.start();
-  noiseVolumeLfo.connect(noise.volume);
-
   //Subtly modulate the reverb
-  const reverbRoomSizeLfo = new Tone.LFO("7m", 0.7, 0.9);
-  reverbRoomSizeLfo.start();
-  reverbRoomSizeLfo.connect(reverb.roomSize);
-
-  //Subtly modulate the reverb
-  const reverbDampeningLfo = new Tone.LFO("6m", 1000, 4000);
-  reverbDampeningLfo.start();
-  reverbDampeningLfo.connect(reverb.dampening);
+  const lfo = new Tone.LFO("7m", 0.7, 0.9);
+  lfo.start();
+  lfo.connect(reverb.roomSize);
 
   //Fade in and out one other random oscillator
   const extraOscillatorLoop = new Tone.Loop(() => {
@@ -164,7 +178,7 @@ export const play = () => {
       extraOscillator.volume.rampTo(0, "1m", time);
     }, config.extraOscillatorFadeOutTime);
   }, config.extraOscillatorInterval);
-  // extraOscillatorLoop.probability = 0.7;
+  extraOscillatorLoop.probability = 0.7;
   extraOscillatorLoop.start(config.extraOscillatorInterval);
 
   const harmonyOscillatorLoop = new Tone.Loop(time => {
@@ -177,7 +191,7 @@ export const play = () => {
     }, config.harmonyFadeOutTime);
     harmonyNotes.push(note);
   }, config.harmonyInterval);
-  // harmonyOscillatorLoop.probability = 0.8;
+  harmonyOscillatorLoop.probability = 0.8;
   harmonyOscillatorLoop.start(config.harmonyInterval);
 
   //Transpose th whole lot by changing the root
@@ -191,9 +205,5 @@ export const play = () => {
   changeRootPattern.interval = config.changeRootInterval;
   changeRootPattern.start(config.changeRootInterval);
 
-  return {
-    bpm: 70,
-    swing: 0,
-    key: `${root} (${masterScale.type})`
-  };
+  return {};
 };

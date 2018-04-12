@@ -1,12 +1,12 @@
 import * as actions from "./actionTypes";
 import * as synth from "../../synth/synth";
 
-const initialState = { seed: "yeah", playButtonText: "Play", generatedSettings: null, isPlaying: false };
+const initialState = { song: 1, seed: "a seed", playButtonText: "Play", generatedSettings: null, isPlaying: false };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case actions.SYNTH_PLAY: {
-      const generatedSettings = synth.play(state.seed);
+      const generatedSettings = synth.play(state.song, state.seed);
       state = { ...state, generatedSettings: generatedSettings, playButtonText: "Stop", isPlaying: true };
       break;
     }
@@ -26,6 +26,12 @@ export default (state = initialState, action) => {
     case actions.UPDATE_GENERATED_SETTINGS: {
       const generatedSettings = action.payload;
       state = { ...state, generatedSettings: generatedSettings };
+      break;
+    }
+
+    case actions.SET_SONG: {
+      const newSong = action.payload;
+      state = { ...state, song: newSong };
       break;
     }
 

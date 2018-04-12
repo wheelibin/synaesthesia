@@ -1,29 +1,23 @@
 import debounce from "lodash/debounce";
 import Tone from "tone";
 import songs from "./songs";
-import * as utils from "../utils";
 
-export const play = (seed, callback = null) => {
+export const play = (song, seed, callback = null) => {
   Tone.context.close();
   Tone.context = new AudioContext();
 
   Math.seedrandom(seed);
 
-  const reverb = new Tone.Freeverb().toMaster();
-  reverb.receive("reverb");
-
-  //const generatedSettings = songs.funkyDownTempo.play();
-  const generatedSettings = songs.drone.play();
-
-  const bpm = utils.randomIntBetween(70, 90);
-  generatedSettings.bpm = bpm;
-
-  const swing = Math.random();
-  generatedSettings.swing = swing;
+  let generatedSettings = null;
+  if (song === 1) {
+    generatedSettings = songs.funkyDownTempo.play();
+  } else {
+    generatedSettings = songs.drone.play();
+  }
 
   Tone.Master.volume.value = -32;
-  Tone.Transport.bpm.value = bpm;
-  Tone.Transport.swing = swing;
+  Tone.Transport.bpm.value = generatedSettings.bpm;
+  Tone.Transport.swing = generatedSettings.swing;
 
   Tone.Transport.start(1);
   console.log(generatedSettings);
