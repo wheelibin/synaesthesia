@@ -49,25 +49,24 @@ class App extends Component {
         </div>
 
         <div className="row">
-          <div className="col-md-8 offset-md-2">
+          <div className={`col-md-8 offset-md-2 border border-white rounded song-section ${this.props.activeSongClassName}`}>
             <NowPlayingSection isPlaying={this.props.isPlaying} generatedSettings={this.props.generatedSettings} />
+            <div className="row">
+              <div className="col-md-12">
+                <GenerationOptions
+                  isPlaying={this.props.isPlaying}
+                  seed={this.props.seed}
+                  onRandomise={this.randomiseSeed}
+                  onSeedChange={this.handleSeedChange}
+                />
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-md-8 offset-md-2">
-            <GenerationOptions
-              isPlaying={this.props.isPlaying}
-              seed={this.props.seed}
-              onRandomise={this.randomiseSeed}
-              onSeedChange={this.handleSeedChange}
-            />
-            {/* <button onClick={this.props.actions.PlayButtonClick} className="main-panel__play-button btn btn-block btn-outline-light btn-lg">
+        {/* <button onClick={this.props.actions.PlayButtonClick} className="main-panel__play-button btn btn-block btn-outline-light btn-lg">
               {this.props.playButtonText}
             </button> */}
-          </div>
-        </div>
-
         <div className="main-panel col-md-8 offset-md-2">
           <Info isPlaying={this.props.isPlaying} />
         </div>

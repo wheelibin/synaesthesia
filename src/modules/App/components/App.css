@@ -1,10 +1,10 @@
 .main-panel {
-    padding-bottom: 8px;
-    font-weight: lighter;
+  padding-bottom: 8px;
+  font-weight: lighter;
 }
 
 .main-panel__play-button {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .now-playing-section {
@@ -25,17 +25,21 @@
 }
 
 .main-title {
-    font-weight: 100;
+  font-weight: 100;
 }
 
-a, a:visited {
-    color: white;
-    text-decoration: underline;
+a,
+a:visited {
+  color: white;
+  text-decoration: underline;
 }
 
+.song-section {
+  margin-top: 30px;
+}
 
 .version {
-    font-size: 0.6rem;
+  font-size: 0.6rem;
 }
 
 .card {
@@ -47,44 +51,45 @@ a, a:visited {
 }
 
 .info-section {
-margin-top: 60px;
+  margin-top: 60px;
 }
 
 .funky-down-tempo--active {
-  background: #43cea2;  
+  background: #43cea2;
   background: -webkit-linear-gradient(to top, #185a9d, #43cea2);
-  background: linear-gradient(to top, #185a9d, #43cea2); 
+  background: linear-gradient(to top, #185a9d, #43cea2);
 }
 
 .evolving-drone--active {
-  background: #4B79A1;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to bottom, #283E51, #4B79A1);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to bottom, #283E51, #4B79A1); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  
+  background: #4b79a1; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to bottom,
+    #283e51,
+    #4b79a1
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    #283e51,
+    #4b79a1
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
-
-@media (min-width: 576px) { 
-    .main-title {
-        font-size: 3rem;
-    }    
- }
-
-@media (min-width: 768px) { 
-    .main-title {
-        font-size: 3rem;
-    }
- }
-
-@media (min-width: 992px) { 
-    .main-title {
-        font-size: 4rem;
-    }
- }
-
-@media (min-width: 1200px) { 
-    .main-title {
-        font-size: 5rem;
-    }
- }
-
-
+@media (min-width: 576px) {
+  .main-title {
+    font-size: 3rem;
+  }
+}
+@media (min-width: 768px) {
+  .main-title {
+    font-size: 3rem;
+  }
+}
+@media (min-width: 992px) {
+  .main-title {
+    font-size: 4rem;
+  }
+}
+@media (min-width: 1200px) {
+  .main-title {
+    font-size: 5rem;
+  }
+}
