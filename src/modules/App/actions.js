@@ -2,9 +2,14 @@ import * as actions from "./actionTypes";
 import * as synth from "../../synth/synth";
 
 export const Play = () => {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const generatedSettings = synth.play(getState().app.song, getState().app.seed, null, visData => {
+      console.log(visData);
+      //dispatch(UpdateEnvelopeValue(kv));
+    });
     dispatch({
-      type: actions.SYNTH_PLAY
+      type: actions.SYNTH_PLAY,
+      payload: generatedSettings
     });
   };
 };
@@ -33,20 +38,22 @@ export const SetInitialSeed = newSeed => {
 export const SetSeed = newSeed => {
   return (dispatch, getState) => {
     dispatch({ type: actions.UPDATE_SEED, payload: newSeed });
-    synth.playDebounced(getState().song, newSeed, generatedSettings => {
+    synth.playDebounced(getState().app.song, newSeed, generatedSettings => {
       dispatch({ type: actions.UPDATE_GENERATED_SETTINGS, payload: generatedSettings });
     });
   };
 };
 
 export const RandomiseSeed = () => {
-  const randomSeed = new Date().getTime().toString();
-  return SetSeed(randomSeed);
+  return () => {
+    const randomSeed = new Date().getTime().toString();
+    return SetSeed(randomSeed);
+  };
 };
 
 export const SetSong = song => {
   return dispatch => {
     dispatch({ type: actions.SET_SONG, payload: song });
-    dispatch({ type: actions.SYNTH_PLAY });
+    dispatch(Play());
   };
 };

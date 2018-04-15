@@ -1,6 +1,6 @@
 import Tone from "tone";
 
-export const addChordProgression = (startTime, chordProgression, instrument, noteLength, interval, shouldLoop) => {
+export const addChordProgression = (startTime, chordProgression, instrument, noteLength, interval, shouldLoop, visCallback) => {
   const loop = new Tone.Loop(function(time) {
     //Take first chord
     const currentChord = chordProgression.shift();
@@ -8,6 +8,13 @@ export const addChordProgression = (startTime, chordProgression, instrument, not
     chordProgression.push(currentChord);
     //play it
     instrument.triggerAttackRelease(currentChord, noteLength, time);
+
+    Tone.Draw.schedule(function() {
+      //the callback synced to the animation frame at the given time
+      if (visCallback) {
+        visCallback(currentChord);
+      }
+    }, time);
   }, interval);
 
   loop.loop = shouldLoop;

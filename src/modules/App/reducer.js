@@ -13,13 +13,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case actions.SYNTH_PLAY: {
-      const generatedSettings = synth.play(state.song, state.seed);
-      state = {
-        ...state,
-        generatedSettings: generatedSettings,
-        playButtonText: "Stop",
-        isPlaying: true
-      };
+      state = { ...state, generatedSettings: action.payload, playButtonText: "Stop", isPlaying: true };
       break;
     }
 
@@ -45,8 +39,7 @@ export default (state = initialState, action) => {
       const newSong = action.payload;
       state = {
         ...state,
-        song: newSong,
-        activeSongClassName: newSong === 1 ? "funky-down-tempo--active" : "evolving-drone--active"
+        song: newSong
       };
       break;
     }

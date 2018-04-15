@@ -23,7 +23,7 @@ const NowPlayingSection = ({ isPlaying, generatedSettings }) => {
 };
 
 NowPlayingSection.propTypes = {
-  isPlaying: PropTypes.bool.isRequired,
+  isPlaying: PropTypes.bool,
   generatedSettings: PropTypes.object
 };
 

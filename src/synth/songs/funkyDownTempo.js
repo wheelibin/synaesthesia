@@ -8,7 +8,7 @@ import * as utils from "../../utils";
 const reverb = new Tone.Freeverb().toMaster();
 reverb.receive("reverb");
 
-export const play = () => {
+export const play = visCallback => {
   const keyType = scales.getRandomScaleType();
   const songKey = {
     root: scales.getRandomRootNote(),
@@ -90,7 +90,7 @@ export const play = () => {
     changeRythym(sequencer, rythyms.randomOpenHatRythym());
   });
 
-  parts.addChordProgression("0:0:0", chordProgression, chordInstrument, `${chordProgressionBars}m`, `${chordProgressionBars}m`, true);
+  parts.addChordProgression("0:0:0", chordProgression, chordInstrument, `${chordProgressionBars}m`, `${chordProgressionBars}m`, true, visCallback);
 
   const notesPerChord = [];
   for (const bassLinePattern of bassLinePatterns) {

@@ -6,6 +6,7 @@ import NowPlayingSection from "./NowPlayingSection";
 import GenerationOptions from "./GenerationOptions";
 import Songs from "./Songs";
 import Info from "./Info";
+import Song from "./Song";
 
 class App extends Component {
   componentWillMount() {
@@ -47,8 +48,14 @@ class App extends Component {
             <Songs onSongSelection={this.handleSongSelection} song={this.props.song} />
           </div>
         </div>
-
-        <div className="row">
+        <Song
+          isPlaying={this.props.isPlaying}
+          generatedSettings={this.props.generatedSettings}
+          seed={this.props.seed}
+          onRandomise={this.randomiseSeed}
+          onSeedChange={this.handleSeedChange}
+        />
+        {/* <div className="row">
           <div className={`col-md-8 offset-md-2 border border-white rounded song-section ${this.props.activeSongClassName}`}>
             <NowPlayingSection isPlaying={this.props.isPlaying} generatedSettings={this.props.generatedSettings} />
             <div className="row">
@@ -62,12 +69,12 @@ class App extends Component {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* <button onClick={this.props.actions.PlayButtonClick} className="main-panel__play-button btn btn-block btn-outline-light btn-lg">
               {this.props.playButtonText}
             </button> */}
-        <div className="main-panel col-md-8 offset-md-2">
+        <div className="col-md-12" style={{ marginTop: 0 }}>
           <Info isPlaying={this.props.isPlaying} />
         </div>
         <small className="version">v{version}</small>
