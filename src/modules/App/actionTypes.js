@@ -9,3 +9,4 @@ export const SYNTH_STOP = prefix + "SYNTH_STOP";
 export const UPDATE_SEED = prefix + "UPDATE_SEED";
 export const UPDATE_GENERATED_SETTINGS = prefix + "UPDATE_GENERATED_SETTINGS";
 export const SET_SONG = prefix + "SET_SONG";
+export const CHANGE_IMAGE = prefix + "CHANGE_IMAGE";

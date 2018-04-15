@@ -7,7 +7,7 @@ const initialState = {
   playButtonText: "Play",
   generatedSettings: null,
   isPlaying: false,
-  activeSongClassName: "funky-down-tempo--active"
+  currentImage: "https://farm5.staticflickr.com/4009/4693323665_28d5825b16_b.jpg"
 };
 
 export default (state = initialState, action) => {
@@ -41,6 +41,11 @@ export default (state = initialState, action) => {
         ...state,
         song: newSong
       };
+      break;
+    }
+
+    case actions.CHANGE_IMAGE: {
+      state = { ...state, currentImage: action.payload };
       break;
     }
 

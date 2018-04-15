@@ -1,10 +1,11 @@
 import * as actions from "./actionTypes";
 import * as synth from "../../synth/synth";
+import * as flickrApi from "../../api/flickrApi";
 
 export const Play = () => {
   return (dispatch, getState) => {
     const generatedSettings = synth.play(getState().app.song, getState().app.seed, null, visData => {
-      console.log(visData);
+      dispatch(ChangeImage());
       //dispatch(UpdateEnvelopeValue(kv));
     });
     dispatch({
@@ -55,5 +56,19 @@ export const SetSong = song => {
   return dispatch => {
     dispatch({ type: actions.SET_SONG, payload: song });
     dispatch(Play());
+  };
+};
+var image = 0;
+export const ChangeImage = () => {
+  return dispatch => {
+    flickrApi.getImage(image++).then(response => {
+      //console.log(response.data.photos.photo[0]);
+      const { farm, server, id, secret } = response.data.photos.photo[0];
+      const newImage = `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}_b.jpg`;
+      console.log(newImage);
+      dispatch({ type: actions.CHANGE_IMAGE, payload: newImage });
+    });
+
+    // const newImage = "https://picsum.photos/1148/492/?image=" + image++;
   };
 };

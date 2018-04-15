@@ -4,14 +4,14 @@ import * as actions from "../actions";
 import components from "../components";
 
 const mapStateToProps = state => {
-  const { seed, playButtonText, generatedSettings, isPlaying, song, activeSongClassName } = state.app;
+  const { seed, playButtonText, generatedSettings, isPlaying, song, currentImage } = state.app;
   return {
     seed: seed,
     playButtonText: playButtonText,
     generatedSettings: generatedSettings,
     isPlaying: isPlaying,
     song: song,
-    activeSongClassName: activeSongClassName
+    currentImage: currentImage
   };
 };
 

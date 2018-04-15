@@ -54,6 +54,7 @@ class App extends Component {
           seed={this.props.seed}
           onRandomise={this.randomiseSeed}
           onSeedChange={this.handleSeedChange}
+          currentImage={this.props.currentImage}
         />
         {/* <div className="row">
           <div className={`col-md-8 offset-md-2 border border-white rounded song-section ${this.props.activeSongClassName}`}>

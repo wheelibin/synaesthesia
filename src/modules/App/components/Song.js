@@ -2,13 +2,20 @@ import React from "react";
 import PropTypes from "prop-types";
 import SongInfo from "./SongInfo";
 import GenerationOptions from "./GenerationOptions";
-const Song = ({ isPlaying, generatedSettings, seed, onRandomise, onSeedChange }) => {
+const Song = ({ isPlaying, generatedSettings, seed, onRandomise, onSeedChange, currentImage }) => {
   return (
     <div className="row">
       <div className="col-sm-12">
         <div
           className="border border-white rounded"
-          style={{ marginTop: 20, padding: 0, height: 492, backgroundImage: "url('https://picsum.photos/1148/492/?random')" }}
+          style={{
+            marginTop: 20,
+            padding: 0,
+            height: 492,
+            backgroundImage: `url('${currentImage}')`,
+            transition: "background-image 2s ease-in-out",
+            backgroundSize: "cover"
+          }}
         >
           {/* <img
             style={{ position: "absolute", left: 0 }}
