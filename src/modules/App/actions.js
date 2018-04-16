@@ -58,17 +58,40 @@ export const SetSong = song => {
     dispatch(Play());
   };
 };
-var image = 0;
+
+const runUntilCheckPasses = (fn, check, isDone, dispatch) => {
+  if (isDone) return;
+  const promise = fn();
+  return promise.then(data => runUntilCheckPasses(fn, check, check(dispatch, data), dispatch));
+};
+
+var page = 0;
+const getNextImage = () => {
+  const apiResponse = flickrApi.getImage(page++, "bokeh", "music instrument");
+  return apiResponse;
+};
+
+const check = (dispatch, response) => {
+  const hasOkImage =
+    response.data.photos !== undefined &&
+    response.data.photos.photo.length > 0 &&
+    response.data.photos.photo.find(p => p.url_c !== undefined) !== undefined;
+  if (hasOkImage) {
+    const mediumImage = response.data.photos.photo.find(p => p.url_c !== undefined);
+    const newImage = mediumImage.url_c;
+    var img = new Image();
+
+    img.onload = function() {
+      dispatch({ type: actions.CHANGE_IMAGE, payload: newImage });
+    };
+    img.src = newImage;
+  }
+
+  return hasOkImage;
+};
+
 export const ChangeImage = () => {
   return dispatch => {
-    flickrApi.getImage(image++).then(response => {
-      //console.log(response.data.photos.photo[0]);
-      const { farm, server, id, secret } = response.data.photos.photo[0];
-      const newImage = `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}_b.jpg`;
-      console.log(newImage);
-      dispatch({ type: actions.CHANGE_IMAGE, payload: newImage });
-    });
-
-    // const newImage = "https://picsum.photos/1148/492/?image=" + image++;
+    runUntilCheckPasses(getNextImage, check, false, dispatch);
   };
 };

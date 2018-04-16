@@ -25,7 +25,7 @@ const Song = ({ isPlaying, generatedSettings, seed, onRandomise, onSeedChange, c
           <SongInfo isPlaying={isPlaying} generatedSettings={generatedSettings} />
 
           <div className="row>">
-            <div className="col-md-6 offset-md-3 border rounded" style={{ backgroundColor: "rgba(0,0,0, 0.5)", marginTop: 60 }}>
+            <div className="col-md-6 offset-md-3 border rounded" style={{ backgroundColor: "rgba(0,0,0, 0.5)", marginTop: 100 }}>
               <GenerationOptions isPlaying={isPlaying} seed={seed} onRandomise={onRandomise} onSeedChange={onSeedChange} />
             </div>
           </div>
