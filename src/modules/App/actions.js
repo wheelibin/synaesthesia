@@ -42,12 +42,20 @@ export const SetInitialSeed = newSeed => {
 export const SetSeed = newSeed => {
   return (dispatch, getState) => {
     dispatch({ type: actions.UPDATE_SEED, payload: newSeed });
-    synth.playDebounced(getState().app.song, newSeed, generatedSettings => {
-      dispatch({
-        type: actions.UPDATE_GENERATED_SETTINGS,
-        payload: generatedSettings
-      });
-    });
+    synth.playDebounced(
+      getState().app.song,
+      newSeed,
+      generatedSettings => {
+        dispatch({
+          type: actions.UPDATE_GENERATED_SETTINGS,
+          payload: generatedSettings
+        });
+      },
+      visData => {
+        dispatch(ChangeImage());
+        //dispatch(UpdateEnvelopeValue(kv));
+      }
+    );
   };
 };
 
@@ -65,9 +73,9 @@ export const SetSong = song => {
   };
 };
 
-var page = 0;
-const getNextImage = () => {
-  const apiResponse = flickrApi.getImage(page++, "bokeh", "music instrument");
+var page = 1;
+const getNextImage = group => {
+  const apiResponse = flickrApi.getImage(page++, group);
   return apiResponse;
 };
 const checkForAcceptableImage = (dispatch, response) => {
@@ -89,7 +97,12 @@ const checkForAcceptableImage = (dispatch, response) => {
 };
 
 export const ChangeImage = () => {
-  return dispatch => {
-    utils.runFunctionUntilCheckPasses(getNextImage, checkForAcceptableImage, false, dispatch);
+  return (dispatch, getState) => {
+    const group = getState().app.song === 1 ? "2702819%40N24" : "430026@N21";
+    const getNextGroupImage = () => {
+      return getNextImage(group);
+    };
+
+    utils.runFunctionUntilCheckPasses(getNextGroupImage, checkForAcceptableImage, false, dispatch);
   };
 };

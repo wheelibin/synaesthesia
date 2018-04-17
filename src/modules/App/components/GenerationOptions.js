@@ -5,8 +5,18 @@ const GenerationOptions = ({ isPlaying, seed, onRandomise, onSeedChange }) => {
   if (isPlaying) {
     return (
       <form className="form">
-        <div className="generation-options row">
-          <div className="form-group col-md-12">
+        <div
+          className="generation-options row"
+          style={{
+            backgroundColor: "rgba(0,0,0, 0.5)",
+            marginLeft: 0,
+            marginRight: 0,
+            borderBottomLeftRadius: "2em",
+            borderBottomRightRadius: "2em",
+            paddingTop: 8
+          }}
+        >
+          <div className="form-group col-md-4 offset-md-2">
             <label htmlFor="seed">Seed (try entering your own)</label>
             <input
               type="text"
@@ -19,7 +29,7 @@ const GenerationOptions = ({ isPlaying, seed, onRandomise, onSeedChange }) => {
             />
           </div>
 
-          <div className="form-group col-md-12">
+          <div className="form-group col-md-4">
             <label htmlFor="seed">Or generate a random seed</label>
             <button type="button" disabled={!isPlaying} className="btn btn-outline-light btn-lg btn-block" onClick={onRandomise}>
               Randomise!

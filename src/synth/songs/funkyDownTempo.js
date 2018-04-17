@@ -9,6 +9,8 @@ const reverb = new Tone.Freeverb().toMaster();
 reverb.receive("reverb");
 
 export const play = visCallback => {
+  Tone.Master.volume.value = -32;
+
   const keyType = scales.getRandomScaleType();
   const songKey = {
     root: scales.getRandomRootNote(),

@@ -11,7 +11,9 @@ const fmOscillator = (note, volume = 0) => {
 const transpose = (freq, semitones) => {
   return Tone.Frequency(freq).transpose(semitones);
 };
-export const play = () => {
+export const play = visCallback => {
+  Tone.Master.volume.value = -25;
+
   const config = {
     lowestOscVolume: -50,
     changeFrequencyInterval: "4m",
@@ -45,6 +47,11 @@ export const play = () => {
   const bassPattern = new Tone.Pattern(
     function(time, note) {
       bassInstrument.triggerAttackRelease(note, config.bassInterval, time);
+      Tone.Draw.schedule(function() {
+        if (visCallback) {
+          visCallback();
+        }
+      }, time);
     },
     scales.actualNotesFromScale(rootFreq.toNote(), masterScale.intervals, 1, 2),
     "randomWalk"
