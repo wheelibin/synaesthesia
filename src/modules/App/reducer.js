@@ -3,7 +3,7 @@ import * as synth from "../../synth/synth";
 
 const initialState = {
   song: 1,
-  seed: "a seed",
+  seed: "a seed", //1523983162306
   playButtonText: "Play",
   generatedSettings: null,
   isPlaying: false,

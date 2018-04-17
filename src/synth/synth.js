@@ -10,7 +10,6 @@ export const play = (song, seed, callback = null, visCallback = null) => {
 
   const generatedSettings = songs[song].play(visCallback);
 
-  Tone.Master.volume.value = -32;
   Tone.Transport.bpm.value = generatedSettings.bpm;
   Tone.Transport.swing = generatedSettings.swing;
 
