@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import "./App.css";
 import { version } from "../../../../package.json";
-import NowPlayingSection from "./NowPlayingSection";
-import GenerationOptions from "./GenerationOptions";
 import Songs from "./Songs";
 import Info from "./Info";
 import Song from "./Song";

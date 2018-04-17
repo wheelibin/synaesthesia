@@ -33,3 +33,9 @@ export const shuffleArray = array => {
 
   return array;
 };
+
+export const runFunctionUntilCheckPasses = (fn, check, isDone, dispatch) => {
+  if (isDone) return;
+  const promise = fn();
+  return promise.then(data => runFunctionUntilCheckPasses(fn, check, check(dispatch, data), dispatch));
+};

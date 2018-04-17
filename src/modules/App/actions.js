@@ -1,6 +1,9 @@
+/* globals Image */
+
 import * as actions from "./actionTypes";
 import * as synth from "../../synth/synth";
 import * as flickrApi from "../../api/flickrApi";
+import * as utils from "../../utils";
 
 export const Play = () => {
   return (dispatch, getState) => {
@@ -40,7 +43,10 @@ export const SetSeed = newSeed => {
   return (dispatch, getState) => {
     dispatch({ type: actions.UPDATE_SEED, payload: newSeed });
     synth.playDebounced(getState().app.song, newSeed, generatedSettings => {
-      dispatch({ type: actions.UPDATE_GENERATED_SETTINGS, payload: generatedSettings });
+      dispatch({
+        type: actions.UPDATE_GENERATED_SETTINGS,
+        payload: generatedSettings
+      });
     });
   };
 };
@@ -59,39 +65,31 @@ export const SetSong = song => {
   };
 };
 
-const runUntilCheckPasses = (fn, check, isDone, dispatch) => {
-  if (isDone) return;
-  const promise = fn();
-  return promise.then(data => runUntilCheckPasses(fn, check, check(dispatch, data), dispatch));
-};
-
 var page = 0;
 const getNextImage = () => {
   const apiResponse = flickrApi.getImage(page++, "bokeh", "music instrument");
   return apiResponse;
 };
-
-const check = (dispatch, response) => {
-  const hasOkImage =
+const checkForAcceptableImage = (dispatch, response) => {
+  const foundAcceptableImage =
     response.data.photos !== undefined &&
     response.data.photos.photo.length > 0 &&
     response.data.photos.photo.find(p => p.url_c !== undefined) !== undefined;
-  if (hasOkImage) {
+  if (foundAcceptableImage) {
     const mediumImage = response.data.photos.photo.find(p => p.url_c !== undefined);
     const newImage = mediumImage.url_c;
     var img = new Image();
-
     img.onload = function() {
       dispatch({ type: actions.CHANGE_IMAGE, payload: newImage });
     };
     img.src = newImage;
   }
 
-  return hasOkImage;
+  return foundAcceptableImage;
 };
 
 export const ChangeImage = () => {
   return dispatch => {
-    runUntilCheckPasses(getNextImage, check, false, dispatch);
+    utils.runFunctionUntilCheckPasses(getNextImage, checkForAcceptableImage, false, dispatch);
   };
 };
