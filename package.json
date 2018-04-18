@@ -1,6 +1,6 @@
 {
   "name": "synaesthesia",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "private": true,
   "homepage": "https://wheelibin.github.io/synaesthesia",
   "dependencies": {
