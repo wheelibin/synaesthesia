@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import SongInfo from "./SongInfo";
 import GenerationOptions from "./GenerationOptions";
 const Song = ({ isPlaying, generatedSettings, seed, onRandomise, onSeedChange, currentImage }) => {
+  //console.log(currentImage);
+
   return (
     <div className="row">
       <div className="col-sm-12">
@@ -13,6 +15,7 @@ const Song = ({ isPlaying, generatedSettings, seed, onRandomise, onSeedChange, c
             marginTop: 50,
             padding: 0,
             height: 492,
+            backgroundColor: "transparent",
             backgroundImage: `url('${currentImage}')`,
             transition: "background-image 2s ease-in",
             backgroundSize: "cover",
@@ -21,7 +24,7 @@ const Song = ({ isPlaying, generatedSettings, seed, onRandomise, onSeedChange, c
           }}
         >
           <SongInfo isPlaying={isPlaying} generatedSettings={generatedSettings} />
-          <div style={{ flex: "auto" }} />
+          <div style={{ flex: "auto", backgroundColor: "transparent" }} />
           <div className="row>">
             <GenerationOptions isPlaying={isPlaying} seed={seed} onRandomise={onRandomise} onSeedChange={onSeedChange} />
           </div>

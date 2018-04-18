@@ -13,3 +13,4 @@ export const CHANGE_IMAGE = prefix + "CHANGE_IMAGE";
 export const SET_IMAGE_PAGECOUNT = prefix + "SET_IMAGE_PAGECOUNT";
 export const IMAGES_FOUND = prefix + "IMAGES_FOUND";
 export const SELECT_NEXT_IMAGE = prefix + "SELECT_NEXT_IMAGE";
+export const CLEAR_IMAGES = prefix + "CLEAR_IMAGES";

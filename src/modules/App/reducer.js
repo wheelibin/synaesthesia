@@ -12,8 +12,6 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
-  console.log(action);
-
   switch (action.type) {
     case actions.SYNTH_PLAY: {
       state = {
@@ -72,6 +70,12 @@ export default (state = initialState, action) => {
       const nextImage = images.shift();
 
       state = { ...state, images: images, nextImage: nextImage };
+
+      break;
+    }
+
+    case actions.CLEAR_IMAGES: {
+      state = { ...state, images: [] };
       break;
     }
 

@@ -90,6 +90,8 @@ App.propTypes = {
   playButtonText: PropTypes.string.isRequired,
   match: PropTypes.object,
   location: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  currentImage: PropTypes.string.isRequired,
+  song: PropTypes.number.isRequired
 };
 export default App;
