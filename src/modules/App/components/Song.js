@@ -9,7 +9,7 @@ const Song = ({ isPlaying, generatedSettings, seed, onRandomise, onSeedChange, c
         <div
           className="border border-white"
           style={{
-            borderRadius: "2em",
+            borderRadius: "0.5em",
             marginTop: 50,
             padding: 0,
             height: 492,
@@ -29,6 +29,15 @@ const Song = ({ isPlaying, generatedSettings, seed, onRandomise, onSeedChange, c
       </div>
     </div>
   );
+};
+
+Song.propTypes = {
+  isPlaying: PropTypes.bool,
+  generatedSettings: PropTypes.object,
+  seed: PropTypes.string.isRequired,
+  onRandomise: PropTypes.func.isRequired,
+  onSeedChange: PropTypes.func.isRequired,
+  currentImage: PropTypes.string
 };
 
 export default Song;

@@ -7,13 +7,21 @@ const initialState = {
   playButtonText: "Play",
   generatedSettings: null,
   isPlaying: false,
-  currentImage: "https://farm5.staticflickr.com/4009/4693323665_28d5825b16_b.jpg"
+  currentImage: "https://farm5.staticflickr.com/4009/4693323665_28d5825b16_b.jpg",
+  images: []
 };
 
 export default (state = initialState, action) => {
+  console.log(action);
+
   switch (action.type) {
     case actions.SYNTH_PLAY: {
-      state = { ...state, generatedSettings: action.payload, playButtonText: "Stop", isPlaying: true };
+      state = {
+        ...state,
+        generatedSettings: action.payload,
+        playButtonText: "Stop",
+        isPlaying: true
+      };
       break;
     }
 
@@ -46,6 +54,24 @@ export default (state = initialState, action) => {
 
     case actions.CHANGE_IMAGE: {
       state = { ...state, currentImage: action.payload };
+      break;
+    }
+
+    case actions.SET_IMAGE_PAGECOUNT: {
+      state = { ...state, imagePageCount: action.payload };
+      break;
+    }
+
+    case actions.IMAGES_FOUND: {
+      state = { ...state, images: [...state.images, ...action.payload] };
+      break;
+    }
+
+    case actions.SELECT_NEXT_IMAGE: {
+      const images = [...state.images];
+      const nextImage = images.shift();
+
+      state = { ...state, images: images, nextImage: nextImage };
       break;
     }
 

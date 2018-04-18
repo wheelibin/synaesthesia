@@ -1,6 +1,6 @@
 import axios from "axios";
 import credentials from "./flickrApiCredentials";
-export const getImage = (index, group) => {
+export const getImages = (page, group) => {
   // return axios.get(
   //   `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${
   //     credentials.key
@@ -10,6 +10,6 @@ export const getImage = (index, group) => {
   return axios.get(
     `https://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key=${
       credentials.key
-    }&group_id=${group}&extras=url_c&per_page=1&page=${index}&format=json&nojsoncallback=1`
+    }&group_id=${group}&extras=url_c&per_page=50&page=${page}&format=json&nojsoncallback=1`
   );
 };

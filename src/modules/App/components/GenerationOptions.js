@@ -11,8 +11,8 @@ const GenerationOptions = ({ isPlaying, seed, onRandomise, onSeedChange }) => {
             backgroundColor: "rgba(0,0,0, 0.5)",
             marginLeft: 0,
             marginRight: 0,
-            borderBottomLeftRadius: "2em",
-            borderBottomRightRadius: "2em",
+            borderBottomLeftRadius: "0.5em",
+            borderBottomRightRadius: "0.5em",
             paddingTop: 8
           }}
         >

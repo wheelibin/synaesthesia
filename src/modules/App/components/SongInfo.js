@@ -7,7 +7,13 @@ const SongInfo = ({ isPlaying, generatedSettings }) => {
       <section className="">
         <div
           className="row"
-          style={{ backgroundColor: "rgba(0,0,0, 0.5)", marginLeft: 0, marginRight: 0, borderTopLeftRadius: "2em", borderTopRightRadius: "2em" }}
+          style={{
+            backgroundColor: "rgba(0,0,0, 0.5)",
+            marginLeft: 0,
+            marginRight: 0,
+            borderTopLeftRadius: "0.5em",
+            borderTopRightRadius: "0.5em"
+          }}
         >
           <div className="col-md-4 offset-md-2">
             {/* <h5>Key:</h5> */}

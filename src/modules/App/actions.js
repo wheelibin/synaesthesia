@@ -73,36 +73,61 @@ export const SetSong = song => {
   };
 };
 
-var page = 1;
-const getNextImage = group => {
-  const apiResponse = flickrApi.getImage(page++, group);
+const getNextImage = (page, group) => {
+  const apiResponse = flickrApi.getImages(page, group);
   return apiResponse;
 };
-const checkForAcceptableImage = (dispatch, response) => {
-  const foundAcceptableImage =
-    response.data.photos !== undefined &&
-    response.data.photos.photo.length > 0 &&
-    response.data.photos.photo.find(p => p.url_c !== undefined) !== undefined;
-  if (foundAcceptableImage) {
-    const mediumImage = response.data.photos.photo.find(p => p.url_c !== undefined);
-    const newImage = mediumImage.url_c;
-    var img = new Image();
-    img.onload = function() {
-      dispatch({ type: actions.CHANGE_IMAGE, payload: newImage });
-    };
-    img.src = newImage;
-  }
+const checkForAcceptableImage = (dispatch, getState, response) => {
+  const data = response.data;
+  dispatch({ type: actions.SET_IMAGE_PAGECOUNT, payload: data.photos.pages });
 
-  return foundAcceptableImage;
+  const acceptableImages = data.photos.photo.filter(photo => photo.url_c !== undefined);
+  dispatch({ type: actions.IMAGES_FOUND, payload: acceptableImages });
+  dispatch({ type: actions.SELECT_NEXT_IMAGE });
+
+  const newImage = getState().app.nextImage;
+  var img = new Image();
+  img.onload = function() {
+    dispatch({ type: actions.CHANGE_IMAGE, payload: newImage });
+  };
+  img.src = newImage;
+
+  return true;
 };
 
+//If < 10 get more
+
+// const foundAcceptableImage =
+//   data.photos !== undefined && data.photos.photo.length > 0 && data.photos.photo.find(p => p.url_c !== undefined) !== undefined;
+
+// if (foundAcceptableImage) {
+//   const mediumImage = data.photos.photo.find(p => p.url_c !== undefined);
+//   const newImage = mediumImage.url_c;
+//   var img = new Image();
+//   img.onload = function() {
+//     dispatch({ type: actions.CHANGE_IMAGE, payload: newImage });
+//   };
+//   img.src = newImage;
+// }
+
+// return foundAcceptableImage;
+// };
+
+let page = 1;
 export const ChangeImage = () => {
   return (dispatch, getState) => {
     const group = getState().app.song === 1 ? "2702819%40N24" : "430026@N21";
+    const totalPages = getState().app.imagePageCount;
+
+    page++;
+    if (page > totalPages) {
+      page = 1;
+    }
+
     const getNextGroupImage = () => {
-      return getNextImage(group);
+      return getNextImage(page, group);
     };
 
-    utils.runFunctionUntilCheckPasses(getNextGroupImage, checkForAcceptableImage, false, dispatch);
+    utils.runFunctionUntilCheckPasses(getNextGroupImage, checkForAcceptableImage, false, dispatch, getState);
   };
 };
