@@ -9,9 +9,8 @@ let page = 1;
 
 export const Play = () => {
   return (dispatch, getState) => {
-    const generatedSettings = synth.play(getState().app.song, getState().app.seed, null, visData => {
+    const generatedSettings = synth.play(getState().app.song, getState().app.seed, null, () => {
       dispatch(ChangeImage());
-      //dispatch(UpdateEnvelopeValue(kv));
     });
     dispatch({
       type: actions.SYNTH_PLAY,
@@ -53,9 +52,8 @@ export const SetSeed = newSeed => {
           payload: generatedSettings
         });
       },
-      visData => {
+      () => {
         dispatch(ChangeImage());
-        //dispatch(UpdateEnvelopeValue(kv));
       }
     );
   };
@@ -88,16 +86,23 @@ const selectNextImage = (dispatch, getState) => {
   img.src = newImage;
 };
 
-const getNextImage = (page, group) => {
+const getBatchOfImages = (page, group) => {
   const apiResponse = flickrApi.getImages(page, group);
   return apiResponse;
 };
-const checkForAcceptableImage = (dispatch, getState, response) => {
+const checkForAcceptableImages = (dispatch, getState, response) => {
   const data = response.data;
   dispatch({ type: actions.SET_IMAGE_PAGECOUNT, payload: data.photos.pages });
 
   const acceptableImages = data.photos.photo.filter(photo => photo.url_c !== undefined);
-  dispatch({ type: actions.IMAGES_FOUND, payload: acceptableImages.map(img => img.url_c) });
+  if (acceptableImages === undefined || acceptableImages.length === 0) {
+    return false;
+  }
+
+  dispatch({
+    type: actions.IMAGES_FOUND,
+    payload: acceptableImages.map(img => img.url_c)
+  });
 
   selectNextImage(dispatch, getState);
   return true;
@@ -115,10 +120,10 @@ export const ChangeImage = () => {
       }
 
       const getNextGroupImage = () => {
-        return getNextImage(page, group);
+        return getBatchOfImages(page, group);
       };
 
-      utils.runFunctionUntilCheckPasses(getNextGroupImage, checkForAcceptableImage, false, dispatch, getState);
+      utils.runFunctionUntilCheckPasses(getNextGroupImage, checkForAcceptableImages, false, dispatch, getState);
     } else {
       selectNextImage(dispatch, getState);
     }

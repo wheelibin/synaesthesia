@@ -5,11 +5,13 @@ const Info = ({ isPlaying }) => {
   if (isPlaying) {
     return (
       <div className="info-section">
-        <p className="lead text-left">What's all this then?</p>
+        <p className="lead text-left">What&#39;s all this then?</p>
         <p className="text-justify">
-          The music is randomly generated within certain musical constraints, the seed for the currently playing song is shown above. This can be
-          shared and entered again to recreate the exact combination of random parameters used to generate this song. Try experimenting by entering
-          your own seed, it can be any text, word, or phrase!
+          All the music is randomly generated, within certain musical constraints, using the excellent{" "}
+          <a href="https://tonejs.github.io/" target="new">
+            Tone.js
+          </a>. The random generation algorithm is seeded with the seed shown above, this can be changed to anything you like, and entering the same
+          seed with always produce the same randomly generated song. Images are loaded from Flickr and will change in time with the music.
         </p>
         <p className="text-left">
           All the code, and a bit more info, can be found on GitHub here:{" "}
