@@ -4,7 +4,8 @@ import * as scales from "../scales";
 import instruments from "../instruments";
 
 const fmOscillator = (note, volume = 0) => {
-  const osc = new Tone.FMOscillator(note, "sine", "square").toMaster().start(0.5);
+  const oscType = utils.randomFromArray(["sine", "square4"]);
+  const osc = new Tone.FMOscillator(note, oscType, "square").toMaster().start(0.5);
   osc.volume.value = volume;
   return osc;
 };
@@ -67,11 +68,12 @@ export const play = visCallback => {
   const osc7 = fmOscillator(oscScale[6], config.lowestOscVolume);
   const osc9 = fmOscillator(oscScale[8], config.lowestOscVolume);
   const osc11 = fmOscillator(oscScale[10], config.lowestOscVolume);
+  const osc13 = fmOscillator(oscScale[12], config.lowestOscVolume);
 
-  oscillatorsWithEffects = [harmonyOscillator, oscRoot, oscRootO2, oscRootO3, osc3, osc5, osc7, osc9, osc11];
+  oscillatorsWithEffects = [harmonyOscillator, oscRoot, oscRootO2, oscRootO3, osc3, osc5, osc7, osc9, osc11, osc13];
   oscillatorsWithFrequencyChange = oscillatorsWithEffects;
   oscillatorsWithVolumeChange = [oscRoot, oscRootO2, oscRootO3, osc3];
-  extraOscillators = [osc5, osc7, osc9, osc11];
+  extraOscillators = [osc5, osc7, osc9, osc11, osc13];
 
   changeRootAndTransposeAllToMatch = newRoot => {
     newRoot = Tone.Frequency(newRoot);
