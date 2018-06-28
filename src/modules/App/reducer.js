@@ -2,11 +2,11 @@ import * as actions from "./actionTypes";
 import * as synth from "../../synth/synth";
 
 const initialState = {
-  song: 1,
+  song: 0,
   seed: "a seed", //1523983162306
   playButtonText: "Play",
   generatedSettings: null,
-  isPlaying: true
+  isPlaying: false
 };
 
 export default (state = initialState, action) => {
