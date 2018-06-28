@@ -13,7 +13,7 @@ const transpose = (freq, semitones) => {
   return Tone.Frequency(freq).transpose(semitones);
 };
 export const play = visCallback => {
-  Tone.Master.volume.value = -25;
+  Tone.Master.volume.value = -32;
 
   const config = {
     lowestOscVolume: -50,
@@ -203,6 +203,7 @@ export const play = visCallback => {
   return {
     bpm: 70,
     swing: 0,
-    key: `${root} (${masterScale.type})`
+    key: `${root} (${masterScale.type})`,
+    chordProgressionNotes: "n/a"
   };
 };

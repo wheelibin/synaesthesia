@@ -3,8 +3,8 @@ import * as bass from "./bass";
 import { Instrument } from "./instrument";
 
 export class SimpleSine extends Instrument {
-  constructor() {
-    super(new Tone.PolySynth(6, Tone.Synth), 24);
+  constructor(volume = 24) {
+    super(new Tone.PolySynth(6, Tone.Synth), volume);
     this.synth.set({
       oscillator: {
         type: "fatsine"
@@ -23,8 +23,8 @@ export class SimpleSine extends Instrument {
 }
 
 export class SoftSquareFm extends Instrument {
-  constructor() {
-    super(new Tone.PolySynth(6, Tone.Synth), 24);
+  constructor(volume = 24) {
+    super(new Tone.PolySynth(6, Tone.Synth), volume);
     this.synth.set({
       oscillator: {
         type: "fmsquare2"

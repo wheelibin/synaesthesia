@@ -10,6 +10,6 @@ export const getImages = (page, group) => {
   return axios.get(
     `https://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key=${
       credentials.key
-    }&group_id=${group}&extras=url_c&per_page=50&page=${page}&format=json&nojsoncallback=1`
+    }&group_id=${group}&extras=url_q&per_page=50&page=${page}&format=json&nojsoncallback=1`
   );
 };

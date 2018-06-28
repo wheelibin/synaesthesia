@@ -6,9 +6,7 @@ const initialState = {
   seed: "a seed", //1523983162306
   playButtonText: "Play",
   generatedSettings: null,
-  isPlaying: false,
-  currentImage: "https://farm5.staticflickr.com/4009/4693323665_28d5825b16_b.jpg",
-  images: []
+  isPlaying: true
 };
 
 export default (state = initialState, action) => {
@@ -47,35 +45,6 @@ export default (state = initialState, action) => {
         ...state,
         song: newSong
       };
-      break;
-    }
-
-    case actions.CHANGE_IMAGE: {
-      state = { ...state, currentImage: action.payload };
-      break;
-    }
-
-    case actions.SET_IMAGE_PAGECOUNT: {
-      state = { ...state, imagePageCount: action.payload };
-      break;
-    }
-
-    case actions.IMAGES_FOUND: {
-      state = { ...state, images: [...state.images, ...action.payload] };
-      break;
-    }
-
-    case actions.SELECT_NEXT_IMAGE: {
-      const images = [...state.images];
-      const nextImage = images.shift();
-
-      state = { ...state, images: images, nextImage: nextImage };
-
-      break;
-    }
-
-    case actions.CLEAR_IMAGES: {
-      state = { ...state, images: [] };
       break;
     }
 

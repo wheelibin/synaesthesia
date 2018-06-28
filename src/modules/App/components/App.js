@@ -11,6 +11,9 @@ class App extends Component {
     if (this.props.match.params.seed) {
       this.props.actions.SetInitialSeed(this.props.match.params.seed);
     }
+    if (this.props.song > 0) {
+      this.props.actions.SetSong(this.props.song);
+    }
   }
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
@@ -40,40 +43,23 @@ class App extends Component {
             </p>
           </div>
         </div>
-
         <div className="row">
           <div className="col-md-8 offset-md-2">
             <Songs onSongSelection={this.handleSongSelection} song={this.props.song} />
           </div>
         </div>
-        <Song
-          isPlaying={this.props.isPlaying}
-          generatedSettings={this.props.generatedSettings}
-          seed={this.props.seed}
-          onRandomise={this.randomiseSeed}
-          onSeedChange={this.handleSeedChange}
-          currentImage={this.props.currentImage}
-        />
-        {/* <div className="row">
-          <div className={`col-md-8 offset-md-2 border border-white rounded song-section ${this.props.activeSongClassName}`}>
-            <NowPlayingSection isPlaying={this.props.isPlaying} generatedSettings={this.props.generatedSettings} />
-            <div className="row">
-              <div className="col-md-12">
-                <GenerationOptions
-                  isPlaying={this.props.isPlaying}
-                  seed={this.props.seed}
-                  onRandomise={this.randomiseSeed}
-                  onSeedChange={this.handleSeedChange}
-                />
-              </div>
-            </div>
-          </div>
-        </div> */}
 
-        {/* <button onClick={this.props.actions.PlayButtonClick} className="main-panel__play-button btn btn-block btn-outline-light btn-lg">
-              {this.props.playButtonText}
-            </button> */}
-        <div className="col-md-12" style={{ marginTop: 0 }}>
+        {this.props.isPlaying && (
+          <Song
+            isPlaying={this.props.isPlaying}
+            generatedSettings={this.props.generatedSettings}
+            seed={this.props.seed}
+            onRandomise={this.randomiseSeed}
+            onSeedChange={this.handleSeedChange}
+          />
+        )}
+
+        <div className="col-md-6 offset-md-3" style={{ marginTop: 0 }}>
           <Info isPlaying={this.props.isPlaying} />
         </div>
         <small className="version">v{version}</small>
@@ -91,7 +77,6 @@ App.propTypes = {
   match: PropTypes.object,
   location: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  currentImage: PropTypes.string.isRequired,
   song: PropTypes.number.isRequired
 };
 export default App;
