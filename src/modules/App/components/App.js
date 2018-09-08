@@ -8,11 +8,14 @@ import Song from "./Song";
 
 class App extends Component {
   componentWillMount() {
+    let song = this.props.song;
     if (this.props.match.params.seed) {
+      song = 1;
       this.props.actions.SetInitialSeed(this.props.match.params.seed);
     }
-    if (this.props.song > 0) {
-      this.props.actions.SetSong(this.props.song);
+
+    if (song) {
+      this.props.actions.SetSong(song);
     }
   }
   componentDidUpdate(prevProps) {
