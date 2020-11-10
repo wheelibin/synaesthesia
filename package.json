@@ -1,34 +1,60 @@
 {
   "name": "synaesthesia",
-  "version": "0.1.20",
+  "version": "2.0.0",
   "private": true,
   "homepage": "https://wheelibin.github.io/synaesthesia",
   "dependencies": {
-    "axios": "^0.18.0",
-    "lodash": "^4.17.10",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "react-redux": "^5.0.7",
-    "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2",
-    "react-scripts": "^1.1.4",
-    "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0",
-    "tone": "^0.11.12"
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^12.19.3",
+    "@types/react": "^16.9.55",
+    "@types/react-dom": "^16.9.9",
+    "color": "^3.1.3",
+    "jss": "^10.4.0",
+    "jss-preset-default": "^10.4.0",
+    "p5": "^1.1.9",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-jss": "^10.4.0",
+    "react-scripts": "4.0.0",
+    "seedrandom": "^3.0.5",
+    "tone": "^14.7.58",
+    "web-vitals": "^0.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm version patch && npm run build",
     "deploy": "gh-pages -d build"
   },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "devDependencies": {
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-prettier": "^2.6.0",
-    "eslint-plugin-react": "^7.7.0",
-    "gh-pages": "^1.2.0",
-    "prettier": "1.11.1"
+    "@types/p5": "^0.9.1",
+    "@types/seedrandom": "^2.4.28",
+    "@typescript-eslint/eslint-plugin": "^4.7.0",
+    "@typescript-eslint/parser": "^4.7.0",
+    "gh-pages": "^3.1.0",
+    "typescript": "^4.0.5"
   }
 }
