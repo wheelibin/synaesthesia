@@ -2,6 +2,14 @@ export function randomIntBetween(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+export function randomVariation(value: number, maxPercentageVariation: number): number {
+  const variationPerc = randomIntBetween(0, maxPercentageVariation) / 100;
+  const variation = value * variationPerc * (coinToss() ? 1 : -1);
+  const result = value + variation;
+
+  return Math.round(result);
+}
+
 export function randomFromArray<T>(array: T[]): T {
   return array[randomIntBetween(0, array.length - 1)];
 }

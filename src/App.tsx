@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import * as Tone from "tone";
-import { createUseStyles } from "react-jss";
-// import color from "color";
-
 import p5 from "p5";
+import * as Tone from "tone";
+import * as color from "color";
+import { createUseStyles } from "react-jss";
 
-import "./App.css";
+import * as utils from "./synth/utils";
 import { ISongCallback } from "./songs/abstract/songTypes";
 import { Song1 } from "./songs/Song1";
 import { SongKey } from "./synth/types/SongKey";
@@ -17,15 +16,33 @@ const frameRate = 40;
 const outputTopY = 75;
 let displayFont: p5.Font;
 
+const getColours = (baseColour: color) => {
+  return {
+    base: baseColour,
+    kick: baseColour.darken(0.5),
+    snare: baseColour.darken(0.2),
+    closedHat: baseColour.lighten(0.2),
+    openHat: baseColour.lighten(0.5),
+    bass: baseColour.rotate(270),
+    chord: baseColour.rotate(270).lighten(0.2),
+    motif: baseColour.rotate(270).lighten(0.5),
+  };
+};
+
+const baseColour = color.rgb(utils.randomVariation(45, 50), utils.randomVariation(110, 50), utils.randomVariation(142, 50));
+let colours = getColours(baseColour);
+
+// let baseColour = color.rgb(45, 110, 142);
+
 export const App = () => {
   const classes = useStyles();
   const [seed, setSeed] = useState("1604951306214"); //1604667243574
 
   const drumHitShapes = {
-    kick: { diameter: 100, angle: 0, colour: "#0A4562" },
-    snare: { diameter: 100, angle: 0, colour: "#175A7B" },
-    closedHat: { diameter: 100, angle: 0, colour: "#46829F" },
-    openHat: { diameter: 100, angle: 0, colour: "#73A7C0" },
+    kick: { diameter: 100, angle: 0 },
+    snare: { diameter: 100, angle: 0 },
+    closedHat: { diameter: 100, angle: 0 },
+    openHat: { diameter: 100, angle: 0 },
   };
 
   const noteDisplays = {
@@ -50,6 +67,9 @@ export const App = () => {
     });
 
     songKey = songParams.key;
+
+    const baseColour = color.rgb(utils.randomVariation(45, 50), utils.randomVariation(110, 50), utils.randomVariation(142, 50));
+    colours = getColours(baseColour);
 
     if (p5js) {
       p5js.remove();
@@ -118,43 +138,47 @@ export const App = () => {
     };
 
     p.draw = () => {
-      p.background("#2d6e8e");
+      p.background(colours.base.hex());
 
       // Song key
       if (songKey) {
-        p.fill("#D1E8F3");
+        p.fill(colours.base.lighten(1.2).hex());
         p.textAlign(p.CENTER);
         p.textFont(displayFont);
         p.textSize(50);
-        // p.textStyle(p.BOLD);
         p.text(`${songKey.root} ${songKey.typeName}`, p.width / 2, outputTopY);
       }
 
       // bass note
       if (noteDisplays.bass.alpha > 0) {
-        p.fill(`RGBA(163,203,222,${noteDisplays.bass.alpha})`);
+        p.fill(
+          `RGBA(${colours.bass.red().toFixed(0)},${colours.bass.green().toFixed(0)},${colours.bass.blue().toFixed(0)},${noteDisplays.bass.alpha})`
+        );
         p.textAlign(p.CENTER);
         p.textFont(displayFont);
         p.textSize(75);
-        // p.textStyle(p.BOLD);
         p.text(noteDisplays.bass.text, p.width / 2, outputTopY + 100);
         noteDisplays.bass.alpha -= noteDisplays.bass.alphaDecrement;
       }
 
       // chord note
       if (noteDisplays.chord.alpha > 0) {
-        p.fill(`RGBA(214,234,244,${noteDisplays.chord.alpha})`);
+        p.fill(
+          `RGBA(${colours.chord.red().toFixed(0)},${colours.chord.green().toFixed(0)},${colours.chord.blue().toFixed(0)},${noteDisplays.chord.alpha})`
+        );
         p.textAlign(p.CENTER);
         p.textFont(displayFont);
         p.textSize(75);
-        // p.textStyle(p.BOLD);
+
         p.text(noteDisplays.chord.text, p.width / 2, outputTopY + 350);
         noteDisplays.chord.alpha -= noteDisplays.chord.alphaDecrement;
       }
 
       // motif note
       if (noteDisplays.motif.alpha > 0) {
-        p.fill(`RGBA(163,203,222,${noteDisplays.motif.alpha})`);
+        p.fill(
+          `RGBA(${colours.motif.red().toFixed(0)},${colours.motif.green().toFixed(0)},${colours.motif.blue().toFixed(0)},${noteDisplays.motif.alpha})`
+        );
         p.textAlign(p.CENTER);
         p.textFont(displayFont);
         p.textSize(75);
@@ -168,7 +192,7 @@ export const App = () => {
       // kick
       const kickDiameter = (p.sin(drumHitShapes.kick.angle + p.PI / 2) * drumHitShapes.kick.diameter) / 2 + drumHitShapes.kick.diameter / 2;
       if (Math.round(kickDiameter) > 0) {
-        p.fill(drumHitShapes.kick.colour);
+        p.fill(colours.kick.hex());
         p.noStroke();
         p.ellipse(p.width / 2 - 150, outputTopY + 200, kickDiameter, kickDiameter);
         drumHitShapes.kick.angle -= drumAngleDecrement;
@@ -177,7 +201,7 @@ export const App = () => {
       // snare
       const snareDiameter = (p.sin(drumHitShapes.snare.angle + p.PI / 2) * drumHitShapes.snare.diameter) / 2 + drumHitShapes.snare.diameter / 2;
       if (Math.round(snareDiameter) > 0) {
-        p.fill(drumHitShapes.snare.colour);
+        p.fill(colours.snare.hex());
         p.noStroke();
         p.ellipse(p.width / 2 - 50, outputTopY + 200, snareDiameter, snareDiameter);
         drumHitShapes.snare.angle -= drumAngleDecrement;
@@ -187,7 +211,7 @@ export const App = () => {
       const closedHatDiameter =
         (p.sin(drumHitShapes.closedHat.angle + p.PI / 2) * drumHitShapes.closedHat.diameter) / 2 + drumHitShapes.closedHat.diameter / 2;
       if (Math.round(closedHatDiameter) > 0) {
-        p.fill(drumHitShapes.closedHat.colour);
+        p.fill(colours.closedHat.hex());
         p.noStroke();
         p.ellipse(p.width / 2 + 50, outputTopY + 200, closedHatDiameter, closedHatDiameter);
         drumHitShapes.closedHat.angle -= drumAngleDecrement;
@@ -197,7 +221,7 @@ export const App = () => {
       const openHatDiameter =
         (p.sin(drumHitShapes.openHat.angle + p.PI / 2) * drumHitShapes.openHat.diameter) / 2 + drumHitShapes.openHat.diameter / 2;
       if (Math.round(openHatDiameter) > 0) {
-        p.fill(drumHitShapes.openHat.colour);
+        p.fill(colours.openHat.hex());
         p.noStroke();
         p.ellipse(p.width / 2 + 150, outputTopY + 200, openHatDiameter, openHatDiameter);
         drumHitShapes.openHat.angle -= drumAngleDecrement;
@@ -208,8 +232,8 @@ export const App = () => {
   return (
     <div>
       <header className={classes.toolbar}>
-        <div className="toolbar__content">
-          <div className="toolbar__main-buttons">
+        <div className={classes.toolbarContent}>
+          <div className={classes.toolbarMainButtons}>
             <button onClick={handleRandomise}>Randomise</button>
             <button onClick={playPause}>Play/Pause</button>
           </div>
@@ -227,15 +251,28 @@ export const App = () => {
 const useStyles = createUseStyles({
   "@global": {
     html: {
-      backgroundColor: "#2d6e8e",
+      backgroundColor: colours.base.hex(),
     },
   },
   toolbar: {
     height: 32,
-    backgroundColor: "#73a7c0",
+    backgroundColor: colours.base.lighten(0.8).hex(),
     padding: 16,
     "& button": {
       height: 34,
+    },
+  },
+  toolbarContent: {
+    margin: "0 auto",
+    maxWidth: 1024,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  toolbarMainButtons: {
+    marginRight: -16,
+    "& button": {
+      marginRight: 16,
     },
   },
 });
