@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import p5 from "p5";
 import * as Tone from "tone";
 import * as color from "color";
+import seedRandom from "seedrandom";
 import { createUseStyles } from "react-jss";
 
 import * as utils from "./synth/utils";
@@ -9,12 +10,26 @@ import { ISongCallback } from "./songs/abstract/songTypes";
 import { Song1 } from "./songs/Song1";
 import { SongKey } from "./synth/types/SongKey";
 
+const initialSeed = "1605046628792";
+seedRandom(initialSeed, { global: true });
+
 let p5js: p5;
 
 const song = new Song1();
 const frameRate = 40;
 const outputTopY = 75;
 let displayFont: p5.Font;
+
+interface IColours {
+  base: color;
+  kick: color;
+  snare: color;
+  closedHat: color;
+  openHat: color;
+  bass: color;
+  chord: color;
+  motif: color;
+}
 
 const getColours = (baseColour: color) => {
   return {
@@ -29,15 +44,18 @@ const getColours = (baseColour: color) => {
   };
 };
 
-const baseColour = color.rgb(utils.randomVariation(45, 50), utils.randomVariation(110, 50), utils.randomVariation(142, 50));
-let colours = getColours(baseColour);
+// const baseColour = color.rgb(utils.randomVariation(45, 50), utils.randomVariation(110, 50), utils.randomVariation(142, 50));
+// let colours = getColours(baseColour);
 
 // let baseColour = color.rgb(45, 110, 142);
 
-export const App = () => {
-  const classes = useStyles();
-  const [seed, setSeed] = useState("1604951306214"); //1604667243574
+export const App: () => JSX.Element = () => {
+  const [seed, setSeed] = useState("1605046628792");
 
+  const [colours, setColours] = useState<IColours>(
+    getColours(color.rgb(utils.randomVariation(45, 50), utils.randomVariation(110, 50), utils.randomVariation(142, 50)))
+  );
+  const classes = useStyles();
   const drumHitShapes = {
     kick: { diameter: 100, angle: 0 },
     snare: { diameter: 100, angle: 0 },
@@ -54,6 +72,7 @@ export const App = () => {
   let songKey: SongKey;
 
   useEffect(() => {
+    seedRandom(seed, { global: true });
     song.dispose();
     const songParams = song.create({
       seed,
@@ -67,9 +86,6 @@ export const App = () => {
     });
 
     songKey = songParams.key;
-
-    const baseColour = color.rgb(utils.randomVariation(45, 50), utils.randomVariation(110, 50), utils.randomVariation(142, 50));
-    colours = getColours(baseColour);
 
     if (p5js) {
       p5js.remove();
@@ -120,7 +136,12 @@ export const App = () => {
 
   const handleRandomise = () => {
     song.stop();
-    setTimeout(() => setSeed(new Date().getTime().toString()), 1000);
+
+    setTimeout(() => {
+      const baseColour = color.rgb(utils.randomVariation(45, 50), utils.randomVariation(110, 50), utils.randomVariation(142, 50));
+      setColours(getColours(baseColour));
+      setSeed(new Date().getTime().toString());
+    }, 1000);
   };
 
   const handleSeedChange = (e: { target: { value: string } }) => {
@@ -231,7 +252,7 @@ export const App = () => {
 
   return (
     <div>
-      <header className={classes.toolbar}>
+      <header className={classes.toolbar} style={{ backgroundColor: colours.base.lighten(0.8).hex() }}>
         <div className={classes.toolbarContent}>
           <div className={classes.toolbarMainButtons}>
             <button onClick={handleRandomise}>Randomise</button>
@@ -249,14 +270,13 @@ export const App = () => {
 };
 
 const useStyles = createUseStyles({
-  "@global": {
-    html: {
-      backgroundColor: colours.base.hex(),
-    },
-  },
+  // "@global": {
+  //   html: {
+  //     backgroundColor: (c: IColours) => c.base.hex(),
+  //   },
+  // },
   toolbar: {
     height: 32,
-    backgroundColor: colours.base.lighten(0.8).hex(),
     padding: 16,
     "& button": {
       height: 34,

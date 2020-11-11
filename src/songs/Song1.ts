@@ -1,5 +1,5 @@
 import * as Tone from "tone";
-import seedRandom from "seedrandom";
+
 import { SongBuilder } from "../synth/SongBuilder";
 import * as utils from "../synth/utils";
 
@@ -37,8 +37,6 @@ export class Song1 extends Song implements ISong {
     onClosedHatHit,
     onOpenHatHit,
   }: ICreateParams): ISongParams {
-    seedRandom(seed, { global: true });
-
     const s = new SongBuilder();
     const music = new MusicGenerator();
     const rythym = new RythymGenerator();
