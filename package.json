@@ -18,8 +18,10 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-jss": "^10.4.0",
+    "react-p5-wrapper": "^2.3.0",
     "react-scripts": "4.0.0",
     "seedrandom": "^3.0.5",
+    "shortid": "^2.2.16",
     "tone": "^14.7.58",
     "web-vitals": "^0.2.4"
   },
@@ -53,6 +55,7 @@
     "@types/color": "^3.0.1",
     "@types/p5": "^0.9.1",
     "@types/seedrandom": "^2.4.28",
+    "@types/shortid": "0.0.29",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
     "gh-pages": "^3.1.0",

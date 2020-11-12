@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import p5 from "p5";
 import * as Tone from "tone";
 import * as color from "color";
 import seedRandom from "seedrandom";
@@ -10,26 +9,17 @@ import { ISongCallback } from "./songs/abstract/songTypes";
 import { Song1 } from "./songs/Song1";
 import { SongKey } from "./synth/types/SongKey";
 
+import { IColours } from "./vis/types";
+import sketch from "./vis/sketch";
+
+import p5Wrapper from "./vis/P5Wrapper";
+const P5Wrapper = p5Wrapper();
+
 const initialSeed = "1605046628792";
 seedRandom(initialSeed, { global: true });
 
-let p5js: p5;
-
 const song = new Song1();
 const frameRate = 40;
-const outputTopY = 75;
-let displayFont: p5.Font;
-
-interface IColours {
-  base: color;
-  kick: color;
-  snare: color;
-  closedHat: color;
-  openHat: color;
-  bass: color;
-  chord: color;
-  motif: color;
-}
 
 const getColours = (baseColour: color) => {
   return {
@@ -44,66 +34,68 @@ const getColours = (baseColour: color) => {
   };
 };
 
-// const baseColour = color.rgb(utils.randomVariation(45, 50), utils.randomVariation(110, 50), utils.randomVariation(142, 50));
-// let colours = getColours(baseColour);
-
-// let baseColour = color.rgb(45, 110, 142);
-
 export const App: () => JSX.Element = () => {
-  const [seed, setSeed] = useState("1605046628792");
-
-  const [colours, setColours] = useState<IColours>(
-    getColours(color.rgb(utils.randomVariation(45, 50), utils.randomVariation(110, 50), utils.randomVariation(142, 50)))
-  );
   const classes = useStyles();
-  const drumHitShapes = {
+  const [seed, setSeed] = useState(initialSeed);
+  const [songKey, setSongKey] = useState<SongKey>();
+  const [colours, setColours] = useState<IColours | undefined>(undefined);
+  const [drumHitShapes, setDrumHitShapes] = useState({
     kick: { diameter: 100, angle: 0 },
     snare: { diameter: 100, angle: 0 },
     closedHat: { diameter: 100, angle: 0 },
     openHat: { diameter: 100, angle: 0 },
-  };
-
-  const noteDisplays = {
+  });
+  const [noteDisplays, setNoteDisplays] = useState({
     bass: { text: "", alpha: 0, alphaDecrement: 0 },
     chord: { text: "", alpha: 0, alphaDecrement: 0 },
     motif: { text: "", alpha: 0, alphaDecrement: 0 },
-  };
+  });
 
-  let songKey: SongKey;
-
+  // Create a new song on change of seed
   useEffect(() => {
     seedRandom(seed, { global: true });
     song.dispose();
-    const songParams = song.create({
-      seed,
-      onBassNotePlayed,
-      onMotifNotePlayed,
-      onChordPlayed,
-      onKickDrumHit,
-      onSnareDrumHit,
-      onClosedHatHit,
-      onOpenHatHit,
-    });
 
-    songKey = songParams.key;
+    const createSong: () => void = async () => {
+      const songParams = await song.create({
+        seed,
+        onBassNotePlayed,
+        onMotifNotePlayed,
+        onChordPlayed,
+        onKickDrumHit,
+        onSnareDrumHit,
+        onClosedHatHit,
+        onOpenHatHit,
+      });
+      setSongKey(songParams.key);
+    };
 
-    if (p5js) {
-      p5js.remove();
-    }
-    p5js = new p5(sketch, document.getElementById("p5"));
+    createSong();
   }, [seed]);
 
+  // Change colours on change of seed
+  useEffect(() => {
+    const baseColour = color.rgb(utils.randomVariation(45, 25), utils.randomVariation(110, 25), utils.randomVariation(142, 25));
+    const newColours = getColours(baseColour);
+    setColours(newColours);
+  }, [seed]);
+
+  // song event handlers
   const onKickDrumHit: ISongCallback = () => {
     drumHitShapes.kick.angle = 0;
+    setDrumHitShapes(drumHitShapes);
   };
   const onSnareDrumHit: ISongCallback = () => {
     drumHitShapes.snare.angle = 0;
+    setDrumHitShapes(drumHitShapes);
   };
   const onClosedHatHit: ISongCallback = () => {
     drumHitShapes.closedHat.angle = 0;
+    setDrumHitShapes(drumHitShapes);
   };
   const onOpenHatHit: ISongCallback = () => {
     drumHitShapes.openHat.angle = 0;
+    setDrumHitShapes(drumHitShapes);
   };
 
   const onBassNotePlayed: ISongCallback = ({ note, duration }) => {
@@ -112,6 +104,7 @@ export const App: () => JSX.Element = () => {
     noteDisplays.bass.text = noteName;
     noteDisplays.bass.alpha = 1;
     noteDisplays.bass.alphaDecrement = noteDisplays.bass.alpha / (frameRate * noteLength);
+    setNoteDisplays(noteDisplays);
   };
 
   const onMotifNotePlayed: ISongCallback = ({ note, duration }) => {
@@ -120,6 +113,7 @@ export const App: () => JSX.Element = () => {
     noteDisplays.motif.text = noteName;
     noteDisplays.motif.alpha = 1;
     noteDisplays.motif.alphaDecrement = noteDisplays.motif.alpha / (frameRate * noteLength);
+    setNoteDisplays(noteDisplays);
   };
 
   const onChordPlayed: ISongCallback = ({ notes, duration }) => {
@@ -128,18 +122,16 @@ export const App: () => JSX.Element = () => {
     noteDisplays.chord.text = noteNames.join(" ");
     noteDisplays.chord.alpha = 1;
     noteDisplays.chord.alphaDecrement = noteDisplays.chord.alpha / (frameRate * noteLength);
+    setNoteDisplays(noteDisplays);
   };
 
+  // UI Event handlers
   const playPause = () => {
     song.playPause();
   };
 
   const handleRandomise = () => {
-    song.stop();
-
     setTimeout(() => {
-      const baseColour = color.rgb(utils.randomVariation(45, 50), utils.randomVariation(110, 50), utils.randomVariation(142, 50));
-      setColours(getColours(baseColour));
       setSeed(new Date().getTime().toString());
     }, 1000);
   };
@@ -148,123 +140,23 @@ export const App: () => JSX.Element = () => {
     setSeed(e.target.value);
   };
 
-  const sketch = (p: p5) => {
-    p.preload = () => {
-      displayFont = p.loadFont(`${process.env.PUBLIC_URL}/assets/OpenSans-SemiBold.ttf`);
-    };
-
-    p.setup = () => {
-      p.frameRate(frameRate);
-      p.createCanvas(p.windowWidth, p.windowHeight);
-    };
-
-    p.draw = () => {
-      p.background(colours.base.hex());
-
-      // Song key
-      if (songKey) {
-        p.fill(colours.base.lighten(1.2).hex());
-        p.textAlign(p.CENTER);
-        p.textFont(displayFont);
-        p.textSize(50);
-        p.text(`${songKey.root} ${songKey.typeName}`, p.width / 2, outputTopY);
-      }
-
-      // bass note
-      if (noteDisplays.bass.alpha > 0) {
-        p.fill(
-          `RGBA(${colours.bass.red().toFixed(0)},${colours.bass.green().toFixed(0)},${colours.bass.blue().toFixed(0)},${noteDisplays.bass.alpha})`
-        );
-        p.textAlign(p.CENTER);
-        p.textFont(displayFont);
-        p.textSize(75);
-        p.text(noteDisplays.bass.text, p.width / 2, outputTopY + 100);
-        noteDisplays.bass.alpha -= noteDisplays.bass.alphaDecrement;
-      }
-
-      // chord note
-      if (noteDisplays.chord.alpha > 0) {
-        p.fill(
-          `RGBA(${colours.chord.red().toFixed(0)},${colours.chord.green().toFixed(0)},${colours.chord.blue().toFixed(0)},${noteDisplays.chord.alpha})`
-        );
-        p.textAlign(p.CENTER);
-        p.textFont(displayFont);
-        p.textSize(75);
-
-        p.text(noteDisplays.chord.text, p.width / 2, outputTopY + 350);
-        noteDisplays.chord.alpha -= noteDisplays.chord.alphaDecrement;
-      }
-
-      // motif note
-      if (noteDisplays.motif.alpha > 0) {
-        p.fill(
-          `RGBA(${colours.motif.red().toFixed(0)},${colours.motif.green().toFixed(0)},${colours.motif.blue().toFixed(0)},${noteDisplays.motif.alpha})`
-        );
-        p.textAlign(p.CENTER);
-        p.textFont(displayFont);
-        p.textSize(75);
-        // p.textStyle(p.BOLD);
-        p.text(noteDisplays.motif.text, p.width / 2, outputTopY + 450);
-        noteDisplays.motif.alpha -= noteDisplays.motif.alphaDecrement;
-      }
-
-      const drumAngleDecrement = 0.13;
-
-      // kick
-      const kickDiameter = (p.sin(drumHitShapes.kick.angle + p.PI / 2) * drumHitShapes.kick.diameter) / 2 + drumHitShapes.kick.diameter / 2;
-      if (Math.round(kickDiameter) > 0) {
-        p.fill(colours.kick.hex());
-        p.noStroke();
-        p.ellipse(p.width / 2 - 150, outputTopY + 200, kickDiameter, kickDiameter);
-        drumHitShapes.kick.angle -= drumAngleDecrement;
-      }
-
-      // snare
-      const snareDiameter = (p.sin(drumHitShapes.snare.angle + p.PI / 2) * drumHitShapes.snare.diameter) / 2 + drumHitShapes.snare.diameter / 2;
-      if (Math.round(snareDiameter) > 0) {
-        p.fill(colours.snare.hex());
-        p.noStroke();
-        p.ellipse(p.width / 2 - 50, outputTopY + 200, snareDiameter, snareDiameter);
-        drumHitShapes.snare.angle -= drumAngleDecrement;
-      }
-
-      // closed hat
-      const closedHatDiameter =
-        (p.sin(drumHitShapes.closedHat.angle + p.PI / 2) * drumHitShapes.closedHat.diameter) / 2 + drumHitShapes.closedHat.diameter / 2;
-      if (Math.round(closedHatDiameter) > 0) {
-        p.fill(colours.closedHat.hex());
-        p.noStroke();
-        p.ellipse(p.width / 2 + 50, outputTopY + 200, closedHatDiameter, closedHatDiameter);
-        drumHitShapes.closedHat.angle -= drumAngleDecrement;
-      }
-
-      // open hat
-      const openHatDiameter =
-        (p.sin(drumHitShapes.openHat.angle + p.PI / 2) * drumHitShapes.openHat.diameter) / 2 + drumHitShapes.openHat.diameter / 2;
-      if (Math.round(openHatDiameter) > 0) {
-        p.fill(colours.openHat.hex());
-        p.noStroke();
-        p.ellipse(p.width / 2 + 150, outputTopY + 200, openHatDiameter, openHatDiameter);
-        drumHitShapes.openHat.angle -= drumAngleDecrement;
-      }
-    };
-  };
-
   return (
     <div>
-      <header className={classes.toolbar} style={{ backgroundColor: colours.base.lighten(0.8).hex() }}>
-        <div className={classes.toolbarContent}>
-          <div className={classes.toolbarMainButtons}>
-            <button onClick={handleRandomise}>Randomise</button>
-            <button onClick={playPause}>Play/Pause</button>
+      {colours !== undefined && (
+        <header className={classes.toolbar} style={{ backgroundColor: colours.base.lighten(0.8).hex() }}>
+          <div className={classes.toolbarContent}>
+            <div className={classes.toolbarMainButtons}>
+              <button onClick={handleRandomise}>Randomise</button>
+              <button onClick={playPause}>Play/Pause</button>
+            </div>
+            <div>
+              <input type="text" value={seed} onChange={handleSeedChange}></input>
+              <button onClick={playPause}>Go</button>
+            </div>
           </div>
-          <div>
-            <input type="text" value={seed} onChange={handleSeedChange}></input>
-            <button onClick={playPause}>Go</button>
-          </div>
-        </div>
-      </header>
-      <section id="p5"></section>
+        </header>
+      )}
+      <P5Wrapper sketch={sketch} state={{ colours, drumHitShapes, noteDisplays, songKey }}></P5Wrapper>
     </div>
   );
 };

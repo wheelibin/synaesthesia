@@ -27,7 +27,7 @@ export class Song1 extends Song implements ISong {
   private bassPart: Tone.Sequence;
   private motifPart: Tone.Sequence;
 
-  public create({
+  public async create({
     seed,
     onBassNotePlayed,
     onMotifNotePlayed,
@@ -36,7 +36,12 @@ export class Song1 extends Song implements ISong {
     onSnareDrumHit,
     onClosedHatHit,
     onOpenHatHit,
-  }: ICreateParams): ISongParams {
+  }: ICreateParams): Promise<ISongParams> {
+    await new Promise((resolve) => resolve());
+
+    // await (Tone.getContext() as Tone.Context).close();
+    // Tone.setContext(new Tone.Context());
+
     const s = new SongBuilder();
     const music = new MusicGenerator();
     const rythym = new RythymGenerator();
