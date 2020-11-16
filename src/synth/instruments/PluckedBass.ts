@@ -4,7 +4,7 @@ import { IInstrument, ITriggerParams } from "./IInstrument";
 export class PluckedBass implements IInstrument {
   private synth: Tone.AMSynth;
 
-  constructor(volume: number) {
+  constructor(volume = 3) {
     this.synth = new Tone.AMSynth({
       volume,
       harmonicity: 2,

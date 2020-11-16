@@ -4,19 +4,16 @@ import { SongBuilder } from "../synth/SongBuilder";
 import * as utils from "../synth/utils";
 
 import { KickDrum } from "../synth/instruments/KickDrum";
-import { BassSynth } from "../synth/instruments/BassSynth";
 import { MusicGenerator } from "../synth/MusicGenerator";
-import { SongKey } from "../synth/types/SongKey";
-import { PolySynth } from "../synth/instruments/PolySynth";
 import { RythymGenerator } from "../synth/RythymGenerator";
+import { InstrumentSelector } from "../synth/InstrumentSelector";
+import { SongKey } from "../synth/types/SongKey";
 import { HiHatClosed } from "../synth/instruments/HiHatClosed";
 import { HiHatOpen } from "../synth/instruments/HiHatOpen";
 import { Snare } from "../synth/instruments/Snare";
 import { Song } from "./abstract/Song";
 import { ICreateParams, ISongParams } from "./abstract/songTypes";
 import { ISong } from "./abstract/ISong";
-import { AcidSynth } from "../synth/instruments/AcidSynth";
-import { PluckedBass } from "../synth/instruments/PluckedBass";
 
 export class Song1 extends Song implements ISong {
   private kickPart: Tone.Sequence;
@@ -45,6 +42,7 @@ export class Song1 extends Song implements ISong {
     const s = new SongBuilder();
     const music = new MusicGenerator();
     const rythym = new RythymGenerator();
+    const instruments = new InstrumentSelector();
     const keyType = music.getRandomScaleType();
     const key: SongKey = {
       root: music.getRandomRootNote(),
@@ -83,15 +81,14 @@ export class Song1 extends Song implements ISong {
     this.openHatPart = s.addDrumPart(new HiHatOpen(), rythym.randomOpenHatRythym(), onOpenHatHit);
 
     this.chordPart = s.addChordProgression(
-      new PolySynth(-15),
+      instruments.randomChordInstrument(),
       music.getChordProgressionForKey(key, progressionIntervals, chordTypesToUseInProgression),
       chordProgressionBars,
       onChordPlayed
     );
 
-    this.bassPart = s.addBassLine(bassLine, new PluckedBass(3), bassLinePatterns, chordProgressionBars, onBassNotePlayed);
-
-    this.motifPart = s.addMotif(motif, new AcidSynth(-27), motifPatterns, chordProgressionBars, onMotifNotePlayed);
+    this.bassPart = s.addBassLine(bassLine, instruments.randomBassInstrument(), bassLinePatterns, chordProgressionBars, onBassNotePlayed);
+    // this.motifPart = s.addMotif(motif, instruments.randomBassInstrument(), motifPatterns, chordProgressionBars, onMotifNotePlayed);
 
     Tone.Transport.bpm.value = utils.randomIntBetween(90, 110);
 

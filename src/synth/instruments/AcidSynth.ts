@@ -7,7 +7,7 @@ export class AcidSynth implements IInstrument {
   private reverb: Tone.Reverb;
   private autoPan: Tone.AutoPanner;
 
-  constructor(volume: number) {
+  constructor(volume = -27) {
     this.autoFilter = new Tone.AutoFilter({ frequency: "2m" }).start().toDestination();
     this.reverb = new Tone.Reverb({ decay: 1, wet: 0.5 }).toDestination();
     this.autoPan = new Tone.AutoPanner({ frequency: "2m", wet: 0.3 }).start().toDestination();

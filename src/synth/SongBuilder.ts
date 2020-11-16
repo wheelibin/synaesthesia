@@ -48,6 +48,7 @@ export class SongBuilder {
 
       // the notes given as the second element in the array
       // will be passed in as the second argument
+      console.log(playedNotes, chordDuration);
       instrument.trigger({ notes: playedNotes, duration: chordDuration, time });
       // fire the draw callback
       if (visCallback) {

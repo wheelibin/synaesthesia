@@ -7,6 +7,7 @@
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "@tonejs/piano": "^0.2.1",
     "@types/jest": "^26.0.15",
     "@types/node": "^12.19.3",
     "@types/react": "^16.9.55",
@@ -23,7 +24,8 @@
     "seedrandom": "^3.0.5",
     "shortid": "^2.2.16",
     "tone": "^14.7.58",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^0.2.4",
+    "webmidi": "^2.5.1"
   },
   "scripts": {
     "start": "react-scripts start",

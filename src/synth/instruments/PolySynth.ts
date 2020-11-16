@@ -5,7 +5,7 @@ export class PolySynth implements IInstrument {
   private synth: Tone.PolySynth;
   private reverb: Tone.Reverb;
 
-  constructor(volume: number) {
+  constructor(volume = -15) {
     this.reverb = new Tone.Reverb({ decay: 0.3, wet: 0.5 }).toDestination();
     this.synth = new Tone.PolySynth(Tone.AMSynth, { volume }).connect(this.reverb);
   }
