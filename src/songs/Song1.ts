@@ -81,20 +81,22 @@ export class Song1 extends Song implements ISong {
     const motifOctave = key.chordOctave + 1;
     const motif = music.motifForChordProgression(notesPerChord, chordProgression, key, motifOctave);
 
+    const kit = instruments.randomKit();
+
     this.kickPart = s.addDrumPart(new KickDrum(), rythym.randomKickRythym(), onKickDrumHit);
     this.snarePart = s.addDrumPart(new Snare(), rythym.randomSnareRythym(), onSnareDrumHit);
     this.closedHatPart = s.addDrumPart(new HiHatClosed(), rythym.randomHiHatRythym(), onClosedHatHit);
     this.openHatPart = s.addDrumPart(new HiHatOpen(), rythym.randomOpenHatRythym(), onOpenHatHit);
 
     this.chordPart = s.addChordProgression(
-      instruments.randomChordInstrument(),
+      kit.chord,
       music.getChordProgressionForKey(key, progressionIntervals, chordTypesToUseInProgression),
       chordProgressionBars,
       onChordPlayed
     );
 
-    this.bassPart = s.addBassLine(bassLine, instruments.randomBassInstrument(), bassLinePatterns, chordProgressionBars, onBassNotePlayed);
-    this.motifPart = s.addMotif(motif, instruments.randomMotifInstrument(), motifPatterns, chordProgressionBars, onMotifNotePlayed);
+    this.bassPart = s.addBassLine(bassLine, kit.bass, bassLinePatterns, chordProgressionBars, onBassNotePlayed);
+    this.motifPart = s.addMotif(motif, kit.motif, motifPatterns, chordProgressionBars, onMotifNotePlayed);
 
     Tone.Transport.bpm.value = utils.randomIntBetween(90, 110);
 

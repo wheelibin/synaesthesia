@@ -1,16 +1,18 @@
 import * as Tone from "tone";
 import { IInstrument, ITriggerParams } from "./IInstrument";
 
+export interface SamplesMap {
+  [note: string]: string;
+}
+
 export class Sample implements IInstrument {
   private sampler: Tone.Sampler;
 
-  constructor(filename: string) {
+  constructor(filenames: SamplesMap, volume = -15) {
     this.sampler = new Tone.Sampler({
-      urls: {
-        C3: filename,
-      },
+      urls: filenames,
       baseUrl: `${process.env.PUBLIC_URL}/assets/sounds/`,
-      volume: -15,
+      volume,
     }).toDestination();
   }
 
@@ -20,5 +22,10 @@ export class Sample implements IInstrument {
 
   trigger({ time }: ITriggerParams): void {
     this.sampler.triggerAttack("C3", time);
+  }
+
+  triggerAttackRelease({ note, duration, time }: ITriggerParams): void {
+    this.sampler.triggerRelease(note);
+    this.sampler.triggerAttackRelease(note, duration, time);
   }
 }

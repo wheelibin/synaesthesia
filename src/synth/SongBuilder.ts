@@ -111,7 +111,7 @@ export class SongBuilder {
     chordBars: (number | number[])[],
     visCallback: ISongCallback
   ): Tone.Sequence {
-    return this.addRepeatingSoloPart("0:0:0", bassLineNotes, instrument, "16n", patterns, chordBars, true, visCallback);
+    return this.addRepeatingSoloPart("0:0:0", bassLineNotes, instrument, "16n", true, patterns, chordBars, true, visCallback);
   }
 
   public addMotif(
@@ -121,7 +121,7 @@ export class SongBuilder {
     chordBars: (number | number[])[],
     visCallback: ISongCallback
   ): Tone.Sequence {
-    return this.addRepeatingSoloPart("0:0:0", bassLineNotes, instrument, "2n", patterns, chordBars, true, visCallback);
+    return this.addRepeatingSoloPart("0:0:0", bassLineNotes, instrument, "1n", false, patterns, chordBars, true, visCallback);
   }
 
   private addRepeatingSoloPart(
@@ -129,6 +129,7 @@ export class SongBuilder {
     notes: Tone.Unit.Frequency[][],
     instrument: IInstrument,
     noteLength: Tone.Unit.Time,
+    varyNoteLength: boolean,
     patterns: number[][],
     barLengths: (number | number[])[],
     shouldLoop: boolean,
@@ -162,7 +163,7 @@ export class SongBuilder {
           // Play the next note
           const note = expandedSequence.shift();
           expandedSequence.push(note);
-          const duration = utils.randomIntBetween(1, 8) * Tone.Time(noteLength).toSeconds();
+          const duration = varyNoteLength ? utils.randomIntBetween(1, 8) * Tone.Time(noteLength).toSeconds() : noteLength;
           instrument.trigger({ note, duration, time });
 
           // fire the draw callback
