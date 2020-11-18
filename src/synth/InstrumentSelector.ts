@@ -12,14 +12,20 @@ export class InstrumentSelector {
   // private chordInstruments = [Piano, PolySynth];
   private bassInstruments = [PluckedBass];
   private chordInstruments = [Piano];
+  private motifInstruments = [AcidSynth];
 
   public randomBassInstrument(volume?: number): IInstrument {
-    const i = utils.randomFromArray(this.bassInstruments);
-    return new i(volume);
+    const instrument = utils.randomFromArray(this.bassInstruments);
+    return new instrument(volume);
   }
 
   public randomChordInstrument(volume?: number): IInstrument {
-    const i = utils.randomFromArray(this.chordInstruments);
-    return new i(volume);
+    const instrument = utils.randomFromArray(this.chordInstruments);
+    return new instrument(volume);
+  }
+
+  public randomMotifInstrument(volume?: number): IInstrument {
+    const instrument = utils.randomFromArray(this.motifInstruments);
+    return new instrument(volume);
   }
 }

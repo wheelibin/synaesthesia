@@ -15,11 +15,11 @@ import sketch from "./vis/sketch";
 import p5Wrapper from "./vis/P5Wrapper";
 const P5Wrapper = p5Wrapper();
 
-const initialSeed = "1605532643445"; //"1605046628792";
+const initialSeed = "1605641949973"; //"1605532643445"; //"1605046628792";
 seedRandom(initialSeed, { global: true });
 
 const song = new Song1();
-const frameRate = 40;
+const frameRate = 24;
 
 const getColours = (baseColour: color) => {
   return {

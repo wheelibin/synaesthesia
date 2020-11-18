@@ -54,7 +54,13 @@ export class Song1 extends Song implements ISong {
     const progressionIntervals = utils.randomFromArray(music.chordProgressions);
     const chordTypesToUseInProgression = music.getRandomChordTypesForProgression(progressionIntervals.length);
     const chordProgression = music.getChordProgressionForKey(key, progressionIntervals, chordTypesToUseInProgression);
-    const chordProgressionBars = rythym.randomChordProgressionRythym(progressionIntervals.length);
+
+    const maxBarLength = 2;
+    const _chordProgressionBars = rythym.randomChordProgressionRythym(progressionIntervals.length);
+    const chordProgressionBars: (number | number[])[] = [];
+    for (const b of _chordProgressionBars) {
+      chordProgressionBars.push(b > maxBarLength ? [b / 2, b / 2] : b);
+    }
 
     const bassLinePatterns = [];
     for (let i = 0; i < progressionIntervals.length; i++) {
@@ -88,7 +94,7 @@ export class Song1 extends Song implements ISong {
     );
 
     this.bassPart = s.addBassLine(bassLine, instruments.randomBassInstrument(), bassLinePatterns, chordProgressionBars, onBassNotePlayed);
-    // this.motifPart = s.addMotif(motif, instruments.randomBassInstrument(), motifPatterns, chordProgressionBars, onMotifNotePlayed);
+    this.motifPart = s.addMotif(motif, instruments.randomMotifInstrument(), motifPatterns, chordProgressionBars, onMotifNotePlayed);
 
     Tone.Transport.bpm.value = utils.randomIntBetween(90, 110);
 

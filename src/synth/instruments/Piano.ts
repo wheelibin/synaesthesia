@@ -29,8 +29,8 @@ export class Piano implements IInstrument {
   }
 
   trigger({ note, notes, duration, time }: ITriggerParams): void {
-    this.piano.pedalUp();
-    this.piano.pedalDown();
+    // this.piano.pedalUp();
+    // this.piano.pedalDown();
 
     if (note) {
       notes = [note];
@@ -41,7 +41,7 @@ export class Piano implements IInstrument {
     time = Tone.context.currentTime;
 
     for (const note of notes) {
-      this.piano.keyDown({ note: Tone.Frequency(note).toNote(), time });
+      this.piano.keyDown({ note: Tone.Frequency(note).toNote(), time, velocity: 1 });
       const upTime = Tone.Time(time).toSeconds() + Tone.Time(duration).toSeconds();
       this.piano.keyUp({ note: Tone.Frequency(note).toNote(), time: upTime });
     }
