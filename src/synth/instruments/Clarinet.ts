@@ -1,10 +1,11 @@
-import { IInstrument, ITriggerParams } from "./IInstrument";
-import { Sample } from "./Sample";
+import { IInstrument, IInstrumentParams, ITriggerParams } from "./IInstrument";
+import { Sampler } from "./Sampler";
 
-export class Clarinet extends Sample implements IInstrument {
-  constructor(volume: number) {
-    super(
-      {
+export class Clarinet extends Sampler implements IInstrument {
+  constructor(params: IInstrumentParams = {}) {
+    super({
+      ...params,
+      filenames: {
         D3: "instruments/clarinet/D3.[mp3|ogg]",
         D4: "instruments/clarinet/D4.[mp3|ogg]",
         D5: "instruments/clarinet/D5.[mp3|ogg]",
@@ -17,10 +18,9 @@ export class Clarinet extends Sample implements IInstrument {
         "A#4": "instruments/clarinet/As4.[mp3|ogg]",
         D2: "instruments/clarinet/D2.[mp3|ogg]",
       },
-      volume
-    );
+    });
   }
-  trigger({ note, duration, time }: ITriggerParams): void {
-    super.triggerAttackRelease({ note, duration, time });
+  trigger(params: ITriggerParams): void {
+    super.triggerAttackRelease(params);
   }
 }

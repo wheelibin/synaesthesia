@@ -1,10 +1,11 @@
-import { IInstrument, ITriggerParams } from "./IInstrument";
-import { Sample } from "./Sample";
+import { IInstrument, IInstrumentParams, ITriggerParams } from "./IInstrument";
+import { Sampler } from "./Sampler";
 
-export class FrenchHorn extends Sample implements IInstrument {
-  constructor(volume: number) {
-    super(
-      {
+export class FrenchHorn extends Sampler implements IInstrument {
+  constructor(params: IInstrumentParams = {}) {
+    super({
+      ...params,
+      filenames: {
         D2: "instruments/french-horn/D2.[mp3|ogg]",
         D4: "instruments/french-horn/D4.[mp3|ogg]",
         "D#1": "instruments/french-horn/Ds1.[mp3|ogg]",
@@ -16,10 +17,9 @@ export class FrenchHorn extends Sample implements IInstrument {
         C1: "instruments/french-horn/C1.[mp3|ogg]",
         C3: "instruments/french-horn/C3.[mp3|ogg]",
       },
-      volume
-    );
+    });
   }
-  trigger({ note, duration, time }: ITriggerParams): void {
-    super.triggerAttackRelease({ note, duration, time });
+  trigger(params: ITriggerParams): void {
+    super.triggerAttackRelease(params);
   }
 }

@@ -15,7 +15,7 @@ import sketch from "./vis/sketch";
 import p5Wrapper from "./vis/P5Wrapper";
 const P5Wrapper = p5Wrapper();
 
-const initialSeed = "1605736100814";
+const initialSeed = "1605885629627";
 seedRandom(initialSeed, { global: true });
 
 const song = new Song1();

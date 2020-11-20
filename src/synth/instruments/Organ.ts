@@ -1,10 +1,11 @@
-import { IInstrument, ITriggerParams } from "./IInstrument";
-import { Sample } from "./Sample";
+import { IInstrument, IInstrumentParams, ITriggerParams } from "./IInstrument";
+import { Sampler } from "./Sampler";
 
-export class Organ extends Sample implements IInstrument {
-  constructor(volume: number) {
-    super(
-      {
+export class Organ extends Sampler implements IInstrument {
+  constructor(params: IInstrumentParams = {}) {
+    super({
+      ...params,
+      filenames: {
         C3: "instruments/organ/C3.[mp3|ogg]",
         C4: "instruments/organ/C4.[mp3|ogg]",
         C5: "instruments/organ/C5.[mp3|ogg]",
@@ -27,10 +28,9 @@ export class Organ extends Sample implements IInstrument {
         C1: "instruments/organ/C1.[mp3|ogg]",
         C2: "instruments/organ/C2.[mp3|ogg]",
       },
-      volume
-    );
+    });
   }
-  trigger({ note, duration, time }: ITriggerParams): void {
-    super.triggerAttackRelease({ note, duration, time });
+  trigger(params: ITriggerParams): void {
+    super.triggerAttackRelease(params);
   }
 }

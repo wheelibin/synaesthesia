@@ -1,10 +1,11 @@
-import { IInstrument, ITriggerParams } from "./IInstrument";
-import { Sample } from "./Sample";
+import { IInstrument, IInstrumentParams, ITriggerParams } from "./IInstrument";
+import { Sampler } from "./Sampler";
 
-export class Bassoon extends Sample implements IInstrument {
-  constructor(volume: number) {
-    super(
-      {
+export class Bassoon extends Sampler implements IInstrument {
+  constructor(params: IInstrumentParams = {}) {
+    super({
+      ...params,
+      filenames: {
         A3: "instruments/bassoon/A3.[mp3|ogg]",
         C2: "instruments/bassoon/C2.[mp3|ogg]",
         C3: "instruments/bassoon/C3.[mp3|ogg]",
@@ -16,10 +17,9 @@ export class Bassoon extends Sample implements IInstrument {
         A1: "instruments/bassoon/A1.[mp3|ogg]",
         A2: "instruments/bassoon/A2.[mp3|ogg]",
       },
-      volume
-    );
+    });
   }
-  trigger({ note, duration, time }: ITriggerParams): void {
-    super.triggerAttackRelease({ note, duration, time });
+  trigger(params: ITriggerParams): void {
+    super.triggerAttackRelease(params);
   }
 }

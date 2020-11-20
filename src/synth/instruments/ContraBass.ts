@@ -1,10 +1,11 @@
-import { IInstrument, ITriggerParams } from "./IInstrument";
-import { Sample } from "./Sample";
+import { IInstrument, IInstrumentParams, ITriggerParams } from "./IInstrument";
+import { Sampler } from "./Sampler";
 
-export class ContraBass extends Sample implements IInstrument {
-  constructor(volume: number) {
-    super(
-      {
+export class ContraBass extends Sampler implements IInstrument {
+  constructor(params: IInstrumentParams = {}) {
+    super({
+      ...params,
+      filenames: {
         C1: "instruments/contrabass/C1.[mp3|ogg]",
         "C#2": "instruments/contrabass/Cs2.[mp3|ogg]",
         D1: "instruments/contrabass/D1.[mp3|ogg]",
@@ -19,10 +20,9 @@ export class ContraBass extends Sample implements IInstrument {
         "A#0": "instruments/contrabass/As0.[mp3|ogg]",
         B2: "instruments/contrabass/B2.[mp3|ogg]",
       },
-      volume
-    );
+    });
   }
-  trigger({ note, duration, time }: ITriggerParams): void {
-    super.triggerAttackRelease({ note, duration, time });
+  trigger(params: ITriggerParams): void {
+    super.triggerAttackRelease(params);
   }
 }

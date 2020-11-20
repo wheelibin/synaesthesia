@@ -3,6 +3,18 @@ import { ISongCallback } from "../songs/abstract/songTypes";
 import { IInstrument } from "./instruments/IInstrument";
 import * as utils from "./utils";
 
+interface IRepeatingSoloPartParams {
+  startTime: Tone.Unit.Time;
+  notes: Tone.Unit.Frequency[][];
+  instrument: IInstrument;
+  // noteLength: Tone.Unit.Time;
+  // varyNoteLength: boolean;
+  patterns: number[][];
+  barLengths: (number | number[])[];
+  shouldLoop: boolean;
+  visCallback: ISongCallback;
+}
+
 export class SongBuilder {
   public addDrumPart(instrument: IInstrument, pattern: Array<number | number[]>, visCallback?: ISongCallback): Tone.Sequence {
     const sequencer = new Tone.Sequence(
@@ -50,6 +62,7 @@ export class SongBuilder {
         extendedChordProgression.push(chord);
       }
     }
+    console.log("---> extendedChordProgression", extendedChordProgression);
 
     const extendedChordBars = chordBars.flatMap((b) => b);
 
@@ -58,6 +71,7 @@ export class SongBuilder {
     const progPart = extendedChordProgression.map((chord, index) => {
       const cb = index === 0 ? 0 : extendedChordBars[index - 1];
 
+      // decimal bars e.g. 1.5m don't work, so need to convert to bars:beats:sixteenths then back to seconds
       const sp = Tone.Time(`0:${cb * (Tone.Transport.timeSignature as number)}:0`);
       currentChordStartPos += Tone.Time(sp).toSeconds();
       return [currentChordStartPos, chord];
@@ -66,7 +80,9 @@ export class SongBuilder {
     let currentChord = 0;
     const part = new Tone.Part((time, notes) => {
       const playedNotes = notes as Tone.Unit.Frequency[];
-      const chordDuration = `${extendedChordBars[currentChord]}m`;
+
+      // decimal bars e.g. 1.5m don't work, so need to convert to bars:beats:sixteenths
+      const chordDuration = `0:${extendedChordBars[currentChord] * (Tone.Transport.timeSignature as number)}:0`;
 
       // the notes given as the second element in the array
       // will be passed in as the second argument
@@ -104,37 +120,33 @@ export class SongBuilder {
     return part;
   }
 
-  public addBassLine(
-    bassLineNotes: Tone.Unit.Frequency[][],
-    instrument: IInstrument,
-    patterns: number[][],
-    chordBars: (number | number[])[],
-    visCallback: ISongCallback
-  ): Tone.Sequence {
-    return this.addRepeatingSoloPart("0:0:0", bassLineNotes, instrument, "16n", true, patterns, chordBars, true, visCallback);
-  }
-
-  public addMotif(
-    bassLineNotes: Tone.Unit.Frequency[][],
-    instrument: IInstrument,
-    patterns: number[][],
-    chordBars: (number | number[])[],
-    visCallback: ISongCallback
-  ): Tone.Sequence {
-    return this.addRepeatingSoloPart("0:0:0", bassLineNotes, instrument, "1n", false, patterns, chordBars, true, visCallback);
-  }
-
-  private addRepeatingSoloPart(
-    startTime: Tone.Unit.Time,
+  public addSoloPart(
     notes: Tone.Unit.Frequency[][],
     instrument: IInstrument,
-    noteLength: Tone.Unit.Time,
-    varyNoteLength: boolean,
     patterns: number[][],
-    barLengths: (number | number[])[],
-    shouldLoop: boolean,
+    chordBars: (number | number[])[],
     visCallback: ISongCallback
   ): Tone.Sequence {
+    return this.addRepeatingSoloPart({
+      startTime: "0:0:0",
+      notes,
+      instrument,
+      patterns,
+      barLengths: chordBars,
+      shouldLoop: true,
+      visCallback,
+    });
+  }
+
+  private addRepeatingSoloPart({
+    startTime,
+    notes,
+    instrument,
+    patterns,
+    barLengths,
+    shouldLoop,
+    visCallback,
+  }: IRepeatingSoloPartParams): Tone.Sequence {
     const expandedSequence: Tone.Unit.Frequency[] = [];
     for (let index = 0; index < notes.length; index++) {
       const section = notes[index];
@@ -157,13 +169,33 @@ export class SongBuilder {
       }
     }
 
+    // calculate the lengths of all the notes in the pattern by counting how many
+    // sixteenth notes they occupy (assuming legato for the whole pattern)
+    let patternNoteStart = -1;
+    const noteLengths: number[] = [];
+    expandedPattern.forEach((hit, index) => {
+      if (hit === 1) {
+        if (patternNoteStart > -1) {
+          noteLengths.push(index - patternNoteStart);
+        }
+        patternNoteStart = index;
+      }
+    });
+    // get the last note (that ends at the end of the sequence)
+    noteLengths.push(expandedPattern.length - patternNoteStart);
+
     const sequencer = new Tone.Sequence(
       (time, hit) => {
         if (hit === 1) {
           // Play the next note
           const note = expandedSequence.shift();
           expandedSequence.push(note);
-          const duration = varyNoteLength ? utils.randomIntBetween(1, 8) * Tone.Time(noteLength).toSeconds() : noteLength;
+          //const duration = varyNoteLength ? utils.randomIntBetween(1, 8) * Tone.Time(noteLength).toSeconds() : noteLength;
+
+          const noteLength = noteLengths.shift();
+          noteLengths.push(noteLength);
+          const duration = `0:0:${noteLength}`;
+
           instrument.trigger({ note, duration, time });
 
           // fire the draw callback
@@ -178,7 +210,7 @@ export class SongBuilder {
       "16n"
     );
 
-    // sequencer.humanize = true;
+    sequencer.humanize = true;
     sequencer.loop = shouldLoop;
     sequencer.start(startTime);
 

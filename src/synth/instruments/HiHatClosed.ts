@@ -1,9 +1,9 @@
 import { IInstrument, ITriggerParams } from "./IInstrument";
-import { Sample } from "./Sample";
+import { Sampler } from "./Sampler";
 
-export class HiHatClosed extends Sample implements IInstrument {
+export class HiHatClosed extends Sampler implements IInstrument {
   constructor() {
-    super({ C3: "hatcl1.wav" });
+    super({ filenames: { C3: "hatcl1.wav" } });
   }
   trigger({ time }: ITriggerParams): void {
     super.trigger({ time });

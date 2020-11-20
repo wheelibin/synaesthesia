@@ -1,10 +1,11 @@
-import { IInstrument, ITriggerParams } from "./IInstrument";
-import { Sample } from "./Sample";
+import { IInstrument, IInstrumentParams, ITriggerParams } from "./IInstrument";
+import { Sampler } from "./Sampler";
 
-export class GuitarNylon extends Sample implements IInstrument {
-  constructor(volume: number) {
-    super(
-      {
+export class GuitarNylon extends Sampler implements IInstrument {
+  constructor(params: IInstrumentParams = {}) {
+    super({
+      ...params,
+      filenames: {
         "F#2": "instruments/guitar-nylon/Fs2.[mp3|ogg]",
         "F#3": "instruments/guitar-nylon/Fs3.[mp3|ogg]",
         "F#4": "instruments/guitar-nylon/Fs4.[mp3|ogg]",
@@ -35,10 +36,9 @@ export class GuitarNylon extends Sample implements IInstrument {
         E4: "instruments/guitar-nylon/E4.[mp3|ogg]",
         E5: "instruments/guitar-nylon/E5.[mp3|ogg]",
       },
-      volume
-    );
+    });
   }
-  trigger({ note, duration, time }: ITriggerParams): void {
-    super.triggerAttackRelease({ note, duration, time });
+  trigger(params: ITriggerParams): void {
+    super.triggerAttackRelease(params);
   }
 }

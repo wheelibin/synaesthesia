@@ -1,10 +1,11 @@
-import { IInstrument, ITriggerParams } from "./IInstrument";
-import { Sample } from "./Sample";
+import { IInstrument, IInstrumentParams, ITriggerParams } from "./IInstrument";
+import { Sampler } from "./Sampler";
 
-export class Tuba extends Sample implements IInstrument {
-  constructor(volume: number) {
-    super(
-      {
+export class Tuba extends Sampler implements IInstrument {
+  constructor(params: IInstrumentParams = {}) {
+    super({
+      ...params,
+      filenames: {
         "A#1": "instruments/tuba/As1.[mp3|ogg]",
         "A#2": "instruments/tuba/As2.[mp3|ogg]",
         D2: "instruments/tuba/D2.[mp3|ogg]",
@@ -15,10 +16,9 @@ export class Tuba extends Sample implements IInstrument {
         F2: "instruments/tuba/F2.[mp3|ogg]",
         "A#0": "instruments/tuba/As0.[mp3|ogg]",
       },
-      volume
-    );
+    });
   }
-  trigger({ note, duration, time }: ITriggerParams): void {
-    super.triggerAttackRelease({ note, duration, time });
+  trigger(params: ITriggerParams): void {
+    super.triggerAttackRelease(params);
   }
 }

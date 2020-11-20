@@ -1,9 +1,9 @@
 import { IInstrument, ITriggerParams } from "./IInstrument";
-import { Sample } from "./Sample";
+import { Sampler } from "./Sampler";
 
-export class Snare extends Sample implements IInstrument {
+export class Snare extends Sampler implements IInstrument {
   constructor() {
-    super({ C3: "snare1.wav" });
+    super({ filenames: { C3: "snare1.wav" } });
   }
   trigger({ time }: ITriggerParams): void {
     super.trigger({ time });

@@ -76,17 +76,19 @@ export class Song1 extends Song implements ISong {
       notesPerChord.push(bassLinePattern.filter((hit: number) => hit === 1).length);
     }
     const bassOctave = key.chordOctave - 1;
-    const bassLine = music.smoothBassLineForChordProgression(notesPerChord, chordProgression, key, bassOctave, 3);
+    const bassLine = music.smoothMelodyLineForChordProgression(notesPerChord, chordProgression, key, bassOctave, 3);
 
     const motifOctave = key.chordOctave + 1;
-    const motif = music.motifForChordProgression(notesPerChord, chordProgression, key, motifOctave);
+    const motif = music.smoothMelodyLineForChordProgression(notesPerChord, chordProgression, key, motifOctave, 2);
 
     const kit = instruments.randomKit();
 
-    this.kickPart = s.addDrumPart(new KickDrum(), rythym.randomKickRythym(), onKickDrumHit);
-    this.snarePart = s.addDrumPart(new Snare(), rythym.randomSnareRythym(), onSnareDrumHit);
-    this.closedHatPart = s.addDrumPart(new HiHatClosed(), rythym.randomHiHatRythym(), onClosedHatHit);
-    this.openHatPart = s.addDrumPart(new HiHatOpen(), rythym.randomOpenHatRythym(), onOpenHatHit);
+    if (kit.drums) {
+      this.kickPart = s.addDrumPart(new KickDrum(), rythym.randomKickRythym(), onKickDrumHit);
+      this.snarePart = s.addDrumPart(new Snare(), rythym.randomSnareRythym(), onSnareDrumHit);
+      this.closedHatPart = s.addDrumPart(new HiHatClosed(), rythym.randomHiHatRythym(), onClosedHatHit);
+      this.openHatPart = s.addDrumPart(new HiHatOpen(), rythym.randomOpenHatRythym(), onOpenHatHit);
+    }
 
     this.chordPart = s.addChordProgression(
       kit.chord,
@@ -95,8 +97,8 @@ export class Song1 extends Song implements ISong {
       onChordPlayed
     );
 
-    this.bassPart = s.addBassLine(bassLine, kit.bass, bassLinePatterns, chordProgressionBars, onBassNotePlayed);
-    this.motifPart = s.addMotif(motif, kit.motif, motifPatterns, chordProgressionBars, onMotifNotePlayed);
+    this.bassPart = s.addSoloPart(bassLine, kit.bass, bassLinePatterns, chordProgressionBars, onBassNotePlayed);
+    this.motifPart = s.addSoloPart(motif, kit.motif, motifPatterns, chordProgressionBars, onMotifNotePlayed);
 
     Tone.Transport.bpm.value = utils.randomIntBetween(90, 110);
 

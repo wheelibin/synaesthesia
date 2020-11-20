@@ -1,10 +1,11 @@
-import { IInstrument, ITriggerParams } from "./IInstrument";
-import { Sample } from "./Sample";
+import { IInstrument, IInstrumentParams, ITriggerParams } from "./IInstrument";
+import { Sampler } from "./Sampler";
 
-export class GuitarAcoustic extends Sample implements IInstrument {
-  constructor(volume: number) {
-    super(
-      {
+export class GuitarAcoustic extends Sampler implements IInstrument {
+  constructor(params: IInstrumentParams = {}) {
+    super({
+      ...params,
+      filenames: {
         F3: "instruments/guitar-acoustic/F3.[mp3|ogg]",
         "F#1": "instruments/guitar-acoustic/Fs1.[mp3|ogg]",
         "F#2": "instruments/guitar-acoustic/Fs2.[mp3|ogg]",
@@ -43,10 +44,9 @@ export class GuitarAcoustic extends Sample implements IInstrument {
         F1: "instruments/guitar-acoustic/F1.[mp3|ogg]",
         F2: "instruments/guitar-acoustic/F2.[mp3|ogg]",
       },
-      volume
-    );
+    });
   }
-  trigger({ note, duration, time }: ITriggerParams): void {
-    super.triggerAttackRelease({ note, duration, time });
+  trigger(params: ITriggerParams): void {
+    super.triggerAttackRelease(params);
   }
 }

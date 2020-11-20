@@ -1,11 +1,16 @@
 import * as Tone from "tone";
-import { IInstrument, ITriggerParams } from "./IInstrument";
+import { IInstrument, IInstrumentParams, ITriggerParams } from "./IInstrument";
 
 export class BassSynth implements IInstrument {
   private synth: Tone.MonoSynth;
 
-  constructor(volume: number) {
-    this.synth = new Tone.MonoSynth({ volume, portamento: 0, envelope: { attack: 0.01 }, filterEnvelope: { attack: 0.03 } }).toDestination();
+  constructor(params: IInstrumentParams = {}) {
+    this.synth = new Tone.MonoSynth({
+      volume: params.volume,
+      portamento: 0,
+      envelope: { attack: 0.01 },
+      filterEnvelope: { attack: 0.03 },
+    }).toDestination();
   }
   dispose(): void {
     this.synth.dispose();

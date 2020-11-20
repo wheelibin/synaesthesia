@@ -154,31 +154,7 @@ export class MusicGenerator {
     return scale;
   }
 
-  //   public rootNotesFromChordProgression = (chordProgression) => {
-  //     return chordProgression.map((chord) => Tone.Frequency(chord[0]).toNote().replace(/[0-9]/g, "")).join(", ");
-  //   };
-
-  //   public bassLineForChordProgression = (notesPerChord, chordProgression, key, octave) => {
-  //     const transposeSemiTones = -1 * octave * 12;
-  //     const notes = [];
-
-  //     for (let i = 0; i < chordProgression.length; i++) {
-  //       const chord = chordProgression[i];
-  //       const noteCountForChord = notesPerChord[i];
-  //       const chordRoot = Tone.Frequency(chord[0]).transpose(transposeSemiTones);
-  //       const scaleForCurrentChord = this.actualNotesFromScale(key.root, key.type, octave, octave);
-
-  //       const notesForChord = [chordRoot];
-  //       for (let i = 0; i < noteCountForChord - 1; i++) {
-  //         notesForChord.push(utils.randomFromArray(scaleForCurrentChord));
-  //       }
-  //       notes.push(notesForChord);
-  //     }
-
-  //     return notes;
-  //   };
-
-  public smoothBassLineForChordProgression(
+  public smoothMelodyLineForChordProgression(
     notesPerChord: number[],
     chordProgression: Tone.Unit.Frequency[][],
     key: SongKey,
@@ -195,7 +171,7 @@ export class MusicGenerator {
       const chordRoot = Tone.Frequency(chord[0]).transpose(transposeSemiTones);
       const scaleForCurrentChord = this.actualNotesFromScale(key.root, key.type, octave, octave);
 
-      const notesForChord: Tone.Unit.Frequency[] = [chordRoot.toFrequency()];
+      const notesForChord: Tone.Unit.Frequency[] = [];
       let previousNoteIndex = 0;
       for (let i = 0; i < noteCountForChord - 1; i++) {
         //get a note not too far away from the last
@@ -213,57 +189,4 @@ export class MusicGenerator {
 
     return notes;
   }
-
-  public motifForChordProgression(
-    notesPerChord: number[],
-    chordProgression: Tone.Unit.Frequency[][],
-    key: SongKey,
-    octave: number
-  ): Tone.Unit.Frequency[][] {
-    const notes = [];
-
-    for (let i = 0; i < chordProgression.length; i++) {
-      const noteCountForChord = notesPerChord[i];
-      const scaleForCurrentChord = this.actualNotesFromScale(key.root, key.type, octave, octave);
-      const notesForChord = [];
-      let previousNoteIndex = 0;
-      for (let i = 0; i < noteCountForChord; i++) {
-        //get a note not too far away from the last
-        const newNote = utils.randomIntBetween(Math.max(previousNoteIndex - 2, 0), Math.min(previousNoteIndex + 2, scaleForCurrentChord.length));
-        notesForChord.push(scaleForCurrentChord[newNote]);
-
-        previousNoteIndex = newNote;
-      }
-      notes.push(notesForChord);
-    }
-
-    return notes;
-  }
-
-  //   public melodyForChordProgression = (chordProgression, key) => {
-  //     //const notesPerChord = 8;
-  //     const melodyOctave = key.chordOctave + 1;
-  //     const transposeSemiTones = melodyOctave - key.chordOctave * 12;
-  //     const notes = [];
-
-  //     for (const chord of chordProgression) {
-  //       const chordRoot = Tone.Frequency(chord[0]).transpose(transposeSemiTones);
-  //       const chordRootToNote = Tone.Frequency(chordRoot).toNote();
-
-  //       const scaleForCurrentChord = this.actualNotesFromScale(chordRootToNote, key.type, melodyOctave, melodyOctave);
-  //       const notesForChord = [chordRootToNote];
-
-  //       notesForChord.push(scaleForCurrentChord[1]);
-  //       notesForChord.push(scaleForCurrentChord[2]);
-  //       notesForChord.push(scaleForCurrentChord[1]);
-  //       notesForChord.push(scaleForCurrentChord[4]);
-  //       notesForChord.push(scaleForCurrentChord[4]);
-  //       notesForChord.push(scaleForCurrentChord[2]);
-  //       notesForChord.push(scaleForCurrentChord[0]);
-
-  //       notes.push(notesForChord);
-  //     }
-
-  //     return notes;
-  //   };
 }
