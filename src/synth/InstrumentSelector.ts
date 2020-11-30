@@ -35,17 +35,23 @@ export interface IKit {
 }
 
 export class InstrumentSelector {
-  private kits = [
-    () => ({ bass: new Tuba({ volume: -13 }), chord: new Cello({ pan: -0.3 }), motif: new Clarinet({ pan: 0.3 }), drums: false }),
-    () => ({ bass: new Tuba({ volume: -13 }), chord: new Cello(), motif: new Clarinet(), drums: false }),
-    () => ({ bass: new Tuba({ volume: -13 }), chord: new Cello(), motif: new Violin(), drums: false }),
-    () => ({ bass: new Cello({ attack: 0.2 }), chord: new Cello(), motif: new Violin(), drums: false }),
-    () => ({ bass: new PluckedBass(), chord: new Piano(), motif: new AcidSynth(-30), drums: false }),
-  ];
+  // mostly classical type instruments
+  private groupA = {
+    bass: [new Tuba({ volume: -13 }), new Cello({ attack: 0.2 })],
+    chord: [new Cello({ volume: -17 }), new Piano(), new Violin(), new Organ()],
+    motif: [new Trumpet({ pan: 0.3 }), new FrenchHorn({ pan: 0.3 }), new Clarinet({ pan: 0.3 })],
+  };
+
+  private groups = [this.groupA];
 
   public randomKit(): IKit {
-    // const kit = utils.randomFromArray(this.kits)();
-    // return kit;
-    return this.kits[0]();
+    const randomGroup = utils.randomFromArray(this.groups);
+
+    return {
+      bass: utils.randomFromArray(randomGroup.bass),
+      chord: utils.randomFromArray(randomGroup.chord),
+      motif: utils.randomFromArray(randomGroup.motif),
+      drums: utils.coinToss() === 1,
+    };
   }
 }
