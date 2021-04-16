@@ -5,7 +5,7 @@ type P5WithState = p5 & { state: any };
 
 export default function (p: P5WithState) {
   const frameRate = 30;
-  const outputTopY = 75;
+  const outputTopY = 128;
 
   let displayFont: p5.Font;
 
@@ -17,6 +17,10 @@ export default function (p: P5WithState) {
 
   p.setup = () => {
     p.frameRate(frameRate);
+    // const sketchWidth = document.getElementById(p.state.containerId).offsetWidth;
+    // const sketchHeight = document.getElementById(p.state.containerId).offsetHeight;
+    // const canvas = p.createCanvas(sketchWidth, p.windowHeight);
+    // canvas.parent(p.state.containerId);
     p.createCanvas(p.windowWidth, p.windowHeight);
   };
 

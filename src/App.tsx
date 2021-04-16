@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import * as Tone from "tone";
 import * as color from "color";
 import seedRandom from "seedrandom";
-import { createUseStyles } from "react-jss";
+import { makeStyles } from "@material-ui/core/styles";
+import { AppBar, Box, Button, Container, Toolbar, Typography, TextField, Grid } from "@material-ui/core";
+
+import PlayIcon from "@material-ui/icons/PlayArrow";
+import PauseIcon from "@material-ui/icons/Pause";
+import RandomiseIcon from "@material-ui/icons/Shuffle";
 
 import * as utils from "./synth/utils";
 import { ISongCallback } from "./songs/abstract/songTypes";
@@ -21,6 +26,21 @@ seedRandom(initialSeed, { global: true });
 const song = new Song1();
 const frameRate = 24;
 
+const useStyles = makeStyles({
+  // "@global": {
+  //   html: {
+  //     backgroundColor: (c: IColours) => c.base.hex(),
+  //   },
+  // },
+  appBar: {
+    backgroundColor: "white",
+  },
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+});
+
 const getColours = (baseColour: color) => {
   return {
     base: baseColour,
@@ -34,7 +54,7 @@ const getColours = (baseColour: color) => {
   };
 };
 
-export const App: () => JSX.Element = () => {
+export const App: React.FC = () => {
   const classes = useStyles();
   const [seed, setSeed] = useState(initialSeed);
   const [songKey, setSongKey] = useState<SongKey>();
@@ -50,6 +70,7 @@ export const App: () => JSX.Element = () => {
     chord: { text: "", alpha: 0, alphaDecrement: 0 },
     motif: { text: "", alpha: 0, alphaDecrement: 0 },
   });
+  const [isPlaying, setIsPlaying] = useState(false);
 
   // Create a new song on change of seed
   useEffect(() => {
@@ -81,53 +102,66 @@ export const App: () => JSX.Element = () => {
   }, [seed]);
 
   // song event handlers
-  const onKickDrumHit: ISongCallback = () => {
+  const onKickDrumHit: ISongCallback = useCallback(() => {
     drumHitShapes.kick.angle = 0;
     setDrumHitShapes(drumHitShapes);
-  };
-  const onSnareDrumHit: ISongCallback = () => {
+  }, [drumHitShapes.kick]);
+
+  const onSnareDrumHit: ISongCallback = useCallback(() => {
     drumHitShapes.snare.angle = 0;
     setDrumHitShapes(drumHitShapes);
-  };
-  const onClosedHatHit: ISongCallback = () => {
+  }, [drumHitShapes.snare]);
+
+  const onClosedHatHit: ISongCallback = useCallback(() => {
     drumHitShapes.closedHat.angle = 0;
     setDrumHitShapes(drumHitShapes);
-  };
-  const onOpenHatHit: ISongCallback = () => {
+  }, [drumHitShapes.closedHat]);
+
+  const onOpenHatHit: ISongCallback = useCallback(() => {
     drumHitShapes.openHat.angle = 0;
     setDrumHitShapes(drumHitShapes);
-  };
+  }, [drumHitShapes.openHat]);
 
-  const onBassNotePlayed: ISongCallback = ({ note, duration }) => {
-    const noteName = Tone.Frequency(note).toNote();
-    const noteLength = Tone.Time(duration).toSeconds();
-    noteDisplays.bass.text = noteName;
-    noteDisplays.bass.alpha = 1;
-    noteDisplays.bass.alphaDecrement = noteDisplays.bass.alpha / (frameRate * noteLength);
-    setNoteDisplays(noteDisplays);
-  };
+  const onBassNotePlayed: ISongCallback = useCallback(
+    ({ note, duration }) => {
+      const noteName = Tone.Frequency(note).toNote();
+      const noteLength = Tone.Time(duration).toSeconds();
+      noteDisplays.bass.text = noteName;
+      noteDisplays.bass.alpha = 1;
+      noteDisplays.bass.alphaDecrement = noteDisplays.bass.alpha / (frameRate * noteLength);
+      setNoteDisplays(noteDisplays);
+    },
+    [noteDisplays.bass]
+  );
 
-  const onMotifNotePlayed: ISongCallback = ({ note, duration }) => {
-    const noteName = Tone.Frequency(note).toNote();
-    const noteLength = Tone.Time(duration).toSeconds();
-    noteDisplays.motif.text = noteName;
-    noteDisplays.motif.alpha = 1;
-    noteDisplays.motif.alphaDecrement = noteDisplays.motif.alpha / (frameRate * noteLength);
-    setNoteDisplays(noteDisplays);
-  };
+  const onMotifNotePlayed: ISongCallback = useCallback(
+    ({ note, duration }) => {
+      const noteName = Tone.Frequency(note).toNote();
+      const noteLength = Tone.Time(duration).toSeconds();
+      noteDisplays.motif.text = noteName;
+      noteDisplays.motif.alpha = 1;
+      noteDisplays.motif.alphaDecrement = noteDisplays.motif.alpha / (frameRate * noteLength);
+      setNoteDisplays(noteDisplays);
+    },
+    [noteDisplays.motif]
+  );
 
-  const onChordPlayed: ISongCallback = ({ notes, duration }) => {
-    const noteNames = notes.map((note) => Tone.Frequency(note).toNote());
-    const noteLength = Tone.Time(duration).toSeconds();
-    noteDisplays.chord.text = noteNames.join(" ");
-    noteDisplays.chord.alpha = 1;
-    noteDisplays.chord.alphaDecrement = noteDisplays.chord.alpha / (frameRate * noteLength);
-    setNoteDisplays(noteDisplays);
-  };
+  const onChordPlayed: ISongCallback = useCallback(
+    ({ notes, duration }) => {
+      const noteNames = notes.map((note) => Tone.Frequency(note).toNote());
+      const noteLength = Tone.Time(duration).toSeconds();
+      noteDisplays.chord.text = noteNames.join(" ");
+      noteDisplays.chord.alpha = 1;
+      noteDisplays.chord.alphaDecrement = noteDisplays.chord.alpha / (frameRate * noteLength);
+      setNoteDisplays(noteDisplays);
+    },
+    [noteDisplays.chord]
+  );
 
   // UI Event handlers
   const playPause = () => {
     song.playPause();
+    setIsPlaying(song.isPlaying);
   };
 
   const handleRandomise = () => {
@@ -141,50 +175,38 @@ export const App: () => JSX.Element = () => {
   };
 
   return (
-    <div>
-      {colours !== undefined && (
-        <header className={classes.toolbar} style={{ backgroundColor: colours.base.lighten(0.8).hex() }}>
-          <div className={classes.toolbarContent}>
-            <div className={classes.toolbarMainButtons}>
-              <button onClick={handleRandomise}>Randomise</button>
-              <button onClick={playPause}>Play/Pause</button>
-            </div>
-            <div>
-              <input type="text" value={seed} onChange={handleSeedChange}></input>
-              <button onClick={playPause}>Go</button>
-            </div>
-          </div>
-        </header>
-      )}
-      <P5Wrapper sketch={sketch} state={{ colours, drumHitShapes, noteDisplays, songKey }}></P5Wrapper>
-    </div>
+    <>
+      <Container maxWidth="lg">
+        {colours !== undefined && (
+          <AppBar className={classes.appBar}>
+            <Toolbar className={classes.toolbar}>
+              <Grid container alignItems="center">
+                <Grid item md={4}>
+                  <Typography variant="h6" color="textPrimary">
+                    Synaesthesia
+                  </Typography>
+                </Grid>
+                <Grid item md={4} style={{ textAlign: "center" }}>
+                  <Box>
+                    <Button onClick={handleRandomise} startIcon={<RandomiseIcon />}>
+                      Randomise
+                    </Button>
+                    <Button onClick={playPause} startIcon={isPlaying ? <PauseIcon /> : <PlayIcon />}>
+                      Play/Pause
+                    </Button>
+                  </Box>
+                </Grid>
+                <Grid item md={4} style={{ textAlign: "right" }}>
+                  <TextField onChange={handleSeedChange} value={seed} margin="dense" label="Seed" variant="outlined" />
+                </Grid>
+              </Grid>
+            </Toolbar>
+          </AppBar>
+        )}
+      </Container>
+      <Box id="vis-container">
+        <P5Wrapper sketch={sketch} state={{ colours, drumHitShapes, noteDisplays, songKey, containerId: "vis-container" }}></P5Wrapper>
+      </Box>
+    </>
   );
 };
-
-const useStyles = createUseStyles({
-  // "@global": {
-  //   html: {
-  //     backgroundColor: (c: IColours) => c.base.hex(),
-  //   },
-  // },
-  toolbar: {
-    height: 32,
-    padding: 16,
-    "& button": {
-      height: 34,
-    },
-  },
-  toolbarContent: {
-    margin: "0 auto",
-    maxWidth: 1024,
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  toolbarMainButtons: {
-    marginRight: -16,
-    "& button": {
-      marginRight: 16,
-    },
-  },
-});

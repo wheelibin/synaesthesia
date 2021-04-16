@@ -1,7 +1,7 @@
 import * as Tone from "tone";
 
 export abstract class Song {
-  private isPlaying: boolean;
+  public isPlaying: boolean;
 
   constructor() {
     this.isPlaying = false;

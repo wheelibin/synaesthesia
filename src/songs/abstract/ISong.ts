@@ -6,4 +6,5 @@ export interface ISong {
   playPause(): void;
   play(): void;
   stop(): void;
+  isPlaying: boolean;
 }
