@@ -7,15 +7,16 @@ import Info from "./Info";
 import Song from "./Song";
 
 class App extends Component {
-  componentWillMount() {
-    let song = this.props.song;
-    if (this.props.match.params.seed) {
+  constructor(props) {
+    super();
+    let song = props.song;
+    if (props.match.params.seed) {
       song = 1;
-      this.props.actions.SetInitialSeed(this.props.match.params.seed);
+      props.actions.SetInitialSeed(props.match.params.seed);
     }
 
     if (song) {
-      this.props.actions.SetSong(song);
+      props.actions.SetSong(song);
     }
   }
   componentDidUpdate(prevProps) {

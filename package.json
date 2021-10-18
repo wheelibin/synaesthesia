@@ -4,14 +4,14 @@
   "private": true,
   "homepage": "https://wheelibin.github.io/synaesthesia",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.23.0",
     "lodash": "^4.17.10",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "^1.1.4",
+    "react-scripts": "^4.0.3",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "tone": "^0.11.12"
@@ -30,5 +30,17 @@
     "eslint-plugin-react": "^7.7.0",
     "gh-pages": "^1.2.0",
     "prettier": "1.11.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
