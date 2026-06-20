@@ -1,19 +1,19 @@
-import Tone from "tone";
+import { FMOscillator, Frequency, getDestination, Pattern, getDraw, Chorus, Freeverb, Phaser, AutoWah, Loop, Noise, AutoFilter, LFO, getTransport } from "tone";
 import * as utils from "../../utils";
 import * as scales from "../scales";
 import instruments from "../instruments";
 
 const fmOscillator = (note, volume = 0) => {
   const oscType = utils.randomFromArray(["sine", "square4"]);
-  const osc = new Tone.FMOscillator(note, oscType, "square").toMaster().start(0.5);
+  const osc = new FMOscillator(note, oscType, "square").toDestination().start(0.5);
   osc.volume.value = volume;
   return osc;
 };
 const transpose = (freq, semitones) => {
-  return Tone.Frequency(freq).transpose(semitones);
+  return Frequency(freq).transpose(semitones);
 };
 export const play = visCallback => {
-  Tone.Master.volume.value = -32;
+  getDestination().volume.value = -32;
 
   const config = {
     lowestOscVolume: -50,
@@ -30,7 +30,7 @@ export const play = visCallback => {
 
   const masterScale = scales.getRandomScaleType();
   const root = scales.getRandomRootNote();
-  const rootFreq = Tone.Frequency(root + "0");
+  const rootFreq = Frequency(root + "0");
   const oscScale = scales.actualNotesFromScale(rootFreq.toNote(), masterScale.intervals, 2, 3);
   const harmonyNotes = utils.shuffleArray(scales.actualNotesFromScale(rootFreq.toNote(), masterScale.intervals, 3, 3));
   const harmonyOscillator = fmOscillator(rootFreq, config.lowestOscVolume);
@@ -43,12 +43,11 @@ export const play = visCallback => {
   let changeRootAndTransposeAllToMatch = null;
   const changeRootRampTime = "+4:0:0";
 
-  //Create the bass pattern
   const bassInstrument = new instruments.bass.FastAttackSquare();
-  const bassPattern = new Tone.Pattern(
+  const bassPattern = new Pattern(
     function(time, note) {
       bassInstrument.triggerAttackRelease(note, config.bassInterval, time);
-      Tone.Draw.schedule(function() {
+      getDraw().schedule(function() {
         if (visCallback) {
           visCallback();
         }
@@ -76,9 +75,8 @@ export const play = visCallback => {
   extraOscillators = [osc5, osc7, osc9, osc11, osc13];
 
   changeRootAndTransposeAllToMatch = newRoot => {
-    newRoot = Tone.Frequency(newRoot);
+    newRoot = Frequency(newRoot);
     const newScale = scales.actualNotesFromScale(newRoot.toNote(), masterScale.intervals, 2, 3);
-    //Change the oscillators to the new notes
     oscRoot.frequency.linearRampToValueAtTime(newRoot, changeRootRampTime);
     oscRootO2.frequency.linearRampToValueAtTime(transpose(newRoot, 24), changeRootRampTime);
     osc3.frequency.linearRampToValueAtTime(newScale[2], changeRootRampTime);
@@ -89,10 +87,10 @@ export const play = visCallback => {
     bassPattern.values = scales.actualNotesFromScale(newRoot.toNote(), masterScale.intervals, 1, 2);
   };
 
-  const chorus = new Tone.Chorus(2, 2.5, 0.5).toMaster();
-  const reverb = new Tone.Freeverb().toMaster();
-  const phaser = new Tone.Phaser(0.2).toMaster();
-  const autoWah = new Tone.AutoWah().toMaster();
+  const chorus = new Chorus(2, 2.5, 0.5).toDestination();
+  const reverb = new Freeverb().toDestination();
+  const phaser = new Phaser(0.2).toDestination();
+  const autoWah = new AutoWah().toDestination();
 
   oscillatorsWithEffects.forEach(osc => {
     osc.connect(chorus);
@@ -104,20 +102,19 @@ export const play = visCallback => {
     osc.volumeChangeActive = true;
   });
 
-  const frequencyChangeLoop = new Tone.Loop(() => {
+  const frequencyChangeLoop = new Loop(() => {
     const frequencyChangeOscillator = utils.randomFromArray(oscillatorsWithFrequencyChange);
 
-    //frequency change
     if (frequencyChangeOscillator.frequencyChangeActive) {
       const transposeAmount = 0.125;
       frequencyChangeOscillator.frequency.exponentialRampToValueAtTime(
-        Tone.Frequency(frequencyChangeOscillator.frequency.value).transpose(transposeAmount),
+        Frequency(frequencyChangeOscillator.frequency.value).transpose(transposeAmount),
         "+0:2:0"
       );
       frequencyChangeOscillator.transposeAmount = transposeAmount;
     } else {
       frequencyChangeOscillator.frequency.exponentialRampToValueAtTime(
-        Tone.Frequency(frequencyChangeOscillator.frequency.value).transpose(frequencyChangeOscillator.transposeAmount * -1),
+        Frequency(frequencyChangeOscillator.frequency.value).transpose(frequencyChangeOscillator.transposeAmount * -1),
         "+0:2:0"
       );
     }
@@ -125,7 +122,7 @@ export const play = visCallback => {
   }, config.changeFrequencyInterval);
   frequencyChangeLoop.start(config.changeFrequencyInterval);
 
-  const volumeChangeLoop = new Tone.Loop(() => {
+  const volumeChangeLoop = new Loop(() => {
     oscillatorsWithVolumeChange.forEach(osc => {
       osc.volume.exponentialRampToValueAtTime(0, "+1:0:0");
     });
@@ -134,34 +131,25 @@ export const play = visCallback => {
   }, config.changeVolumeInterval);
   volumeChangeLoop.start(config.changeVolumeInterval);
 
-  //initialize the noise and start
-  const noise = new Tone.Noise("pink").start();
+  const noise = new Noise("pink").start();
   noise.volume.value = 9;
-  const noiseAutoFilter = new Tone.AutoFilter({
+  const noiseAutoFilter = new AutoFilter({
     frequency: "8m",
     min: 800,
     max: 15000
-  }).toMaster();
+  }).toDestination();
   noise.connect(noiseAutoFilter);
   noiseAutoFilter.start();
 
-  //Subtly modulate the noise volume
-  const noiseVolumeLfo = new Tone.LFO("9m", 8, 10);
+  const noiseVolumeLfo = new LFO("9m", 8, 10);
   noiseVolumeLfo.start();
   noiseVolumeLfo.connect(noise.volume);
 
-  //Subtly modulate the reverb
-  const reverbRoomSizeLfo = new Tone.LFO("7m", 0.7, 0.9);
+  const reverbRoomSizeLfo = new LFO("7m", 0.7, 0.9);
   reverbRoomSizeLfo.start();
   reverbRoomSizeLfo.connect(reverb.roomSize);
 
-  //Subtly modulate the reverb
-  const reverbDampeningLfo = new Tone.LFO("6m", 1000, 4000);
-  reverbDampeningLfo.start();
-  reverbDampeningLfo.connect(reverb.dampening);
-
-  //Fade in and out one other random oscillator
-  const extraOscillatorLoop = new Tone.Loop(() => {
+  const extraOscillatorLoop = new Loop(() => {
     const oscs = [...extraOscillators];
     const extraOscillator = utils.randomFromArray(oscs);
     extraOscillators.forEach(osc => {
@@ -169,28 +157,25 @@ export const play = visCallback => {
         osc.volume.exponentialRampToValueAtTime(config.lowestOscVolume, "+1:0:0");
       }
     });
-    Tone.Transport.scheduleOnce(function(time) {
+    getTransport().scheduleOnce(function(time) {
       extraOscillator.volume.rampTo(0, "1m", time);
     }, config.extraOscillatorFadeOutTime);
   }, config.extraOscillatorInterval);
-  // extraOscillatorLoop.probability = 0.7;
   extraOscillatorLoop.start(config.extraOscillatorInterval);
 
-  const harmonyOscillatorLoop = new Tone.Loop(time => {
+  const harmonyOscillatorLoop = new Loop(time => {
     const note = harmonyNotes.shift();
     harmonyOscillator.frequency.value = note;
     harmonyOscillator.volume.rampTo(config.harmonyOscVolume, "1m", time);
 
-    Tone.Transport.scheduleOnce(function(time) {
+    getTransport().scheduleOnce(function(time) {
       harmonyOscillator.volume.rampTo(config.lowestOscVolume, "1m", time);
     }, config.harmonyFadeOutTime);
     harmonyNotes.push(note);
   }, config.harmonyInterval);
-  // harmonyOscillatorLoop.probability = 0.8;
   harmonyOscillatorLoop.start(config.harmonyInterval);
 
-  //Transpose th whole lot by changing the root
-  const changeRootPattern = new Tone.Pattern(
+  const changeRootPattern = new Pattern(
     function(time, note) {
       changeRootAndTransposeAllToMatch(note);
     },

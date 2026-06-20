@@ -1,4 +1,4 @@
-import Tone from "tone";
+import { Frequency } from "tone";
 import * as utils from "../utils";
 
 const roots = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
@@ -21,36 +21,6 @@ export const scales = {
   Locrian: [1, 2, 2, 1, 2, 2],
   Dominant7th: [2, 2, 1, 2, 2, 1],
   Blues: [3, 2, 1, 1, 3]
-  //   Dimhalf: [1, 2, 1, 2, 1, 2],
-  //   Dimwhole: [2, 1, 2, 1, 2, 1],
-  //   Whole: [2, 2, 2, 2],
-  //   Augmented: [3, 1, 3, 1],
-  //   Chromatic: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  //   RoumanianMinor: [2, 1, 3, 1, 2, 1],
-  //   SpanishGypsy: [1, 3, 1, 2, 1, 2],
-  //   Diatonic: [2, 2, 3, 2],
-  //   DoubleHarmonic: [1, 3, 1, 2, 1, 3],
-  //   EightToneSpanish: [1, 2, 1, 1, 1, 2, 2],
-  //   Enigmatic: [1, 3, 2, 2, 2, 1],
-  //   LeadingWholeTone: [2, 2, 2, 2, 1],
-  //   LydianAugmented: [2, 2, 2, 2, 1, 2],
-  //   NeopolitanMajor: [1, 2, 2, 2, 2, 2],
-  //   NeopolitanMinor: [1, 2, 2, 2, 1, 2],
-  //   Pelog: [1, 2, 3, 4],
-  //   Prometheus: [2, 2, 2, 3, 1],
-  //   PrometheusNeopolitan: [1, 3, 2, 3, 1],
-  //   SixToneSymmetrical: [1, 3, 1, 3, 1],
-  //   SuperLocrian: [1, 2, 1, 2, 2, 2],
-  //   LydianMinor: [2, 2, 2, 1, 1, 2],
-  //   LydianDiminished: [2, 1, 3, 1, 1, 2],
-  //   NineToneScale: [2, 1, 1, 2, 1, 1, 1, 2],
-  //   AuxiliaryDiminished: [2, 1, 2, 1, 2, 1, 2],
-  //   AuxiliaryAugmented: [2, 2, 2, 2, 2],
-  //   AuxiliaryDimBlues: [1, 2, 1, 2, 1, 2, 1],
-  //   MajorLocrian: [2, 2, 1, 1, 2, 2],
-  //   Overtone: [2, 2, 2, 1, 2, 1],
-  //   DiminishedWholeTone: [1, 2, 1, 2, 2, 2],
-  //   PureMinor: [2, 1, 2, 2, 1, 2]
 };
 
 export const chordProgressions = [
@@ -75,11 +45,10 @@ export const getRandomRootNote = () => {
 export const actualNotesFromScale = (tonic, scale, lowOctave, highOctave) => {
   let notes = [];
 
-  //Get just the note value without octaves
   if (!utils.isNumeric(tonic)) {
     tonic = tonic.replace(/[0-9]/g, "");
   } else {
-    tonic = Tone.Frequency(tonic)
+    tonic = Frequency(tonic)
       .toNote()
       .replace(/[0-9]/g, "");
   }
@@ -130,7 +99,7 @@ export const chordFromScale = (chordToneIndexes, tonic, scale, mainOctave, index
 
 export const scaleFromTonic = (tonic, intervals) => {
   const scale = [];
-  let note = Tone.Frequency(tonic);
+  let note = Frequency(tonic);
   scale.push(tonic);
 
   for (const interval of intervals) {
@@ -144,7 +113,7 @@ export const scaleFromTonic = (tonic, intervals) => {
 export const rootNotesFromChordProgression = chordProgression => {
   return chordProgression
     .map(chord =>
-      Tone.Frequency(chord[0])
+      Frequency(chord[0])
         .toNote()
         .replace(/[0-9]/g, "")
     )
@@ -158,7 +127,7 @@ export const bassLineForChordProgression = (notesPerChord, chordProgression, key
   for (let i = 0; i < chordProgression.length; i++) {
     const chord = chordProgression[i];
     const noteCountForChord = notesPerChord[i];
-    const chordRoot = Tone.Frequency(chord[0]).transpose(transposeSemiTones);
+    const chordRoot = Frequency(chord[0]).transpose(transposeSemiTones);
     const scaleForCurrentChord = actualNotesFromScale(key.root, key.type, octave, octave);
 
     const notesForChord = [chordRoot];
@@ -178,13 +147,12 @@ export const smoothBassLineForChordProgression = (notesPerChord, chordProgressio
   for (let i = 0; i < chordProgression.length; i++) {
     const chord = chordProgression[i];
     const noteCountForChord = notesPerChord[i];
-    const chordRoot = Tone.Frequency(chord[0]).transpose(transposeSemiTones);
+    const chordRoot = Frequency(chord[0]).transpose(transposeSemiTones);
     const scaleForCurrentChord = actualNotesFromScale(key.root, key.type, octave, octave);
 
     const notesForChord = [chordRoot];
     let previousNoteIndex = 0;
     for (let i = 0; i < noteCountForChord - 1; i++) {
-      //get a note not too far away from the last
       const newNote = utils.randomIntBetween(Math.max(previousNoteIndex - 2, 0), Math.min(previousNoteIndex + 2, scaleForCurrentChord.length));
       notesForChord.push(scaleForCurrentChord[newNote]);
 
@@ -205,7 +173,6 @@ export const motifForChordProgression = (notesPerChord, chordProgression, key, o
     const notesForChord = [];
     let previousNoteIndex = 0;
     for (let i = 0; i < noteCountForChord; i++) {
-      //get a note not too far away from the last
       const newNote = utils.randomIntBetween(Math.max(previousNoteIndex - 2, 0), Math.min(previousNoteIndex + 2, scaleForCurrentChord.length));
       notesForChord.push(scaleForCurrentChord[newNote]);
 
@@ -218,14 +185,13 @@ export const motifForChordProgression = (notesPerChord, chordProgression, key, o
 };
 
 export const melodyForChordProgression = (chordProgression, key) => {
-  //const notesPerChord = 8;
   const melodyOctave = key.chordOctave + 1;
   const transposeSemiTones = melodyOctave - key.chordOctave * 12;
   const notes = [];
 
   for (const chord of chordProgression) {
-    const chordRoot = Tone.Frequency(chord[0]).transpose(transposeSemiTones);
-    const chordRootToNote = Tone.Frequency(chordRoot).toNote();
+    const chordRoot = Frequency(chord[0]).transpose(transposeSemiTones);
+    const chordRootToNote = Frequency(chordRoot).toNote();
 
     const scaleForCurrentChord = actualNotesFromScale(chordRootToNote, key.type, melodyOctave, melodyOctave);
     const notesForChord = [chordRootToNote];

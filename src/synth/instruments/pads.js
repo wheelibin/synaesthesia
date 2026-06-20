@@ -1,10 +1,11 @@
-import Tone from "tone";
+import { PolySynth, Synth, Filter, Chorus, Freeverb, Frequency, LFO } from "tone";
 import * as bass from "./bass";
 import { Instrument } from "./instrument";
+import { sendToReverb } from "../effects.js";
 
 export class SimpleSine extends Instrument {
   constructor(volume = 24) {
-    super(new Tone.PolySynth(6, Tone.Synth), volume);
+    super(new PolySynth(Synth), volume);
     this.synth.set({
       oscillator: {
         type: "fatsine"
@@ -18,13 +19,13 @@ export class SimpleSine extends Instrument {
       portamento: 0.2
     });
     this.synth.volume.value = 10;
-    this.synth.send("reverb", -12);
+    sendToReverb(this.synth, -12);
   }
 }
 
 export class SoftSquareFm extends Instrument {
   constructor(volume = 24) {
-    super(new Tone.PolySynth(6, Tone.Synth), volume);
+    super(new PolySynth(Synth), volume);
     this.synth.set({
       oscillator: {
         type: "fmsquare2"
@@ -39,14 +40,14 @@ export class SoftSquareFm extends Instrument {
     });
     this.synth.volume.value = 8;
 
-    const filter = new Tone.Filter(400, "lowpass").toMaster();
-    this.synth.send("reverb", -12);
+    const filter = new Filter(400, "lowpass").toDestination();
+    sendToReverb(this.synth, -12);
     this.synth.connect(filter);
   }
 }
 
 export const SwirlySawtoothChorusWithSubBass = function() {
-  const chordSynth = new Tone.PolySynth(6, Tone.Synth);
+  const chordSynth = new PolySynth(Synth);
   chordSynth.set({
     oscillator: {
       type: "fatsawtooth"
@@ -59,28 +60,22 @@ export const SwirlySawtoothChorusWithSubBass = function() {
     },
     portamento: 0.2
   });
-  const filter = new Tone.Filter(250, "lowpass").toMaster();
+  const filter = new Filter(250, "lowpass").toDestination();
 
-  const lfo = new Tone.LFO("8m", 250, 1600);
+  const lfo = new LFO("8m", 250, 1600);
   lfo.start();
   lfo.connect(filter.frequency);
 
-  const chorus = new Tone.Chorus("1:0:0", 2.5, 1).toMaster();
-  const reverb = new Tone.Freeverb().toMaster();
-
-  const lfoReverbDampening = new Tone.LFO("8m", 400, 14000);
-  lfoReverbDampening.phase = 90;
-  lfoReverbDampening.start();
-  lfoReverbDampening.connect(reverb.dampening);
+  const chorus = new Chorus("1:0:0", 2.5, 1).toDestination();
+  const reverb = new Freeverb().toDestination();
 
   chordSynth.chain(chorus, reverb, filter);
 
-  //Add bass for the root note
   const bassSynth = bass.subBass();
   bassSynth.volume.value = bassSynth.volume.value - 12;
 
   this.triggerAttackRelease = (chord, duration, time) => {
-    const lowRootNote = Tone.Frequency(chord[0]).transpose(-12);
+    const lowRootNote = Frequency(chord[0]).transpose(-12);
     chordSynth.triggerAttackRelease(chord, duration, time);
     bassSynth.triggerAttackRelease(lowRootNote, duration, time);
   };

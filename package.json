@@ -4,32 +4,19 @@
   "private": true,
   "homepage": "https://wheelibin.github.io/synaesthesia",
   "dependencies": {
-    "axios": "^0.23.0",
-    "lodash": "^4.17.10",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "react-redux": "^5.0.7",
-    "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2",
-    "react-scripts": "^4.0.3",
-    "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0",
-    "tone": "^0.11.12"
+    "lodash": "^4.18.1",
+    "tone": "^15.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "predeploy": "npm version patch && npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-prettier": "^2.6.0",
-    "eslint-plugin-react": "^7.7.0",
-    "gh-pages": "^1.2.0",
-    "prettier": "1.11.1"
+    "gh-pages": "^6.0.0",
+    "vite": "^6.3.5"
   },
   "browserslist": {
     "production": [

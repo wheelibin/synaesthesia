@@ -1,10 +1,10 @@
-import Tone from "tone";
+import { Synth } from "tone";
 import { Instrument } from "./instrument";
 
 export class SimpleSine extends Instrument {
   constructor() {
     super(
-      new Tone.Synth({
+      new Synth({
         oscillator: {
           type: "sine"
         },

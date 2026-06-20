@@ -1,4 +1,4 @@
-import Tone from "tone";
+import { Synth, Compressor } from "tone";
 import { Instrument } from "./instrument";
 
 export const subBass = () => {
@@ -12,7 +12,7 @@ export const softSquareBass = () => {
 export class FastAttackSquare extends Instrument {
   constructor() {
     super(
-      new Tone.Synth({
+      new Synth({
         oscillator: {
           type: "square4"
         },
@@ -25,7 +25,7 @@ export class FastAttackSquare extends Instrument {
       }),
       22
     );
-    var comp = new Tone.Compressor(-30, 12).toMaster();
+    var comp = new Compressor(-30, 12).toDestination();
     this.synth.connect(comp);
   }
 }
@@ -33,7 +33,7 @@ export class FastAttackSquare extends Instrument {
 export class SawTooth extends Instrument {
   constructor() {
     super(
-      new Tone.Synth({
+      new Synth({
         oscillator: {
           type: "sawtooth"
         },
@@ -50,7 +50,7 @@ export class SawTooth extends Instrument {
 }
 
 export const squareBass = harmonics => {
-  const bassSynth = new Tone.Synth({
+  const bassSynth = new Synth({
     oscillator: {
       type: "square" + harmonics
     },
@@ -60,7 +60,7 @@ export const squareBass = harmonics => {
       sustain: 1,
       release: 3
     }
-  }).toMaster();
+  }).toDestination();
   bassSynth.volume.value = 24;
   return bassSynth;
 };

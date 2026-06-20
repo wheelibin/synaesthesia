@@ -1,20 +1,22 @@
-import Tone from "tone";
+import { MembraneSynth, NoiseSynth, Filter, MetalSynth, Compressor } from "tone";
 import { Instrument } from "./instrument";
+import { sendToReverb } from "../effects.js";
 
 export class KickDrum extends Instrument {
   constructor() {
-    super(new Tone.MembraneSynth({ pitchDecay: 0.1 }), 28);
-    var comp = new Tone.Compressor(-30, 12).toMaster();
+    super(new MembraneSynth({ pitchDecay: 0.1 }), 28);
+    var comp = new Compressor(-30, 12).toDestination();
     this.synth.connect(comp);
   }
 }
+
 export class HiHat extends Instrument {
   constructor(addReverb) {
-    super(new Tone.NoiseSynth(), 16);
+    super(new NoiseSynth(), 16);
     if (addReverb) {
-      this.synth.send("reverb", -12);
+      sendToReverb(this.synth, -12);
     }
-    const filter = new Tone.Filter(8000, "highpass").toMaster();
+    const filter = new Filter(8000, "highpass").toDestination();
     this.synth.connect(filter);
   }
 }
@@ -22,7 +24,7 @@ export class HiHat extends Instrument {
 export class Slap extends Instrument {
   constructor(addReverb) {
     super(
-      new Tone.NoiseSynth({
+      new NoiseSynth({
         noise: {
           type: "white",
           playbackRate: 5
@@ -37,10 +39,10 @@ export class Slap extends Instrument {
       14
     );
     if (addReverb) {
-      this.synth.send("reverb", -12);
+      sendToReverb(this.synth, -12);
     }
 
-    const filter = new Tone.Filter(500, "lowpass").toMaster();
+    const filter = new Filter(500, "lowpass").toDestination();
     this.synth.connect(filter);
   }
 }
@@ -48,7 +50,7 @@ export class Slap extends Instrument {
 export class OpenHat extends Instrument {
   constructor(frequency) {
     super(
-      new Tone.MetalSynth({
+      new MetalSynth({
         frequency: frequency
       }),
       10
@@ -59,14 +61,13 @@ export class OpenHat extends Instrument {
 export class Shaker extends Instrument {
   constructor(frequency) {
     super(
-      new Tone.MetalSynth({
+      new MetalSynth({
         envelope: {
           attack: 0.1,
           decay: 0.4,
           release: 0.3
         },
         frequency: frequency,
-        //harmonicity: 5.1,
         modulationIndex: 64,
         resonance: 3000,
         octaves: 1.5
@@ -79,9 +80,8 @@ export class Shaker extends Instrument {
 export class DampenedOpenHat extends Instrument {
   constructor(frequency) {
     super(
-      new Tone.MetalSynth({
+      new MetalSynth({
         frequency: frequency,
-        //harmonicity: 5.1,
         modulationIndex: 32,
         resonance: 1000,
         octaves: 1.5
@@ -93,6 +93,6 @@ export class DampenedOpenHat extends Instrument {
 
 export class Test extends Instrument {
   constructor() {
-    super(new Tone.MetalSynth({ frequency: 200 }), 16);
+    super(new MetalSynth({ frequency: 200 }), 16);
   }
 }

@@ -1,11 +1,10 @@
-// http://tonejs.github.io/Presets/
-
-import Tone from "tone";
+import { PolySynth, Synth, AMSynth, FMSynth, MonoSynth, NoiseSynth } from "tone";
 import { Instrument } from "./instrument";
+import { sendToReverb } from "../effects.js";
 
 export class Tiny extends Instrument {
   constructor() {
-    super(new Tone.PolySynth(6, Tone.Synth), 24);
+    super(new PolySynth(Synth), 24);
     this.synth.set({
       harmonicity: 2,
       oscillator: {
@@ -33,14 +32,13 @@ export class Tiny extends Instrument {
       }
     });
     this.synth.volume.value = 10;
-
-    this.synth.send("reverb", -12);
+    sendToReverb(this.synth, -12);
   }
 }
 
 export class Harmonics extends Instrument {
   constructor() {
-    super(new Tone.PolySynth(6, Tone.AMSynth), 24);
+    super(new PolySynth(AMSynth), 24);
     this.synth.set({
       volume: 16,
       harmonicity: 3.999,
@@ -65,14 +63,13 @@ export class Harmonics extends Instrument {
       }
     });
     this.synth.volume.value = 10;
-
-    this.synth.send("reverb", -12);
+    sendToReverb(this.synth, -12);
   }
 }
 
 export class AM_Tiny extends Instrument {
   constructor() {
-    super(new Tone.PolySynth(6, Tone.AMSynth), 24);
+    super(new PolySynth(AMSynth), 24);
     this.synth.set({
       volume: 14,
       harmonicity: 2,
@@ -101,14 +98,13 @@ export class AM_Tiny extends Instrument {
       }
     });
     this.synth.volume.value = 14;
-
-    this.synth.send("reverb", -12);
+    sendToReverb(this.synth, -12);
   }
 }
 
 export class FM_ElectricCello extends Instrument {
   constructor() {
-    super(new Tone.PolySynth(6, Tone.FMSynth), 24);
+    super(new PolySynth(FMSynth), 24);
     this.synth.set({
       volume: 20,
       harmonicity: 3.01,
@@ -133,15 +129,14 @@ export class FM_ElectricCello extends Instrument {
       }
     });
     this.synth.volume.value = 10;
-
-    this.synth.send("reverb", -12);
+    sendToReverb(this.synth, -12);
   }
 }
 
 export class Kalimba extends Instrument {
   constructor() {
     super(
-      new Tone.FMSynth({
+      new FMSynth({
         harmonicity: 8,
         modulationIndex: 2,
         oscillator: {
@@ -171,7 +166,7 @@ export class Kalimba extends Instrument {
 export class BassGuitar extends Instrument {
   constructor() {
     super(
-      new Tone.MonoSynth({
+      new MonoSynth({
         oscillator: {
           type: "fmsquare5",
           modulationType: "triangle",
@@ -206,7 +201,7 @@ export class BassGuitar extends Instrument {
 export class Bassy extends Instrument {
   constructor() {
     super(
-      new Tone.MonoSynth({
+      new MonoSynth({
         portamento: 0.08,
         oscillator: {
           partials: [2, 1, 3, 2, 0.4]
@@ -235,9 +230,10 @@ export class Bassy extends Instrument {
     );
   }
 }
+
 export class Coolguy extends Instrument {
   constructor() {
-    super(new Tone.PolySynth(6, Tone.MonoSynth), 24);
+    super(new PolySynth(MonoSynth), 24);
     this.synth.set({
       oscillator: {
         type: "pwm",
@@ -264,14 +260,13 @@ export class Coolguy extends Instrument {
       }
     });
     this.synth.volume.value = 10;
-
-    this.synth.send("reverb", -12);
+    sendToReverb(this.synth, -12);
   }
 }
 
 export class Bah extends Instrument {
   constructor() {
-    super(new Tone.PolySynth(6, Tone.MonoSynth), 24);
+    super(new PolySynth(MonoSynth), 24);
     this.synth.set({
       volume: 24,
       oscillator: {
@@ -303,7 +298,7 @@ export class Bah extends Instrument {
 
 export class AlienChorus extends Instrument {
   constructor() {
-    super(new Tone.PolySynth(6, Tone.Synth), 24);
+    super(new PolySynth(Synth), 24);
     this.synth.set({
       oscillator: {
         type: "fatsine4",
@@ -320,14 +315,13 @@ export class AlienChorus extends Instrument {
       }
     });
     this.synth.volume.value = 10;
-
-    this.synth.send("reverb", -12);
+    sendToReverb(this.synth, -12);
   }
 }
 
 export class Gravel extends Instrument {
   constructor() {
-    super(new Tone.PolySynth(6, Tone.NoiseSynth), 24);
+    super(new PolySynth(NoiseSynth), 24);
     this.synth.set({
       noise: {
         type: "pink",
@@ -341,7 +335,6 @@ export class Gravel extends Instrument {
       }
     });
     this.synth.volume.value = 10;
-
-    this.synth.send("reverb", -12);
+    sendToReverb(this.synth, -12);
   }
 }

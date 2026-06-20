@@ -1,7 +1,7 @@
 export class Instrument {
   constructor(synth, volume) {
     this.synth = synth;
-    this.synth.toMaster();
+    this.synth.toDestination();
     this.synth.volume.value = volume;
   }
   triggerAttackRelease(note, duration, time) {

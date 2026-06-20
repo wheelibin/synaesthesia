@@ -1,15 +1,12 @@
-import Tone from "tone";
+import { Frequency, getDestination } from "tone";
 import * as scales from "../scales";
 import * as parts from "../parts";
 import instruments from "../instruments";
 import * as rythyms from "../rythyms";
 import * as utils from "../../utils";
 
-const reverb = new Tone.Freeverb().toMaster();
-reverb.receive("reverb");
-
 export const play = visCallback => {
-  Tone.Master.volume.value = -32;
+  getDestination().volume.value = -32;
 
   const keyType = scales.getRandomScaleType();
   const songKey = {
@@ -45,7 +42,7 @@ export const play = visCallback => {
   const chordInstrument = new (utils.randomFromArray(possibleChordPads))();
   const bassInstrument = new (utils.randomFromArray(possibleBassInstruments))();
   const motifInstrument = new (utils.randomFromArray(possibleMotifInstruments))();
-  const openHatFrequency = Tone.Frequency(songKey.root + "3").toFrequency();
+  const openHatFrequency = Frequency(songKey.root + "3").toFrequency();
 
   const generatedSettings = {
     bpm: utils.randomIntBetween(70, 90),
@@ -120,13 +117,6 @@ export const play = visCallback => {
     chordProgressionBars,
     true
   );
-
-  // const evolutionLoop = new Tone.Loop(function() {
-  //   const parts = [kickPart, snarePart, hihatPart, shakerPart, openHatPart];
-  //   const part = utils.randomFromArray(parts);
-  //   part.mutate();
-  // }, "4m");
-  // evolutionLoop.start(0);
 
   return generatedSettings;
 };

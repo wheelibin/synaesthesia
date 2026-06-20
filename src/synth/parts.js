@@ -1,16 +1,12 @@
-import Tone from "tone";
+import { Loop, Sequence, getDraw } from "tone";
 
 export const addChordProgression = (startTime, chordProgression, instrument, noteLength, interval, shouldLoop, visCallback) => {
-  const loop = new Tone.Loop(function(time) {
-    //Take first chord
+  const loop = new Loop(function(time) {
     const currentChord = chordProgression.shift();
-    //add chord to back of queue
     chordProgression.push(currentChord);
-    //play it
     instrument.triggerAttackRelease(currentChord, noteLength, time);
 
-    Tone.Draw.schedule(function() {
-      //the callback synced to the animation frame at the given time
+    getDraw().schedule(function() {
       if (visCallback) {
         visCallback(currentChord);
       }
@@ -22,7 +18,7 @@ export const addChordProgression = (startTime, chordProgression, instrument, not
 };
 
 export const addDrums = (startTime, note, instrument, pattern, probability, shouldLoop, mutationFunction) => {
-  const sequencer = new Tone.Sequence(
+  const sequencer = new Sequence(
     function(time, hit) {
       if (hit === 1) {
         instrument.triggerAttackRelease(note, "16n", time);
@@ -39,7 +35,7 @@ export const addDrums = (startTime, note, instrument, pattern, probability, shou
 };
 
 export const addSoloPart = (startTime, notes, instrument, noteLength, pattern, probability, shouldLoop) => {
-  const sequencer = new Tone.Sequence(
+  const sequencer = new Sequence(
     function(time, hit) {
       if (hit === 1) {
         const note = notes.shift();
@@ -77,7 +73,7 @@ export const addRepeatingSoloPart = (startTime, notes, instrument, noteLength, p
     }
   }
 
-  const sequencer = new Tone.Sequence(
+  const sequencer = new Sequence(
     function(time, hit) {
       if (hit === 1) {
         const note = expandedSequence.shift();

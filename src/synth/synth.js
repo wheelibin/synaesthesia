@@ -1,20 +1,21 @@
-import debounce from "lodash/debounce";
-import Tone from "tone";
+import { setContext, Context, getTransport, getContext } from "tone";
+import { clearEffects } from "./effects.js";
 import songs from "./songs";
 
-export const play = (song, seed, callback = null, visCallback = null) => {
-  Tone.context.close();
-  Tone.context = new AudioContext();
+export const reset = () => {
+  setContext(new Context(), true);
+  clearEffects();
+};
 
+export const play = (song, seed, callback = null, visCallback = null) => {
   Math.seedrandom(seed);
 
   const generatedSettings = songs[song].play(visCallback);
 
-  Tone.Transport.bpm.value = generatedSettings.bpm;
-  Tone.Transport.swing = generatedSettings.swing;
+  getTransport().bpm.value = generatedSettings.bpm;
+  getTransport().swing = generatedSettings.swing;
 
-  Tone.Transport.start(1);
-  console.log(generatedSettings);
+  getTransport().start(1);
 
   if (callback) {
     callback(generatedSettings);
@@ -24,7 +25,5 @@ export const play = (song, seed, callback = null, visCallback = null) => {
 };
 
 export const stop = () => {
-  Tone.context.close();
+  getContext().dispose();
 };
-
-export const playDebounced = debounce(play, 400);
