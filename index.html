@@ -1,1 +1,87 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="theme-color" content="#000000"><link rel="manifest" href="/synaesthesia/manifest.json"><link rel="shortcut icon" href="/synaesthesia/favicon.ico"><script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script><link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"><link href="site.css" rel="stylesheet"><title>Synaesthesia</title><link href="/synaesthesia/static/css/main.20aa47e6.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div><script type="text/javascript" src="/synaesthesia/static/js/main.cc6e9922.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#000000">
+  <link rel="shortcut icon" href="/synaesthesia/favicon.ico">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <title>Synaesthesia</title>
+  <script type="module" crossorigin src="/synaesthesia/assets/index-Cey-1kYu.js"></script>
+  <link rel="modulepreload" crossorigin href="/synaesthesia/assets/tone-Cp3uKZNc.js">
+  <link rel="stylesheet" crossorigin href="/synaesthesia/assets/index-kYlT1WG0.css">
+</head>
+<body>
+  <div id="app" class="container text-center">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1 class="main-title">Synaesthesia</h1>
+        <p class="lead">Web Audio experiments by <a href="https://soundcloud.com/wheelibin">wheelibin</a></p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="btn-group" role="group">
+          <button id="btn-song-1" data-song="1" type="button" class="btn btn-lg btn-outline-light">Funky Down-Tempo</button>
+          <button id="btn-song-2" data-song="2" type="button" class="btn btn-lg btn-outline-light">Ambient Drone</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="playback-row" class="row" style="display:none">
+      <div class="col-md-4 offset-md-4" style="margin-top:1em">
+        <button id="btn-play-stop" type="button" class="btn btn-lg btn-outline-light btn-block"></button>
+      </div>
+    </div>
+
+    <div id="song-details" class="row" style="display:none">
+      <div class="col-md-8 offset-md-2 col-sm-12 song border rounded">
+        <div class="row" style="margin-left:0;margin-right:0;margin-top:2em">
+          <div class="col-md-5 offset-md-1">
+            <p style="margin-bottom:0">Key</p>
+            <h4 id="song-key"></h4>
+          </div>
+          <div class="col-md-5">
+            <p style="margin-bottom:0">Chord Progression</p>
+            <h4 id="song-chords"></h4>
+          </div>
+        </div>
+        <form class="form">
+          <div class="generation-options row" style="margin-left:0;margin-right:0;padding-top:8px">
+            <div class="form-group col-md-5 offset-md-1">
+              <label for="seed-input">Seed (try entering your own)</label>
+              <input type="text" class="form-control form-control-lg text-center seed-input" id="seed-input"
+                placeholder="A word or phrase to generate music from" />
+            </div>
+            <div class="form-group col-md-5">
+              <label>Or generate a random seed</label>
+              <button type="button" id="btn-randomise" class="btn btn-outline-light btn-lg btn-block">Randomise!</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-md-6 offset-md-3" style="margin-top:0">
+      <div id="info-section" class="info-section" style="display:none">
+        <p class="lead text-center">What's all this then?</p>
+        <p class="text-center">
+          All the music is randomly generated, within certain musical constraints, using the excellent
+          <a href="https://tonejs.github.io/" target="new">Tone.js</a>. The random generation algorithm is seeded
+          with the seed shown above, this can be changed to anything you like, and entering the same seed will
+          always produce the same randomly generated song.
+        </p>
+        <p class="text-center">
+          All the code, and a bit more info, can be found on GitHub here:
+          <a href="https://github.com/wheelibin/synaesthesia">https://github.com/wheelibin/synaesthesia</a>
+        </p>
+      </div>
+    </div>
+
+    <small class="version"></small>
+  </div>
+</body>
+</html>
